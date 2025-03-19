@@ -1,0 +1,29 @@
+body {
+  background-image: url("../assets/palebluedot.jpg");
+  background-color: black;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right top;
+}
+
+div.poem {
+  display: inline-block;
+  width: 63%;
+  margin: 70px;
+  padding: 20px;
+  border: 1px solid black;
+  background: rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+p {
+  text-align: center;
+}
+
+p.attribution {
+  font-style: italic;
+  margin-top: 40px;
+  margin-right: 40px;
+  font-weight: normal;
+  text-align: right;
+}
