@@ -25,3 +25,4 @@ MITGLIEDERLISTTOREPLACE
 Sobald an dem main-Branch dieses Repositories Veränderungen vorgenommen bzw. gepusht werden, wird automatisch ein Build-Prozess angestoßen, welcher das [Deployment Ihres Projektes](https://PROJECTURLTOREPLACE.th-luebeck.dev) aktualisiert. Die Dateien `Dockerfile` und `.gitlab-ci.yml` steuern diesen Build-Prozess, und sollten von Ihnen in der Regel nicht verändert werden!
 
 Um das Deployment inklusive Datenbank und PhpMyAdmin bei Ihnen lokal so nachzubilden, wie es auf dem myLab-Webspace ausgeführt wird, können Sie `docker-compose` verwenden. Die Datei `docker-compose.yml` wurde für Sie entsprechend vorbereitet.
+hallo moin
