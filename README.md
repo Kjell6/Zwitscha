@@ -1,6 +1,6 @@
-# Hallo Team TEAMDENOMTOREPLACE!
+# Hallo Team Subway Surfers!
 
-Willkommen in Ihrem Repo für VERANSTALTUNGTOREPLACE!
+Willkommen in Ihrem Repo für Zwitscha!
 
 Projekt-URL: https://PROJECTURLTOREPLACE.th-luebeck.dev
 
