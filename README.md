@@ -8,7 +8,9 @@ Der Inhalt dieser Datei (`README.md`) wird in GitLab auf der Hauptseite Ihres Pr
 
 ## Mitglieder
 
-Ferdinand der Snax, Julian der Lachs, Kjell der Flax
+MITGLIEDERLISTTOREPLACE
+Julian, Kjell, Ferdi
+
 ## Ordnerstruktur
 
     |-public      Auf dem Webserver vorliegende Dateien.
