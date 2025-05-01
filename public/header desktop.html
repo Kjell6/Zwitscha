@@ -7,6 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 
     <style>
+        body {
+            font-family: 'Roboto Slab', sans-serif;
+            margin: 0;
+            background-color: #f9f9f9;
+            color: #222;
+        }
+
         .desktop-header {
             display: flex;
             align-items: center;
@@ -37,14 +44,11 @@
             justify-content: flex-end;
         }
 
-        .logo {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #000000; /* jetzt schwarz */
-            text-decoration: none;
-            font-family: 'Roboto Slab', sans-serif;
+        .logo-image {
+            height: 100px;
+            width: auto;
+            display: block;
         }
-
 
         .search-bar {
             width: 100%;
@@ -61,13 +65,89 @@
             color: #333;
             font-weight: 500;
         }
+
+        main {
+            padding: 32px 24px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .settings h2 {
+            font-size: 1.6rem;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        form {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        fieldset {
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        legend {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-top: 16px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 14px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #222;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px 0;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
     </style>
 </head>
 
 <body>
 <header class="desktop-header">
     <div class="header-section logo-section">
-        <a href="index.html" class="logo">Zwitscha</a>
+        <a href="index.html" class="logo">
+            <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image">
+        </a>
     </div>
     <div class="header-section search-section">
         <input type="text" placeholder="Suche..." class="search-bar">
