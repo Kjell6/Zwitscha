@@ -1,14 +1,80 @@
-<header class="site-header">
-    <div class="header-container">
-        <!-- Logo links -->
-        <a href="/feed.html" class="logo" aria-label="Startseite">🐦</a>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Zwitscha</title>
 
-        <!-- Suchleiste in der Mitte -->
-        <div class="search-bar">
-            <input type="text" placeholder="Suche..." aria-label="Suche">
-        </div>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 
-        <!-- Nutzer-Symbol rechts -->
-        <a href="/profile.html" class="user-icon" aria-label="Profil">👤</a>
+    <style>
+        .desktop-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section {
+            justify-content: flex-start;
+        }
+
+        .search-section {
+            justify-content: center;
+        }
+
+        .profile-section {
+            justify-content: flex-end;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #000000; /* jetzt schwarz */
+            text-decoration: none;
+            font-family: 'Roboto Slab', sans-serif;
+        }
+
+
+        .search-bar {
+            width: 100%;
+            max-width: 300px;
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+
+        .profile-link {
+            font-size: 1rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+<header class="desktop-header">
+    <div class="header-section logo-section">
+        <a href="index.html" class="logo">Zwitscha</a>
+    </div>
+    <div class="header-section search-section">
+        <input type="text" placeholder="Suche..." class="search-bar">
+    </div>
+    <div class="header-section profile-section">
+        <a href="profil.html" class="profile-link">Profil</a>
     </div>
 </header>
+</body>
+</html>
