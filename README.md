@@ -1,6 +1,6 @@
-# Hallo Team TEAMDENOMTOREPLACE!
+# Hallo Team Subway Surfers!
 
-Willkommen in Ihrem Repo für VERANSTALTUNGTOREPLACE!
+Willkommen in Ihrem Repo für Zwitscha!
 
 Projekt-URL: https://PROJECTURLTOREPLACE.th-luebeck.dev
 
@@ -8,7 +8,9 @@ Der Inhalt dieser Datei (`README.md`) wird in GitLab auf der Hauptseite Ihres Pr
 
 ## Mitglieder
 
-Ferdinand der Snax, Julian der Lachs, Kjell der Flax
+MITGLIEDERLISTTOREPLACE
+Julian, Kjell, Ferdi
+
 ## Ordnerstruktur
 
     |-public      Auf dem Webserver vorliegende Dateien.
