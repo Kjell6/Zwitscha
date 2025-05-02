@@ -20,3 +20,23 @@
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
 
 * Keine unerwarteten Schwierigkeiten, da ich aufgrund meiner fehlenden Erfahrung keine konkreten Erwartungen hatte.
+
+
+## Ferdinand
+
+### 1. Erzielte Ergebnisse
+
+* Erstellung des grundlegenden HTML-Skeletts für:
+
+    * Das Login/Registrierungs Fenster
+    * Die Startseite, auf der der Feed angezeigt wird
+    * Die Ansicht eines Profils
+
+### 2. Hürden
+
+* HTML Code war neu und ungewohnt, da man "normale" Programmierung erwartet
+* Genauer Aufbau des Projekts (Dateistruktur) war am Anfang erstmal unklar
+
+### 3. Überraschungen oder unerwartete Schwierigkeiten
+
+* Git Interaktionen zeigen teilweise Fehlermeldungen, wo ich noch nicht genau weiß, was sie bedeuten, aber am Ende funktioiert es dann doch meistens
