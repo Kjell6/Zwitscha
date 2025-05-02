@@ -40,3 +40,13 @@
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
 
 * Git Interaktionen zeigen teilweise Fehlermeldungen, wo ich noch nicht genau weiß, was sie bedeuten, aber am Ende funktioiert es dann doch meistens
+
+## Julian
+Webprogrammierung Bericht Julian Latendorf
+
+## Welche Ergebnisse wurden erzielt?
+
+Ich habe den Header entwickelt für unsere Website und ein ersten Entwurf der Einstellungen, sowie einen Prototypen des Footers für die mobile Version.
+
+## Welche Hindernisse / Überraschungen traten auf?
+Zu Beginn war alles ein wenig überfordernd, aber mit der Zeit wurde man immer vertrauter mit der Struktur von html. Überraschend war der Faktor, wie schnell man Ergebnisse sehen kann. 
