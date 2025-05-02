@@ -3,6 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Post Detail</title>
+
+    <script>
+        // Header laden und einfügen
+        fetch('headerDesktop.html')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const template = doc.getElementById('header-template');
+
+                const headerContent = template.content.cloneNode(true);
+                document.body.insertBefore(headerContent, document.body.firstChild);
+            });
+    </script>
 </head>
 <body>
     <h1>Post Detail</h1>
