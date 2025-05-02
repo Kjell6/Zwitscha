@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <title>Willkommen Ferdigram</title>
-    <meta charset="UTF-8" />
-  </head>
-  <body>
-    <h1>Hallo meine Webbis!</h1>
-    <p>
-      Wenn Sie eine URL ohne Dateinamen aufrufen, wird standardmäßig (falls
-      vorhanden) entweder die Datei index.html oder index.php ausgeliefert. Wenn
-      Sie im Laufe des Semesters eine Webanwendung in PHP programmieren, müssen
-      Sie diese statische HTML-Datei entsprechend durch eine index.php-Datei
-      ersetzen.
-    </p>
-    <p>Weitere Beispiele:</p>
-    <ul>
-      <li><a href="palebluedot.html">Beispielseite HTML mit CSS</a></li>
-      <li><a href="clock.html">Beispielseite HTML mit JavaScript</a></li>
-      <li>
-        <a href="db.php">Beispielseite PHP mit Datenbankanbindung</a>
-      </li>
-      <li><a href="php/info.php">PHP Informationsseite</a></li>
-    </ul>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Zwitscha – Startseite</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Hier wird der Header eingefügt -->
+<div id="header-placeholder"></div>
+
+<main>
+  <h1>Willkommen bei Zwitscha!</h1>
+  <p>Dies ist deine Startseite.</p>
+</main>
+
+<footer>
+  © 2025 Zwitscha
+</footer>
+
+<!-- Header laden -->
+<script>
+  fetch('headerDesktop.html')
+          .then(response => response.text())
+          .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+          });
+</script>
+
+</body>
 </html>

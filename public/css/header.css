@@ -1,0 +1,51 @@
+.desktop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.logo-section {
+    justify-content: flex-start;
+}
+
+.search-section {
+    justify-content: center;
+}
+
+.profile-section {
+    justify-content: flex-end;
+}
+
+.logo-image {
+    height: 100px;
+    width: auto;
+    display: block;
+}
+
+.search-bar {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 1rem;
+}
+
+.profile-link {
+    font-size: 1rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
