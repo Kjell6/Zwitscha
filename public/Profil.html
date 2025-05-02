@@ -5,18 +5,6 @@
     <title>Profil</title>
 </head>
 <body>
-    <h1>Nutzername</h1>
-
-    <!-- Profilbild Platzhalter -->
-
-
-    <!-- Anzeige der Posts -->
-    <h2>Posts</h2>
-
-    <!-- Platzhalter für die vergangenen Posts -->
-
-
-    <!-- Zurück Button (Später über Header/Footer) -->
     <a href="Startseite.html">
         <button type="button">Zurück zur Startseite</button>
     </a>
@@ -24,5 +12,42 @@
     <a href="Login.html">
         <button type="button">Abmelden</button>
     </a>
+
+    <h1>Nutzername</h1>
+
+
+    <!-- Profilbild Platzhalter -->
+    <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" width="60" height="60">
+
+    <!-- Anzeige der Posts -->
+    <h2>Posts</h2>
+
+    <!-- Beispiel für die vergangene Posts -->
+    <section>
+        <ul id="feed">
+            <li class="posts">
+                <article class="post">
+                    <section class="post-user-infos">
+                        <time datetime="2025-04-27T10:30:00Z" class="post-timestamp">[vor 2 Stunden]</time>
+                    </section>
+
+                    <div class="post-content">
+                        <p>[Hier steht der Text des Zwitscha-Posts. Maximal 300 Zeichen.]</p>
+                    </div>
+
+                    <section class="post-actions">
+                        <button type="action-button react-button"> Reagieren &#x1F604 </button>
+
+                        <button type="action-button react-button"> Kommentieren</button>
+
+                    </section>
+
+                </article>
+            </li>
+
+        </ul>
+    </section>
+
+
 </body>
 </html>
