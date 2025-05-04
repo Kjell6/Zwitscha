@@ -1,15 +1,15 @@
 <article class="post">
-
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/post.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 
     <section class="post-user-infos">
-        <a href="Profil.html">
+        <a href="Profil.html" class="no-post-details">
             <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
         </a>
         <span class="post-author-name">[Autorname]</span>
         <time datetime="2025-04-27T10:30:00Z" class="post-timestamp">[vor 2 Stunden]</time>
+        <button class="post-options-button no-post-details" type="button" aria-label="Post-Optionen">&#x2026;</button>
     </section>
 
     <div class="post-content">
@@ -18,17 +18,39 @@
 
     <section class="post-actions">
         <div class="post-reactions">
-            <button class="reaction-button" type="button" data-emoji="👍">&#x1F44D; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button" type="button" data-emoji="👎">&#x1F44E; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button" type="button" data-emoji="❤️">&#x2764;&#xFE0F; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button" type="button" data-emoji="🤣">&#x1F923; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button" type="button" data-emoji="❓">&#x2753; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button" type="button" data-emoji="‼️">&#x203C;&#xFE0F; <span class="reaction-counter">0</span></button> </div>
+            <button class="reaction-button no-post-details" type="button" data-emoji="👍">&#x1F44D; <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="👎">&#x1F44E; <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="❤️">&#x2764;&#xFE0F; <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="🤣">&#x1F923; <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="❓">&#x2753; <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="‼️">&#x203C;&#xFE0F; <span class="reaction-counter">0</span></button>
+        </div>
 
-        <a href="postDetails.html" class="comment-link">
-            <button class="action-button comment-button" type="button"> Kommentieren</button>
+        <a href="postDetails.html" class="comment-link no-post-details">
+            <button class="action-button comment-button no-post-details" type="button">Kommentieren</button>
         </a>
-
     </section>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const posts = document.querySelectorAll('.post');
+
+            posts.forEach(post => {
+
+                post.addEventListener('click', function(event) {
+                    // Prüfen, ob das geklickte Element oder eines seiner Elternelemente die Klasse "no-post-details" hat
+                    let target = event.target;
+                    while (target !== post) {
+                        if (target.classList.contains('no-post-details')) {
+                            return; // Klick nicht verarbeiten
+                        }
+                        target = target.parentElement;
+                    }
+
+                    // Wenn kein Element mit "no-post-details" gefunden wurde, zur Detailseite navigieren
+                    window.location.href = 'postDetails.html';
+                });
+            });
+        });
+    </script>
 </article>

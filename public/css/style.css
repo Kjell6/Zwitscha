@@ -67,10 +67,16 @@ html {
 body {
   font-family: var(--font-family-main);
   font-size: var(--font-size-md);
+
+  /* Vielleicht wieder löschen */
+  max-width: var(--container-max-width);
+  margin: 0 auto; /* Zentriert das Body-Element auf der Seite */
+
   line-height: var(--line-height-normal);
   color: var(--text-primary);
   background-color: var(--bg-color);
 }
+
 
 /* Basisstilisierung für häufig verwendete Elemente */
 h1, h2, h3, h4, h5, h6 {
@@ -78,6 +84,13 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
   margin-bottom: 0.6em;
   line-height: var(--line-height-tight);
+}
+
+/* Grundlegende Listen-Resets */
+ul, ol {
+  list-style: none; /* Entfernt Standard-Listenpunkte */
+  padding: 0; /* Entfernt Standard-Padding */
+  margin: 0; /* Entfernt Standard-Margin */
 }
 
 h1 { font-size: var(--font-size-xxl); }
@@ -126,6 +139,10 @@ button:hover, .button:hover {
 }
 
 /* Container und Layout */
+.header-wrapper {
+  width: 100%;
+}
+
 .container {
   width: var(--container-width);
   max-width: var(--container-max-width);

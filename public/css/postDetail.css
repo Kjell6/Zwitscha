@@ -122,7 +122,6 @@ body {
 
 /* Styling für die Kommentare-Sektion */
 .comments-section {
-    margin-top: var(--spacing-lg);
     padding: var(--spacing-md) 0; /* Vertikales Padding */
     padding-left: var(--spacing-sm); /* Horizontales Padding */
     padding-right: var(--spacing-sm);

@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+<div id="header-placeholder"></div>
+
 
 <h1>Benutzer suchen</h1>
 
@@ -33,6 +35,15 @@
         </li>
     </ul>
 </section>
+
+<script>
+    fetch('headerDesktop.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+</script>
+
 
 </body>
 </html>

@@ -12,11 +12,11 @@
 .post-user-infos {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-xs); /* Abstand zwischen den Elementen - wird jetzt durch margins gehandhabt */
     margin-bottom: var(--spacing-xs);
     padding: 0 var(--spacing-sm);
+    flex-wrap: wrap;
 }
-
 /* Styling für das Profilbild */
 .post-user-infos img {
     display: block;
@@ -40,7 +40,32 @@
     color: var(--text-secondary);
     font-size: var(--font-size-xs);
     flex-shrink: 0;
-    margin-left: var(--spacing-xs);
+    /* margin-left: auto; /* Schiebt den Zeitstempel nach rechts - wird jetzt durch Button's margin-left: auto ersetzt */
+    margin-right: var(--spacing-xs); /* Abstand zum neuen Options-Button */
+    /* Abstand unter dem Element bei Umbruch auf kleinen Bildschirmen (kann auch über .post-user-infos > * geregelt werden) */
+    /* margin-bottom: var(--spacing-xs); */
+}
+
+/*Styling für den Options-Button oben rechts */
+.post-options-button {
+    background: none;
+    border: none;
+    padding: var(--spacing-xs);
+    font-size: var(--font-size-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    /* Schiebt den Button ganz nach rechts */
+    margin-left: auto;
+    border-radius: var(--border-radius-sm);
+    flex-shrink: 0;
+    /* margin-bottom: var(--spacing-xs); */
+}
+
+/*Hover-Zustand für den Options-Button */
+.post-options-button:hover {
+    color: var(--primary-color);
+    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.1);
 }
 
 /* Styling für den eigentlichen Post-Inhalt */
@@ -153,44 +178,50 @@
         height: 50px;
     }
 
+    .post-user-infos {
+        flex-wrap: wrap;
+    }
+
+    .post-user-infos > * {
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .post-timestamp, .post-options-button {
+        margin-left: 0;
+        width: 100%;
+        text-align: right;
+    }
+
+
     .post-actions {
-        /* Auf kleinen Bildschirmen können Reaktionen und Kommentieren untereinander gestapelt werden */
         flex-direction: column;
-        align-items: flex-start; /* Links ausrichten beim Stapeln */
-        gap: var(--spacing-sm); /* Abstand zwischen Reaktionsgruppe und Kommentier-Button */
+        align-items: flex-start;
+        gap: var(--spacing-sm);
     }
 
     .post-actions .post-reactions {
-        /* Emoji-Reaktionen können immer noch nebeneinander bleiben, aber mit Umbruch */
-        /* gap: var(--spacing-xs); /* Kleinerer Abstand zwischen Emojis, wenn nötig */
-        /* flex-wrap: wrap; /* Schon oben gesetzt */
-        width: 100%; /* Lässt den Reaktionscontainer volle Breite einnehmen, wenn gestapelt */
-        justify-content: space-between; /* Kann Emojis verteilen, wenn Platz da ist */
+        gap: var(--spacing-xs);
+        width: 100%;
+        justify-content: space-between;
     }
 
     .post-actions .reaction-button {
-        /* Optional: Leichte Größenanpassung der Buttons */
         padding: var(--spacing-xs);
-        /* flex-basis: calc(50% - var(--spacing-xs) / 2); /* Versuch, 2 pro Zeile zu erzwingen */
     }
 
     .post-actions .comment-link {
-        width: 100%; /* Lässt den Kommentier-Link volle Breite einnehmen */
+        width: 100%;
     }
 
     .post-actions .comment-button {
-        width: 100%; /* Lässt den Kommentier-Button volle Breite einnehmen */
-        justify-content: center; /* Zentriert den Text im Button */
-        padding: var(--spacing-sm) 0; /* Vertikales Padding für gestapelten Button */
-        border: var(--border-width) solid var(--border-color); /* Rahmen, um ihn hervorzuheben */
-        background-color: var(--light-color); /* Heller Hintergrund */
+        width: 100%;
+        justify-content: center;
+        padding: var(--spacing-sm) 0;
+        border: var(--border-width) solid var(--border-color);
+        background-color: var(--light-color);
     }
 
     .post-actions .comment-button:hover {
-        background-color: var(--bg-color); /* Leichter Hintergrund bei Hover */
+        background-color: var(--bg-color);
     }
 }
-
-/* Zusätzliche RGB-Variable für primäre Farbe, nützlich für transparente Hintergründe */
-/* Füge dies am besten in deine style.css :root Sektion ein */
-/* :root { --primary-color-rgb: 34, 218, 38; } */

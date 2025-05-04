@@ -11,6 +11,8 @@
 
 </head>
 <body>
+<div id="header-placeholder"></div>
+
 <div class="page-header-container">
     <a href="index.html" class="back-button">
         <button type="button">Zurück</button>
@@ -22,9 +24,10 @@
 <article class="post detail-post">
     <section class="post-user-infos">
         <a href="Profil.html">
-            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" width="60" height="60">
+            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
         </a>
         <span class="post-author-name">[Autorname]</span>
+        <button class="post-options-button" type="button" aria-label="Post-Optionen">&#x2026;</button>
     </section>
 
     <div class="post-content">
@@ -70,6 +73,7 @@
                     </a>
                     <span class="post-author-name">[Autorname]</span>
                     <time datetime="2025-04-27T10:30:00Z" class="post-timestamp">[vor 2 Stunden]</time>
+                    <button class="post-options-button" type="button" aria-label="Post-Optionen">&#x2026;</button>
                 </section>
 
                 <div class="post-content">
@@ -91,6 +95,7 @@
                     </a>
                     <span class="post-author-name">[Autorname]</span>
                     <time datetime="2025-04-27T10:30:00Z" class="post-timestamp">[vor 2 Stunden]</time>
+                    <button class="post-options-button" type="button" aria-label="Post-Optionen">&#x2026;</button>
                 </section>
 
                 <div class="post-content">
@@ -100,6 +105,14 @@
             </article>
     </ul>
 </section>
+
+<script>
+    fetch('headerDesktop.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+</script>
 
 </body>
 </html>
