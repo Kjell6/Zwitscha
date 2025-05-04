@@ -1,8 +1,64 @@
-@import url('header.css');
+/*
+ * Global CSS für Kurznachrichtendienst
+ * Enthält CSS-Variablen für ein konsistentes Design-System
+ * Basierend auf vorhandenem Styling
+ */
 
+:root {
+  /* Farbpalette */
+  --primary-color: #22DA26;       /* Hauptfarbe */
+  --primary-hover: #1baf1e;       /* Hover-Zustand für Hauptfarbe */
+  --dark-color: #222;             /* Dunkle Farbe für Text */
+  --darker-color: #111;           /* Dunklere Farbe für Überschriften */
+  --light-color: #ffffff;         /* Helle Farbe */
+  --button-color: #222;           /* Button-Farbe */
+  --button-hover: #444;           /* Button-Hover-Farbe */
 
+  /* Neutralfarben */
+  --text-primary: #222;           /* Haupttextfarbe */
+  --text-secondary: #777;         /* Sekundärtextfarbe für Footer etc. */
+  --border-color: #ddd;           /* Rahmenfarbe */
+  --input-border: #ccc;           /* Rahmenfarbe für Eingabefelder */
+  --bg-color: #f5f5f5;            /* Hintergrundfarbe */
 
-/* ========= Reset & Basics ========= */
+  /* Typografie */
+  --font-family-main: 'Roboto Slab', sans-serif;
+  --font-family-mono: monospace;
+
+  /* Schriftgrößen */
+  --font-size-xs: 0.9rem;         /* Footer-Größe */
+  --font-size-sm: 0.95rem;        /* Kleine Texte */
+  --font-size-md: 1rem;           /* 16px Basisgröße */
+  --font-size-lg: 1.2rem;         /* Größere Texte */
+  --font-size-xl: 1.5rem;         /* Überschriften */
+  --font-size-xxl: 2rem;          /* Große Überschriften */
+
+  /* Zeilenabstände */
+  --line-height-tight: 1.2;       /* Für Überschriften */
+  --line-height-normal: 1.6;      /* Für Fließtext */
+
+  /* Abstände */
+  --spacing-xs: 0.5rem;           /* 8px */
+  --spacing-sm: 1rem;             /* 16px */
+  --spacing-md: 1.5rem;           /* 24px */
+  --spacing-lg: 2rem;             /* 32px */
+  --spacing-xl: 2.5rem;           /* 40px */
+
+  /* Rahmen */
+  --border-radius-sm: 4px;        /* Kleine Rundungen */
+  --border-radius-md: 6px;        /* Standard-Rundungen für Buttons, Inputs */
+  --border-width: 1px;
+
+  /* Container-Größen */
+  --container-width: 90%;
+  --container-max-width: 1200px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+/* Basis-Reset */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,60 +71,75 @@ html {
 }
 
 body {
-  font-family: 'Roboto Slab', sans-serif;
-  background-color: #f5f5f5;
-  color: #222;
-  line-height: 1.6;
+  font-family: var(--font-family-main);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-color);
 }
 
-
-/* ========= Typografie ========= */
+/* Basisstilisierung für häufig verwendete Elemente */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
-  color: #111;
+  color: var(--darker-color);
   margin-bottom: 0.6em;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
 }
+
+h1 { font-size: var(--font-size-xxl); }
+h2 { font-size: var(--font-size-xl); }
+h3 { font-size: var(--font-size-lg); }
+h4 { font-size: var(--font-size-md); }
+h5, h6 { font-size: var(--font-size-sm); }
 
 p {
   margin-bottom: 1em;
 }
 
 a {
-  color: #0077cc;
+  color: var(--primary-color);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: #005fa3;
+  color: var(--primary-hover);
 }
 
-/* ========= Layout Container ========= */
-.container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 0;
-}
-
-/* ========= Buttons ========= */
-button {
-  background-color: #222;
-  color: white;
+/* Buttons */
+button, .button {
+  display: inline-block;
+  background-color: var(--button-color);
+  color: var(--light-color);
   padding: 10px 20px;
-  font-size: 1rem;
+  font-size: var(--font-size-md);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color var(--transition-fast);
 }
 
-button:hover {
-  background-color: #444;
+button:hover, .button:hover {
+  background-color: var(--button-hover);
 }
 
-/* ========= Formulare ========= */
+.button-primary {
+  background-color: var(--primary-color);
+}
+
+.button-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Container und Layout */
+.container {
+  width: var(--container-width);
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-md) 0;
+}
+
+/* Eingabefelder */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -76,10 +147,16 @@ textarea,
 select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  margin-bottom: 1em;
+  border: var(--border-width) solid var(--input-border);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-md);
+  margin-bottom: var(--spacing-sm);
+  transition: border-color var(--transition-fast);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
 }
 
 label {
@@ -88,21 +165,123 @@ label {
   font-weight: 500;
 }
 
-/* ========= Utilities ========= */
-.text-center {
-  text-align: center;
+/* Kartenkomponente für Beiträge/Nachrichten */
+.card {
+  background-color: var(--light-color);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--transition-fast);
 }
 
+.card:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: var(--spacing-md) 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  border-top: var(--border-width) solid var(--border-color);
+  margin-top: var(--spacing-xl);
+}
+
+/* Hilfsstilisierungen */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.flex-column { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.items-center { align-items: center; }
+.gap-sm { gap: var(--spacing-xs); }
+.gap-md { gap: var(--spacing-sm); }
+
+.w-full { width: 100%; }
+.w-half { width: 50%; }
+
+/* Abstände */
 .mt-2 { margin-top: 0.5rem; }
 .mt-4 { margin-top: 1rem; }
 .mb-4 { margin-bottom: 1rem; }
 
-/* ========= Footer ========= */
-footer {
-  text-align: center;
-  padding: 24px 0;
-  font-size: 0.9rem;
-  color: #777;
-  border-top: 1px solid #ddd;
-  margin-top: 40px;
+/* Zusätzliche Abstandsklassen */
+.mt-1 { margin-top: 0.25rem; }
+.mt-8 { margin-top: 2rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* Komponenten für den Kurznachrichtendienst ?vielleicht in anderer Datei?*/
+.post {
+  border-bottom: var(--border-width) solid var(--border-color);
+  padding: var(--spacing-sm) 0;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.post-username {
+  font-weight: bold;
+  margin-right: var(--spacing-xs);
+}
+
+.post-timestamp {
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.post-content {
+  margin-bottom: var(--spacing-xs);
+}
+
+.post-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  color: var(--text-secondary);
+}
+
+.post-actions button {
+  background: none;
+  color: var(--text-secondary);
+  padding: 0;
+  font-size: var(--font-size-sm);
+}
+
+.post-actions button:hover {
+  color: var(--primary-color);
+  background: none;
+}
+
+/* Responsive-Design-Breakpoints */
+@media (max-width: 768px) {
+  :root {
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+  }
+
+  .container {
+    width: 95%;
+    padding: var(--spacing-sm) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  button, .button {
+    width: 100%;
+    text-align: center;
+  }
 }
