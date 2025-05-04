@@ -153,20 +153,26 @@
     /* flex-grow: 0; /* Verhindert, dass der Kommentar-Link wächst */
 }
 
+/* Styling für den Kommentier-Button */
 .post-actions .comment-button {
-    /* Nutzt die action-button/button Stile aus style.css */
-    /* Kann spezifische Anpassungen hier haben */
-    background: none; /* Standardmäßig kein Hintergrund wie die Reaktionsbuttons */
-    color: var(--text-secondary); /* Standardfarbe */
-    padding: 0 var(--spacing-xs); /* Kleineres horizontales Padding */
+    background: none; /* Kein Hintergrund */
+    color: var(--text-secondary); /* Standardfarbe wie Reaction-Buttons */
+    padding: var(--spacing-xs); /* Ähnliches Padding wie Reaction-Buttons */
     font-size: var(--font-size-sm);
     border: none; /* Kein Rahmen */
-    transition: color var(--transition-fast);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast); /* Übergänge hinzufügen */
+    cursor: pointer; /* Mauszeiger anzeigen */
+    display: inline-flex; /* Nutzt Flexbox für Ausrichtung, auch wenn nur Text da ist */
+    align-items: center; /* Vertikal zentrieren */
+    gap: var(--spacing-xs); /* Abstand falls Icon/Text vorhanden */
+    border-radius: var(--border-radius-md); /* Leichte Rundung wie Reaction-Buttons */
+    line-height: 1; /* Verbessert Ausrichtung */
+    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
 }
 
 .post-actions .comment-button:hover {
-    color: var(--primary-color); /* Farbe bei Hover */
-    background: none; /* Sicherstellen, dass kein Hintergrund da ist */
+    color: var(--primary-color); /* Farbe bei Hover wie Reaction-Buttons */
+    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.1); /* Leichter Hintergrund bei Hover */
 }
 
 

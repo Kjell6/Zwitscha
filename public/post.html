@@ -26,31 +26,11 @@
             <button class="reaction-button no-post-details" type="button" data-emoji="‼️">&#x203C;&#xFE0F; <span class="reaction-counter">0</span></button>
         </div>
 
-        <a href="postDetails.html" class="comment-link no-post-details">
-            <button class="action-button comment-button no-post-details" type="button">Kommentieren</button>
+        <a href="postDetails.html" class="comment-link">
+            <button class="action-button comment-button" type="button">
+                <span class="comment-icon">&#x1F4AC;</span> 2 Kommentare
+            </button>
         </a>
     </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const posts = document.querySelectorAll('.post');
-
-            posts.forEach(post => {
-
-                post.addEventListener('click', function(event) {
-                    // Prüfen, ob das geklickte Element oder eines seiner Elternelemente die Klasse "no-post-details" hat
-                    let target = event.target;
-                    while (target !== post) {
-                        if (target.classList.contains('no-post-details')) {
-                            return; // Klick nicht verarbeiten
-                        }
-                        target = target.parentElement;
-                    }
-
-                    // Wenn kein Element mit "no-post-details" gefunden wurde, zur Detailseite navigieren
-                    window.location.href = 'postDetails.html';
-                });
-            });
-        });
-    </script>
 </article>
