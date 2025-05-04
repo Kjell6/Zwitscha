@@ -1,0 +1,83 @@
+
+/* Grundlegendes Styling für den einzelnen Post Container */
+.post {
+    /* Verwende Abstände und Rahmenfarben aus den Variablen */
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding: var(--spacing-sm) 0; /* Oben/Unten Abstand */
+    margin-bottom: var(--spacing-sm); /* Abstand zwischen Posts */
+    background-color: var(--light-color); /* Hintergrund für die Karte */
+    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+}
+
+/* Styling für die Benutzerinformationen Sektion */
+.post-user-infos {
+    display: flex; /* Elemente nebeneinander anordnen */
+    align-items: center;
+    gap: var(--spacing-xs); /* Abstand zwischen den Elementen */
+    margin-bottom: var(--spacing-xs); /* Abstand zum Inhalt */
+    padding: 0 var(--spacing-sm); /* Horizontaler Innenabstand */
+}
+
+/* Styling für das Profilbild */
+.post-user-infos img {
+    display: block; /* Entfernt zusätzlichen Platz unter dem Bild */
+    border-radius: 50%; /* Runde das Profilbild */
+    margin-right: var(--spacing-xs); /* Abstand nach rechts zum Namen */
+    width: 60px;
+    height: 60px;
+    object-fit: cover; /* Stellt sicher, dass das Bild den Bereich ausfüllt, ohne verzerrt zu werden */
+}
+
+/* Styling für den Autornamen */
+.post-author-name {
+    font-weight: bold; /* Verwende die Fett-Schrift */
+    margin-right: var(--spacing-xs); /* Abstand zum Zeitstempel */
+    color: var(--text-primary);
+}
+
+/* Styling für den Zeitstempel */
+.post-timestamp {
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+}
+
+/* Styling für den eigentlichen Post-Inhalt */
+.post-content {
+    margin-bottom: var(--spacing-xs); /* Abstand zu den Aktionen */
+    padding: 0 var(--spacing-sm); /* Horizontaler Innenabstand */
+    color: var(--text-primary);
+}
+
+/* Styling für den Absatz innerhalb des Inhalts */
+.post-content p {
+    /* Entferne oder passe den Standard-Margin-Bottom für p im Post an, falls nötig */
+    margin-bottom: 0;
+}
+
+/* Styling für die Aktions-Sektion */
+.post-actions {
+    display: flex; /* Buttons nebeneinander anordnen */
+    padding: var(--spacing-xs) var(--spacing-sm) 0; /* Innenabstand */
+    /* Verwende die sekundäre Textfarbe für die Icons/Texte */
+    color: var(--text-secondary);
+    justify-content: space-around; /* Verteilt den Platz gleichmäßig zwischen den Elementen */
+}
+
+/* Styling für die Aktions-Buttons */
+.post-actions button {
+    padding: 0; /* Kein innerer Abstand */
+    font-size: var(--font-size-sm); /* Kleinere Schriftgröße */
+    color: var(--text-secondary); /* Textfarbe */
+    cursor: pointer; /* Zeigt an, dass es klickbar ist */
+    transition: color var(--transition-fast); /* Sanfter Übergang bei Hover */
+    display: flex; /* Ermöglicht flexbox für Icon/Text */
+    align-items: center; /* Vertikal zentrieren */
+    gap: var(--spacing-xs); /* Kleiner Abstand zwischen Icon und Text */
+}
+
+/* Hover-Zustand für die Aktions-Buttons */
+.post-actions button:hover {
+    color: var(--primary-color); /* Ändere die Textfarbe bei Hover */
+    background: none; /* Sicherstellen, dass der Hintergrund transparent bleibt */
+}

@@ -39,8 +39,8 @@
   --spacing-xl: 2.5rem;           /* 40px */
 
   /* Rahmen */
-  --border-radius-sm: 4px;        /* Kleine Rundungen */
-  --border-radius-md: 6px;        /* Standard-Rundungen für Buttons, Inputs */
+  --border-radius-sm: 8px;        /* Kleine Rundungen */
+  --border-radius-md: 16px;        /* Standard-Rundungen für Buttons, Inputs */
   --border-width: 1px;
 
   /* Container-Größen */
@@ -104,7 +104,7 @@ a:hover {
 button, .button {
   display: inline-block;
   background-color: var(--button-color);
-  color: var(--text-secondary);
+  color: var(--light-color);
   padding: 10px 20px;
   font-size: var(--font-size-md);
   border: none;
