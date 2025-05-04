@@ -1,7 +1,5 @@
-
 /* Grundlegendes Styling für den einzelnen Post Container */
 .post {
-    /* Verwende Abstände und Rahmenfarben aus den Variablen */
     border-bottom: var(--border-width) solid var(--border-color);
     padding: var(--spacing-sm) 0; /* Oben/Unten Abstand */
     margin-bottom: var(--spacing-sm); /* Abstand zwischen Posts */
@@ -12,27 +10,28 @@
 
 /* Styling für die Benutzerinformationen Sektion */
 .post-user-infos {
-    display: flex; /* Elemente nebeneinander anordnen */
+    display: flex;
     align-items: center;
-    gap: var(--spacing-xs); /* Abstand zwischen den Elementen */
-    margin-bottom: var(--spacing-xs); /* Abstand zum Inhalt */
-    padding: 0 var(--spacing-sm); /* Horizontaler Innenabstand */
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+    padding: 0 var(--spacing-sm);
 }
 
 /* Styling für das Profilbild */
 .post-user-infos img {
-    display: block; /* Entfernt zusätzlichen Platz unter dem Bild */
-    border-radius: 50%; /* Runde das Profilbild */
-    margin-right: var(--spacing-xs); /* Abstand nach rechts zum Namen */
+    display: block;
+    border-radius: 50%;
+    margin-right: var(--spacing-xs);
     width: 60px;
     height: 60px;
-    object-fit: cover; /* Stellt sicher, dass das Bild den Bereich ausfüllt, ohne verzerrt zu werden */
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
 /* Styling für den Autornamen */
 .post-author-name {
-    font-weight: bold; /* Verwende die Fett-Schrift */
-    margin-right: var(--spacing-xs); /* Abstand zum Zeitstempel */
+    font-weight: bold;
+    margin-right: var(--spacing-xs);
     color: var(--text-primary);
 }
 
@@ -40,47 +39,111 @@
 .post-timestamp {
     color: var(--text-secondary);
     font-size: var(--font-size-xs);
+    flex-shrink: 0;
+    margin-left: var(--spacing-xs);
 }
 
 /* Styling für den eigentlichen Post-Inhalt */
 .post-content {
-    margin-bottom: var(--spacing-xs); /* Abstand zu den Aktionen */
-    padding: 0 var(--spacing-sm); /* Horizontaler Innenabstand */
+    margin-bottom: var(--spacing-xs);
+    padding: 0 var(--spacing-sm);
     color: var(--text-primary);
+    word-wrap: break-word;
 }
 
 /* Styling für den Absatz innerhalb des Inhalts */
 .post-content p {
-    /* Entferne oder passe den Standard-Margin-Bottom für p im Post an, falls nötig */
     margin-bottom: 0;
 }
 
 /* Styling für die Aktions-Sektion */
 .post-actions {
-    display: flex; /* Buttons nebeneinander anordnen */
-    padding: var(--spacing-xs) var(--spacing-sm) 0; /* Innenabstand */
-    /* Verwende die sekundäre Textfarbe für die Icons/Texte */
-    color: var(--text-secondary);
-    justify-content: space-around; /* Verteilt den Platz gleichmäßig zwischen den Elementen */
-}
-
-/* Styling für die Aktions-Buttons */
-.post-actions button {
-    padding: 0; /* Kein innerer Abstand */
-    font-size: var(--font-size-sm); /* Kleinere Schriftgröße */
-    color: var(--text-secondary); /* Textfarbe */
-    cursor: pointer; /* Zeigt an, dass es klickbar ist */
-    transition: color var(--transition-fast); /* Sanfter Übergang bei Hover */
-    display: flex; /* Ermöglicht flexbox für Icon/Text */
+    display: flex; /* Ordnet den Reaktions-Container und den Kommentier-Button an */
     align-items: center; /* Vertikal zentrieren */
-    gap: var(--spacing-xs); /* Kleiner Abstand zwischen Icon und Text */
+    justify-content: space-between; /* Ordnet Reaktionen links, Kommentieren rechts an */
+    padding: var(--spacing-xs) var(--spacing-sm) 0; /* Innenabstand */
+    color: var(--text-secondary); /* Basis-Textfarbe für Aktionen */
+    flex-wrap: wrap; /* Erlaubt Umbruch, falls der Platz nicht reicht */
+    gap: var(--spacing-sm); /* Abstand zwischen den umgebrochenen Zeilen/Elementen */
 }
 
-/* Hover-Zustand für die Aktions-Buttons */
-.post-actions button:hover {
-    color: var(--primary-color); /* Ändere die Textfarbe bei Hover */
-    background: none; /* Sicherstellen, dass der Hintergrund transparent bleibt */
+/* Styling für den Container der Emoji-Reaktionen */
+.post-actions .post-reactions {
+    display: flex; /* Ordnet die Emoji-Buttons nebeneinander an */
+    gap: var(--spacing-xs); /* Kleiner Abstand zwischen den Emoji-Buttons */
+    align-items: center; /* Vertikal zentrieren der Buttons selbst */
+    flex-wrap: wrap; /* Erlaubt Umbruch der Emoji-Buttons, falls zu viele da sind */
+    /* flex-grow: 1; /* Optional: Lässt den Reaktionsbereich Platz einnehmen */
 }
+
+/* Styling für die einzelnen Emoji-Reaktionsbuttons */
+.post-actions .reaction-button {
+    /* Übernimmt Basiseigenschaften von .post-actions button, überschreibt/ergänzt */
+    background: none;
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-xs); /* Kleiner innerer Abstand */
+    font-size: var(--font-size-sm); /* Kleinere Schriftgröße */
+    color: var(--text-secondary); /* Standardfarbe */
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast); /* Übergänge für Hover/Active */
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Sehr kleiner Abstand zwischen Emoji und Zähler */
+    border-radius: var(--border-radius-md); /* Leichte Rundung */
+    line-height: 1; /* Verbessert Ausrichtung von Emoji und Text */
+    /* flex-shrink: 0; /* Verhindert, dass Buttons schrumpfen */
+}
+
+/* Hover-Zustand für Emoji-Reaktionsbuttons */
+.post-actions .reaction-button:hover {
+    color: var(--primary-color); /* Farbe bei Hover */
+    /* Optional: Leichter Hintergrund bei Hover */
+    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.1); /* Beispiel mit RGB + Transparenz */
+}
+
+/* Styling für den Zähler (Span) innerhalb des Reaktionsbuttons */
+.post-actions .reaction-button .reaction-counter {
+    font-size: var(--font-size-xs); /* Sehr kleine Schriftgröße für den Zähler */
+    font-weight: bold; /* Zähler fett */
+    color: var(--text-secondary); /* Zähler Farbe */
+}
+
+/* Zustand für ausgewählte/aktive Emoji-Reaktion */
+.post-actions .reaction-button.active {
+    color: var(--primary-color); /* Hauptfarbe für aktive Reaktion */
+    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.2); /* Leichterer Hintergrund */
+    border: 1px solid var(--primary-color); /* Rahmen als Indikator */
+}
+
+/* Farbe des Zählers im aktiven Zustand anpassen */
+.post-actions .reaction-button.active .reaction-counter {
+    color: var(--primary-color);
+}
+
+
+/* Styling für den Kommentier-Button */
+.post-actions .comment-link {
+    /* Sorgt dafür, dass der Link im Flex-Container korrekt behandelt wird */
+    flex-shrink: 0; /* Verhindert, dass der Kommentar-Link schrumpft */
+    /* flex-grow: 0; /* Verhindert, dass der Kommentar-Link wächst */
+}
+
+.post-actions .comment-button {
+    /* Nutzt die action-button/button Stile aus style.css */
+    /* Kann spezifische Anpassungen hier haben */
+    background: none; /* Standardmäßig kein Hintergrund wie die Reaktionsbuttons */
+    color: var(--text-secondary); /* Standardfarbe */
+    padding: 0 var(--spacing-xs); /* Kleineres horizontales Padding */
+    font-size: var(--font-size-sm);
+    border: none; /* Kein Rahmen */
+    transition: color var(--transition-fast);
+}
+
+.post-actions .comment-button:hover {
+    color: var(--primary-color); /* Farbe bei Hover */
+    background: none; /* Sicherstellen, dass kein Hintergrund da ist */
+}
+
 
 /* Responsive Anpassungen für den Post im Feed */
 @media (max-width: 480px) {
@@ -90,16 +153,44 @@
         height: 50px;
     }
 
-    /* Anpassung der Aktions-Buttons für kleinere Bildschirme */
     .post-actions {
-        /* Ändere die Verteilung und nutze Gap für konsistenten Abstand */
-        justify-content: flex-start; /* Buttons links ausrichten */
-        gap: var(--spacing-sm); /* Konsistenter Abstand zwischen den Buttons */
-        /* flex-wrap ist bereits oben gesetzt */
+        /* Auf kleinen Bildschirmen können Reaktionen und Kommentieren untereinander gestapelt werden */
+        flex-direction: column;
+        align-items: flex-start; /* Links ausrichten beim Stapeln */
+        gap: var(--spacing-sm); /* Abstand zwischen Reaktionsgruppe und Kommentier-Button */
     }
 
-    /.post-actions button {
-        width: 100%;
-        justify-content: center;
+    .post-actions .post-reactions {
+        /* Emoji-Reaktionen können immer noch nebeneinander bleiben, aber mit Umbruch */
+        /* gap: var(--spacing-xs); /* Kleinerer Abstand zwischen Emojis, wenn nötig */
+        /* flex-wrap: wrap; /* Schon oben gesetzt */
+        width: 100%; /* Lässt den Reaktionscontainer volle Breite einnehmen, wenn gestapelt */
+        justify-content: space-between; /* Kann Emojis verteilen, wenn Platz da ist */
+    }
+
+    .post-actions .reaction-button {
+        /* Optional: Leichte Größenanpassung der Buttons */
+        padding: var(--spacing-xs);
+        /* flex-basis: calc(50% - var(--spacing-xs) / 2); /* Versuch, 2 pro Zeile zu erzwingen */
+    }
+
+    .post-actions .comment-link {
+        width: 100%; /* Lässt den Kommentier-Link volle Breite einnehmen */
+    }
+
+    .post-actions .comment-button {
+        width: 100%; /* Lässt den Kommentier-Button volle Breite einnehmen */
+        justify-content: center; /* Zentriert den Text im Button */
+        padding: var(--spacing-sm) 0; /* Vertikales Padding für gestapelten Button */
+        border: var(--border-width) solid var(--border-color); /* Rahmen, um ihn hervorzuheben */
+        background-color: var(--light-color); /* Heller Hintergrund */
+    }
+
+    .post-actions .comment-button:hover {
+        background-color: var(--bg-color); /* Leichter Hintergrund bei Hover */
     }
 }
+
+/* Zusätzliche RGB-Variable für primäre Farbe, nützlich für transparente Hintergründe */
+/* Füge dies am besten in deine style.css :root Sektion ein */
+/* :root { --primary-color-rgb: 34, 218, 38; } */
