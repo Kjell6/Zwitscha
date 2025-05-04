@@ -1,0 +1,192 @@
+/* Nutzt den body als Container */
+body {
+    /* padding-top für Abstand unter einem eventuellen Header */
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+}
+
+/* Container für Zurück-Button und Überschrift */
+.page-header-container {
+    display: flex;
+    align-items: center; /* Vertikal zentrieren */
+    gap: var(--spacing-sm); /* Abstand zwischen Button und Überschrift */
+    margin-bottom: var(--spacing-md); /* Abstand unter dem Header-Bereich */
+}
+
+/* Styling für den Zurück-Button Container */
+.back-button {
+    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
+}
+
+/* Styling für den Button im Zurück-Button Container */
+.back-button button {
+    /* Button-Stile kommen von style.css */
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+
+/* Styling für die Überschrift in der Detailansicht */
+.page-header-container h1 {
+    /* Schriftgröße kleiner als der Standard h1 */
+    font-size: var(--font-size-lg);
+    margin-bottom: 0; /* Entfernt den Standard-Margin-Bottom von h1 im Flex-Container */
+    flex-grow: 1; /* Lässt die Überschrift verfügbaren Platz einnehmen */
+}
+
+/* Styling für den Haupt-Post in der Detailansicht */
+.post.detail-post {
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md); /* Abstand zum Kommentare-Bereich */
+    background-color: var(--light-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling für die Benutzerinformationen Sektion in Post.css gestylt*/
+.post .post-user-infos {
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Styling für den Post-Inhalt */
+/* Wird von post.css gestylt */
+.post .post-content {
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Styling für die Info-Details Sektion (Zeitstempel und Kommentaranzahl) */
+.post .info-details {
+    display: flex;
+    margin-left: var(--spacing-sm);
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md); /* Abstand zu den Aktionen */
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+}
+
+/* Styling für die Aktions-Sektion in der Detailansicht (Kommentar-Input/Button + Reagieren Button) */
+.post-actions.detail-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm); /* Abstand zwischen Input/Button-Gruppe und Reagieren-Button */
+    flex-wrap: wrap; /* Erlaubt Umbruch */
+    padding: 0;
+}
+
+/* Gruppierung für Input und Kommentar-Button */
+.post-actions.detail-actions .comment-input-group {
+    display: flex;
+    flex-grow: 1;
+    gap: var(--spacing-xs);
+    align-items: center;
+}
+
+/* Styling für das Kommentar-Eingabefeld */
+.post-actions.detail-actions #comment-input {
+    flex-grow: 1;
+    margin-bottom: 0;
+    /* Nutzt Input-Stile aus style.css */
+}
+
+/* Styling für den Kommentar-Button */
+.post-actions.detail-actions #comment-button {
+    /* Nutzt Button-Stile aus style.css */
+    background-color: var(--primary-color);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    color: var(--light-color);
+    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
+}
+
+.post-actions.detail-actions #comment-button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Styling für den "Reagieren"-Button im Detail-Post */
+.post-actions.detail-actions .react-button {
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
+}
+
+.post-actions.detail-actions .react-button:hover {
+    color: var(--primary-color);
+    background: none;
+}
+
+
+/* Styling für die Kommentare-Sektion */
+.comments-section {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md) 0;
+}
+
+/* Styling für die Überschrift der Kommentare */
+.comments-section h2 {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-xl); /* Kann auch kleiner sein */
+}
+
+/* Styling für die Kommentare-Liste */
+#comments-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 480px) {
+    body {
+        padding-left: var(--spacing-xs);
+        padding-right: var(--spacing-xs);
+    }
+
+    .page-header-container {
+        flex-direction: column; /* Stapelt auf kleinen Bildschirmen */
+        align-items: flex-start; /* Linksbündig */
+        gap: var(--spacing-xs); /* Kleinerer Abstand beim Stapeln */
+    }
+
+    .page-header-container h1 {
+        font-size: var(--font-size-lg); /* Noch kleiner auf sehr kleinen Bildschirmen */
+    }
+
+
+    .post-actions.detail-actions {
+        flex-direction: column; /* Stapelt Aktionen */
+        align-items: stretch; /* Streckt auf volle Breite */
+        gap: var(--spacing-sm);
+    }
+
+    .post-actions.detail-actions .comment-input-group {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        width: 100%; /* Gruppe nimmt volle Breite ein */
+    }
+
+    .post-actions.detail-actions #comment-input {
+        width: 100%;
+    }
+
+    .post-actions.detail-actions #comment-button {
+        width: 100%;
+    }
+
+    .post-actions.detail-actions .react-button {
+        width: 100%;
+        justify-content: center; /* Zentriert Inhalt */
+    }
+}
