@@ -81,3 +81,25 @@
     color: var(--primary-color); /* Ändere die Textfarbe bei Hover */
     background: none; /* Sicherstellen, dass der Hintergrund transparent bleibt */
 }
+
+/* Responsive Anpassungen für den Post im Feed */
+@media (max-width: 480px) {
+
+    .post-user-infos img {
+        width: 50px;
+        height: 50px;
+    }
+
+    /* Anpassung der Aktions-Buttons für kleinere Bildschirme */
+    .post-actions {
+        /* Ändere die Verteilung und nutze Gap für konsistenten Abstand */
+        justify-content: flex-start; /* Buttons links ausrichten */
+        gap: var(--spacing-sm); /* Konsistenter Abstand zwischen den Buttons */
+        /* flex-wrap ist bereits oben gesetzt */
+    }
+
+    /.post-actions button {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,131 @@
+/* Grundlegendes Layout für die Suchseite */
+body {
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+}
+
+/* Styling für die Hauptüberschrift */
+h1 {
+    margin-bottom: var(--spacing-md); /* Abstand unter der Überschrift */
+}
+
+/* Container für das Suchfeld und den Button */
+.search-bar {
+    display: flex; /* Elemente nebeneinander anordnen */
+    gap: var(--spacing-sm); /* Abstand zwischen Input und Button */
+    margin-bottom: var(--spacing-lg); /* Abstand unter der Suchleiste */
+    align-items: center; /* Vertikal zentrieren */
+}
+
+/* Styling für das Such-Eingabefeld */
+#search-input {
+    flex-grow: 1; /* Lässt das Input-Feld den verfügbaren Platz einnehmen */
+    margin-bottom: 0; /* Entfernt den Standard-Margin-Bottom */
+}
+
+/* Styling für den Suchen-Button */
+#search-button {
+    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
+}
+
+#search-button:hover {
+    background-color: var(--primary-hover);
+}
+
+
+/* Styling für die Suchergebnisse Sektion */
+.search-results {
+    /* Abstand und Layout für die Sektion */
+    margin-top: var(--spacing-md);
+}
+
+/* Styling für die Überschrift der Suchergebnisse */
+.search-results h2 {
+    /* Nutzt die h2 Stile aus style.css */
+    margin-bottom: var(--spacing-sm); /* Abstand unter der Überschrift */
+}
+
+/* Styling für die Suchergebnisse Liste */
+#results-list {
+    list-style: none; /* Entfernt Standard-Listenpunkte */
+    padding: 0;
+    margin: 0;
+}
+
+/* Styling für jedes einzelne Suchergebnis Item */
+.search-result-item {
+    /* Nutzt Karten-ähnlichen Stil */
+    background-color: var(--light-color);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-sm); /* Abstand zwischen den Ergebnissen */
+    padding: var(--spacing-xs) var(--spacing-sm); /* Innerer Abstand */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow var(--transition-fast); /* Übergang für Hover */
+}
+
+.search-result-item:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Schatten bei Hover */
+}
+
+/* Styling für den Link im Suchergebnis */
+.search-result-item a {
+    display: flex; /* Ordnet Bild und Text nebeneinander an */
+    align-items: center; /* Vertikal zentrieren */
+    text-decoration: none; /* Entfernt Unterstreichung */
+    color: var(--text-primary); /* Textfarbe */
+    transition: color var(--transition-fast); /* Übergang für Textfarbe, falls Hover-Effekt */
+}
+
+/* Hover-Effekt für den Link */
+.search-result-item a:hover {
+    color: var(--primary-color); /* Farbe bei Hover */
+}
+
+/* Styling für das Profilbild im Suchergebnis */
+.search-result-item img {
+    display: block;
+    width: 40px; /* Breite */
+    height: 40px; /* Höhe */
+    border-radius: 50%; /* Runde das Bild */
+    object-fit: cover;
+    margin-right: var(--spacing-sm); /* Abstand zum Namen */
+    flex-shrink: 0; /* Verhindert, dass das Bild schrumpft */
+}
+
+/* Styling für den Benutzernamen im Suchergebnis */
+.search-result-item span {
+    font-weight: bold;
+    color: var(--text-primary); /* Textfarbe */
+}
+
+
+/* Responsive Anpassungen */
+@media (max-width: 480px) {
+    body {
+        padding-left: var(--spacing-xs);
+        padding-right: var(--spacing-xs);
+    }
+
+    .search-bar {
+        /* Entferne die Zeile 'flex-direction: column;' hier */
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+
+    .search-result-item {
+        padding: var(--spacing-xs); /* Weniger Padding auf sehr kleinen Bildschirmen */
+    }
+
+    .search-result-item img {
+        width: 30px; /* Etwas kleinere Bilder */
+        height: 30px;
+        margin-right: var(--spacing-xs); /* Weniger Abstand */
+    }
+}

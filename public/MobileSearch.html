@@ -5,19 +5,19 @@
     <title>Zwitscha - Suche</title>
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/search.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <h1>Benutzer suchen</h1>
 
-<div>
+<div class="search-bar">
     <input type="text" id="search-input" placeholder="Namen eingeben...">
     <button id="search-button">Suchen</button>
 </div>
 
-<section>
-    <h2>Suchergebnisse</h2>
+<section class="search-results"><h2>Suchergebnisse</h2>
     <ul id="results-list">
         <li class="search-result-item">
             <a href="Profil.html">
@@ -25,7 +25,12 @@
                 <span>Beispiel Benutzer 1</span>
             </a>
         </li>
-
+        <li class="search-result-item">
+            <a href="Profil.html">
+                <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" width="40" height="40">
+                <span>Ein Anderer Benutzer</span>
+            </a>
+        </li>
     </ul>
 </section>
 
