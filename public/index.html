@@ -6,6 +6,7 @@
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/Startseite.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -18,10 +19,23 @@
   <input type="text" id="write-post" placeholder="Verfasse einen Post...">
 </div>
 
-<div class="feed-filter-links">
-  <a href="">Alle Posts</a>
-  <a href="">Gefolgte Posts</a>
+<div class="switch-wrapper">
+  <div class="post-toggle">
+    <!--
+    <a href="">Alle Posts</a>
+    <a href="">Gefolgte Posts</a>
+    -->
+
+    <input type="radio" id="all-posts" name="post-filter" checked>
+    <label for="all-posts">Alle Posts</label>
+
+    <input type="radio" id="followed-posts" name="post-filter">
+    <label for="followed-posts">Gefolgt</label>
+
+    <span class="switch-indicator"></span>
+  </div>
 </div>
+
 
 
 <section>

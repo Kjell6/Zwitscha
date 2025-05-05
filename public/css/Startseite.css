@@ -1,0 +1,62 @@
+.switch-wrapper {
+    display: flex;
+    justify-content: center; /* horizontal zentrieren */
+    margin-bottom: var(--spacing-sm);
+}
+
+.post-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    background-color: var(--light-color);
+    font-size: var(--font-size-sm);
+    width: 280px; /* Feste Breite für gleichmäßige Label-Breite */
+    height: 40px; /* Höhe für vertikale Zentrierung */
+}
+
+.post-toggle input {
+    display: none;
+}
+
+.post-toggle label {
+    flex: 1;
+    text-align: center;
+    line-height: 40px;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+    user-select: none;
+}
+
+.post-toggle .switch-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: var(--primary-color);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    transition: transform var(--transition-fast);
+    z-index: 0;
+}
+
+#followed-posts:checked ~ .switch-indicator {
+    transform: translateX(100%);
+}
+
+#all-posts:checked ~ .switch-indicator {
+    transform: translateX(0%);
+}
+
+#all-posts:checked ~ label[for="all-posts"],
+#followed-posts:checked ~ label[for="followed-posts"] {
+    color: var(--light-color);
+    font-weight: bold;
+}
