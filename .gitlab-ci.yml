@@ -1,16 +1,42 @@
 services:
   - docker:dind
-
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-
+stages:
+  - prepare
+  - build
+  - deploy
+.default_rules: &default_rules
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+#    - changes:
+#        - app/*
+gitlab-registry:
+  stage: prepare
+  image: 'thlmylab/swakkd:stable'
+  variables:
+    NAMESPACE: course-gwprg25-team19
+  script:
+    - kubectl delete secret gitlab-registry-secret -n $NAMESPACE || true
+    - |
+      kubectl create secret docker-registry gitlab-registry-secret \
+      --docker-server=$CI_REGISTRY \
+      --docker-username=image-registry \
+      --docker-password=$CI_REGISTRY_TOKEN -n $NAMESPACE
+  <<: *default_rules
 build:
   stage: build
   script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
+  <<: *default_rules
+deploy:
+  stage: deploy
+  image: thlmylab/swakkd:stable
+  script:
+    - sed -i "s/LAST_DEPLOYED_UNDEFINED/$(date -Iseconds)/g" $DEPLOYMENT_YAML
+    - kubectl apply -f $DEPLOYMENT_YAML
+  <<: *default_rules
