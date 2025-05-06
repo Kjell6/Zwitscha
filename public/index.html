@@ -5,7 +5,6 @@
   <title>Startseite</title>
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/Startseite.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
@@ -13,10 +12,9 @@
 
 <div id="header-placeholder"></div>
 
-<h1>Startseite</h1>
-
-<div>
-  <input type="text" id="write-post" placeholder="Verfasse einen Post...">
+<div class="post-input-group">
+    <textarea type="text" id="post-input" placeholder="Verfasse einen Post..."></textarea>
+    <button id="post-button" type="button">Veröffentlichen</button>
 </div>
 
 <div class="switch-wrapper">
@@ -62,6 +60,16 @@
             document.getElementById('post-placeholder').innerHTML = data;
           });
 </script>
+
+<script>
+  const commentInput = document.getElementById('post-input');
+
+  commentInput.addEventListener('input', () => {
+    commentInput.style.height = 'auto'; // Reset height to auto
+    commentInput.style.height = commentInput.scrollHeight + 'px'; // Set height to scroll height
+  });
+</script>
+
 
 </body>
 </html>

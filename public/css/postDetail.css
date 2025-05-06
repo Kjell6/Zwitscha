@@ -25,7 +25,6 @@ body {
 
 /* Styling für den Button im Zurück-Button Container */
 .back-button button {
-    /* Button-Stile kommen von style.css */
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: var(--font-size-sm);
 }
@@ -97,19 +96,19 @@ body {
     gap: var(--spacing-xs);
     align-items: center;
     width: 100%; /* Stellt sicher, dass die Gruppe die Breite nutzen kann */
-    padding: 0 var(--spacing-xs); /* NEU: Horizontales Padding passend zur Detailansicht */
+    padding: 0 var(--spacing-xs); /* Horizontales Padding passend zur Detailansicht */
 }
 
 /* Styling für das Kommentar-Eingabefeld */
 .post-actions.detail-actions #comment-input {
     flex-grow: 1;
     margin-bottom: 0;
-    /* Nutzt Input-Stile aus style.css */
+    font-family: var(--font-family-main);
+
 }
 
 /* Styling für den Kommentar-Button */
 .post-actions.detail-actions #comment-button {
-    /* Nutzt Button-Stile aus style.css */
     background-color: var(--primary-color);
     padding: var(--spacing-xs) var(--spacing-sm);
     color: var(--light-color);

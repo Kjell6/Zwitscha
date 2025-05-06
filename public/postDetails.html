@@ -36,9 +36,9 @@
     </div>
 
     <section class="info-details">
-        <time datetime="2025-04-27T10:30:00Z" class="post-timestamp-detail">[13:43, 30.04.25]</time>
+        <time datetime="2025-04-27T10:30:00Z" class="post-timestamp-detail">13:43, 30.04.25</time>
         <i class="bi bi-dot"></i>
-        <span class="number-comments">[15 Kommentare]</span>
+        <span class="number-comments">15 Kommentare</span>
     </section>
 
     <section class="post-actions detail-actions">
@@ -52,7 +52,7 @@
         </div>
 
         <div class="comment-input-group">
-            <input type="text" id="comment-input" placeholder="Schreibe einen Kommentar...">
+            <textarea type="text" id="comment-input" placeholder="Schreibe einen Kommentar..."></textarea>
             <button id="comment-button" type="button">Kommentieren</button>
         </div>
     </section>
@@ -82,6 +82,15 @@
         .then(data => {
             document.getElementById('comment-placeholder').innerHTML = data;
         });
+</script>
+
+<script>
+    const commentInput = document.getElementById('comment-input');
+
+    commentInput.addEventListener('input', () => {
+        commentInput.style.height = 'auto'; // Reset height to auto
+        commentInput.style.height = commentInput.scrollHeight + 'px'; // Set height to scroll height
+    });
 </script>
 
 </body>

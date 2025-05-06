@@ -58,5 +58,34 @@
 #all-posts:checked ~ label[for="all-posts"],
 #followed-posts:checked ~ label[for="followed-posts"] {
     color: var(--light-color);
-    font-weight: bold;
+}
+
+/* Gruppierung für Input und Veröffentlichen-Button */
+.post-input-group {
+    display: flex;
+    flex-grow: 1; /* Lässt die Gruppe den verfügbaren horizontalen Platz einnehmen */
+    gap: var(--spacing-xs);
+    align-items: center;
+    width: 100%; /* Stellt sicher, dass die Gruppe die Breite nutzen kann */
+    padding: 0 var(--spacing-xs); /* NEU: Horizontales Padding passend zur Detailansicht */
+    margin-bottom: var(--spacing-md);
+}
+
+/* Styling für das Post-Eingabefeld */
+.post-input-group #post-input {
+    flex-grow: 1;
+    margin-bottom: 0;
+    font-family: var(--font-family-main);
+}
+
+/* Styling für den Veröffentlichen-Button */
+.post-input-group #post-button {
+    /* Nutzt Button-Stile aus style.css */
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    flex-shrink: 0;
+}
+
+.post-input-group #post-button:hover {
+    background-color: var(--primary-hover);
 }
