@@ -1,3 +1,15 @@
+body {
+    /* padding-top für Abstand unter einem eventuellen Header */
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+}
+
+
 .switch-wrapper {
     display: flex;
     justify-content: center; /* horizontal zentrieren */
