@@ -1,6 +1,6 @@
 <header class="desktop-header">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 
     <div class="header-section logo-section">
         <a href="index.html" class="logo">
@@ -8,9 +8,12 @@
         </a>
     </div>
     <div class="header-section search-section">
-        <input type="text" placeholder="Suche..." class="search-bar">
+        <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
+        <div class="header-search-results-dropdown">
+        </div>
     </div>
     <div class="header-section profile-section">
         <a href="profil.html" class="profile-link">Profil</a>
     </div>
+
 </header>
