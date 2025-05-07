@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     if (filePath === 'headerDesktop.html') {
                         const script = document.createElement('script');
-                        script.src = 'js/headerSearch.js';
+                        script.src = 'js/search.js';
                         script.onload = () => {
                             if (typeof initHeaderSearch === 'function') {
                                 initHeaderSearch();

@@ -14,34 +14,21 @@
 
 <h1>Benutzer suchen</h1>
 
-<div class="search-bar">
-    <input type="text" id="search-input" placeholder="Namen eingeben...">
-    <button id="search-button">Suchen</button>
+<div class="header-section search-section">
+    <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
+    <div class="header-search-results-dropdown">
+    </div>
 </div>
 
-<section class="search-results"><h2>Suchergebnisse</h2>
-    <ul id="results-list">
-        <li class="search-result-item">
-            <a href="Profil.html">
-                <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" width="40" height="40">
-                <span>Beispiel Benutzer 1</span>
-            </a>
-        </li>
-        <li class="search-result-item">
-            <a href="Profil.html">
-                <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" width="40" height="40">
-                <span>Ein Anderer Benutzer</span>
-            </a>
-        </li>
-    </ul>
-</section>
-
 <script>
-    fetch('headerDesktop.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('header-placeholder').innerHTML = data;
-        });
+    const script = document.createElement('script');
+    script.src = 'js/search.js';
+    script.onload = () => {
+        if (typeof initHeaderSearch === 'function') {
+            initHeaderSearch();
+        }
+    };
+    document.body.appendChild(script);
 </script>
 
 
