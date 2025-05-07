@@ -37,7 +37,7 @@
 
 
 <section>
-  <ul id="feed-nur als test wie es aussieht">
+  <ul id="feed-nur als test">
     <li class="posts">
       <div id="post-placeholder"></div>
     </li>
@@ -45,13 +45,7 @@
   </ul>
 </section>
 
-<script>
-  fetch('headerDesktop.html')
-          .then(response => response.text())
-          .then(data => {
-            document.getElementById('header-placeholder').innerHTML = data;
-          });
-</script>
+<script src="js/includeHeader.js"></script>
 
 <script>
   fetch('post.html')
