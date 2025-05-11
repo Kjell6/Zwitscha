@@ -1,48 +1,53 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileBreakpoint = 768; // Breakpoint für mobile Ansicht in Pixeln
+// Get placeholder element
+const headerPlaceholder = document.getElementById('header-placeholder');
 
-    function includeHTML(elementId, filePath) {
-        fetch(filePath)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status} for ${filePath}`);
-                return response.text();
-            })
-            .then(html => {
-                const placeholder = document.getElementById(elementId);
-                if (placeholder) {
-                    placeholder.innerHTML = html;
+// Define mobile breakpoint
+const mobileBreakpoint = 768;
 
-                    // Lade search.js nur für den Desktop-Header
-                    if (filePath === 'headerDesktop.html') {
-                        const script = document.createElement('script');
-                        script.src = 'js/search.js';
-                        script.onload = () => {
-                            if (typeof initHeaderSearch === 'function') initHeaderSearch();
-                        };
-                        script.onerror = () => console.error('Error loading js/search.js');
-                        document.body.appendChild(script);
-                    }
-                } else {
-                    console.warn(`Placeholder with ID '${elementId}' not found.`);
-                }
-            })
-            .catch(error => console.error('Error including HTML content:', error));
+// Function to load content based on screen width
+function loadDynamicContent() {
+    if (!headerPlaceholder) return; // Exit if placeholder not found
+
+    let filePath = '';
+    // Choose file based on width
+    if (window.innerWidth > mobileBreakpoint) {
+        filePath = 'headerDesktop.html';
+
+        const script = document.createElement('script');
+        script.src = 'js/search.js';
+        script.onload = () => {
+            if (typeof initHeaderSearch === 'function') initHeaderSearch();
+        };
+        script.onerror = () => console.error('Error loading js/search.js');
+        document.body.appendChild(script);
+
+    } else {
+        filePath = 'footerMobile.html';
     }
 
-    function updateContentBasedOnScreenSize() {
-        if (window.innerWidth < mobileBreakpoint) {
-            // Inhalt für kleine Bildschirme
-            includeHTML('header-placeholder', 'footerMobile.html');
-        } else {
-            // Inhalt für große Bildschirme
-            includeHTML('header-placeholder', 'headerDesktop.html');
-        }
-    }
+    // Fetch and insert content
+    fetch(filePath)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.text();
+        })
+        .then(html => {
+            headerPlaceholder.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error loading content:', error);
+            headerPlaceholder.innerHTML = `<p>Fehler beim Laden von ${filePath}.</p>`;
+        });
+}
 
-    // Event Listener für das "resize"-Event des Fensters
-    window.addEventListener('resize', updateContentBasedOnScreenSize);
+// --- Event Listeners ---
 
-    // Initialer Aufruf beim Laden der Seite, um den Inhalt sofort anzupassen
-    updateContentBasedOnScreenSize();
+// Load on page load
+document.addEventListener('DOMContentLoaded', loadDynamicContent);
 
+// Load on window resize (with debounce)
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(loadDynamicContent, 200);
 });
