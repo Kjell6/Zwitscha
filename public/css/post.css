@@ -163,7 +163,7 @@
 }
 
 /* Responsive Anpassungen für den Post im Feed */
-@media (max-width: 480px) {
+@media (max-width: 540px) {
     .post-user-infos img {
         width: 50px;
         height: 50px;
