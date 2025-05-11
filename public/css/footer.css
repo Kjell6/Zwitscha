@@ -6,3 +6,32 @@
     z-index: 1000;   /* Stellt sicher, dass es über anderen Inhalten liegt */
     background-color: white;
 }
+
+.mobile-header {
+
+    padding-bottom: var(--spacing-sm);
+}
+
+/* Nutzt deine Container-Definition */
+.logo-container {
+    width: var(--container-width);
+    max-width: var(--container-max-width);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
+
+
+}
+
+.container.logo-container {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+
+.logo-container .logo {
+    height: 80px; /* Höhe des Logos */
+}

@@ -1,6 +1,6 @@
 body {
     /* padding-top für Abstand unter einem eventuellen Header */
-    padding-top: var(--spacing-md);
+    padding-top: var(--spacing-sm);
     padding-bottom: var(--spacing-md);
     max-width: var(--container-max-width);
     margin-left: auto;
