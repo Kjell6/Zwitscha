@@ -1,22 +1,23 @@
 /* Grundlegendes Styling für den einzelnen Post Container */
 .post {
     border-bottom: var(--border-width) solid var(--border-color);
-    padding: var(--spacing-sm) 0; /* Oben/Unten Abstand */
-    margin-bottom: var(--spacing-sm); /* Abstand zwischen Posts */
-    background-color: var(--light-color); /* Hintergrund für die Karte */
-    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+    padding: var(--spacing-sm) 0;
+    margin-bottom: var(--spacing-sm);
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Styling für die Benutzerinformationen Sektion */
 .post-user-infos {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs); /* Abstand zwischen den Elementen - wird jetzt durch margins gehandhabt */
+    gap: var(--spacing-xs);
     margin-bottom: var(--spacing-xs);
     padding: 0 var(--spacing-sm);
     flex-wrap: wrap;
 }
+
 /* Styling für das Profilbild */
 .post-user-infos img {
     display: block;
@@ -40,7 +41,7 @@
     color: var(--text-secondary);
     font-size: var(--font-size-xs);
     flex-shrink: 0;
-    margin-right: var(--spacing-xs); /* Abstand zum neuen Options-Button */
+    margin-right: var(--spacing-xs);
 }
 
 /*Styling für den Options-Button oben rechts */
@@ -52,7 +53,6 @@
     color: var(--text-secondary);
     cursor: pointer;
     transition: color var(--transition-fast), background-color var(--transition-fast);
-    /* Schiebt den Button ganz nach rechts */
     margin-left: auto;
     border-radius: var(--border-radius-sm);
 }
@@ -78,60 +78,56 @@
 
 /* Styling für die Aktions-Sektion */
 .post-actions {
-    display: flex; /* Ordnet den Reaktions-Container und den Kommentier-Button an */
-    align-items: center; /* Vertikal zentrieren */
-    justify-content: space-between; /* Ordnet Reaktionen links, Kommentieren rechts an */
-    padding: var(--spacing-xs) var(--spacing-sm) 0; /* Innenabstand */
-    color: var(--text-secondary); /* Basis-Textfarbe für Aktionen */
-    flex-wrap: wrap; /* Erlaubt Umbruch, falls der Platz nicht reicht */
-    gap: var(--spacing-sm); /* Abstand zwischen den umgebrochenen Zeilen/Elementen */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-xs) var(--spacing-sm) 0;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
 }
 
 /* Styling für den Container der Emoji-Reaktionen */
 .post-actions .post-reactions {
-    display: flex; /* Ordnet die Emoji-Buttons nebeneinander an */
-    gap: var(--spacing-xs); /* Kleiner Abstand zwischen den Emoji-Buttons */
-    align-items: center; /* Vertikal zentrieren der Buttons selbst */
-    /* flex-grow: 1; /* Optional: Lässt den Reaktionsbereich Platz einnehmen */
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    align-items: center;
 }
 
 /* Styling für die einzelnen Emoji-Reaktionsbuttons */
 .post-actions .reaction-button {
-    /* Übernimmt Basiseigenschaften von .post-actions button, überschreibt/ergänzt */
     background: none;
     border: none;
-    padding: var(--spacing-xs) var(--spacing-xs); /* Kleiner innerer Abstand */
-    font-size: var(--font-size-sm); /* Kleinere Schriftgröße */
-    color: var(--text-secondary); /* Standardfarbe */
+    padding: var(--spacing-xs) var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
     cursor: pointer;
-    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast); /* Übergänge für Hover/Active */
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
     display: flex;
     align-items: center;
-    gap: 4px; /* Sehr kleiner Abstand zwischen Emoji und Zähler */
-    border-radius: var(--border-radius-md); /* Leichte Rundung */
-    line-height: 1; /* Verbessert Ausrichtung von Emoji und Text */
-    /* flex-shrink: 0; /* Verhindert, dass Buttons schrumpfen */
+    gap: 4px;
+    border-radius: var(--border-radius-md);
+    line-height: 1;
 }
 
 /* Hover-Zustand für Emoji-Reaktionsbuttons */
 .post-actions .reaction-button:hover {
-    color: var(--primary-color); /* Farbe bei Hover */
-    /* Optional: Leichter Hintergrund bei Hover */
-    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.1); /* Beispiel mit RGB + Transparenz */
+    color: var(--primary-color);
+    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.1);
 }
 
 /* Styling für den Zähler (Span) innerhalb des Reaktionsbuttons */
 .post-actions .reaction-button .reaction-counter {
-    font-size: var(--font-size-xs); /* Sehr kleine Schriftgröße für den Zähler */
-    font-weight: bold; /* Zähler fett */
-    color: var(--text-secondary); /* Zähler Farbe */
+    font-size: var(--font-size-xs);
+    font-weight: bold;
+    color: var(--text-secondary);
 }
 
 /* Zustand für ausgewählte/aktive Emoji-Reaktion */
 .post-actions .reaction-button.active {
-    color: var(--primary-color); /* Hauptfarbe für aktive Reaktion */
-    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.2); /* Leichterer Hintergrund */
-    border: 1px solid var(--primary-color); /* Rahmen als Indikator */
+    color: var(--primary-color);
+    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.2);
+    border: 1px solid var(--primary-color);
 }
 
 /* Farbe des Zählers im aktiven Zustand anpassen */
@@ -139,40 +135,35 @@
     color: var(--primary-color);
 }
 
-
 /* Styling für den Kommentier-Button */
 .post-actions .comment-link {
-    /* Sorgt dafür, dass der Link im Flex-Container korrekt behandelt wird */
-    flex-shrink: 0; /* Verhindert, dass der Kommentar-Link schrumpft */
-    /* flex-grow: 0; /* Verhindert, dass der Kommentar-Link wächst */
+    flex-shrink: 0;
 }
 
 /* Styling für den Kommentier-Button */
 .post-actions .comment-button {
-    background: none; /* Kein Hintergrund */
-    color: var(--text-secondary); /* Standardfarbe wie Reaction-Buttons */
-    padding: var(--spacing-xs); /* Ähnliches Padding wie Reaction-Buttons */
+    background: none;
+    color: var(--text-secondary);
+    padding: var(--spacing-xs);
     font-size: var(--font-size-sm);
-    border: none; /* Kein Rahmen */
-    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast); /* Übergänge hinzufügen */
-    cursor: pointer; /* Mauszeiger anzeigen */
-    display: inline-flex; /* Nutzt Flexbox für Ausrichtung, auch wenn nur Text da ist */
-    align-items: center; /* Vertikal zentrieren */
-    gap: var(--spacing-xs); /* Abstand falls Icon/Text vorhanden */
-    border-radius: var(--border-radius-md); /* Leichte Rundung wie Reaction-Buttons */
-    line-height: 1; /* Verbessert Ausrichtung */
-    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
+    border: none;
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    border-radius: var(--border-radius-md);
+    line-height: 1;
+    flex-shrink: 0;
 }
 
 .post-actions .comment-button:hover {
-    color: var(--primary-color); /* Farbe bei Hover wie Reaction-Buttons */
-    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.1); /* Leichter Hintergrund bei Hover */
+    color: var(--primary-color);
+    background-color: rgba(var(--primary-color-rgb, 34, 218, 38), 0.1);
 }
-
 
 /* Responsive Anpassungen für den Post im Feed */
 @media (max-width: 480px) {
-
     .post-user-infos img {
         width: 50px;
         height: 50px;
@@ -180,15 +171,17 @@
 
     .post-user-infos {
         flex-wrap: nowrap;
-        white-space: nowrap; /* Verhindert Umbruch */
+        white-space: nowrap;
     }
+
     .post-user-infos > * {
         margin-bottom: 0;
     }
 
     .post-user-details {
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .post-actions {
@@ -197,7 +190,6 @@
         gap: var(--spacing-sm);
     }
 
-    /* Emojis inline wie auf Desktop */
     .post-actions .post-reactions {
         flex-direction: row;
     }
@@ -205,7 +197,6 @@
     .post-actions .comment-link {
         width: 100%;
     }
-
 
     .post-actions .comment-button {
         width: 100%;

@@ -12,23 +12,23 @@ body {
 .main-content {
     padding: var(--spacing-sm);
     border-bottom: var(--border-width) solid var(--border-color);
-    margin-bottom: var(--spacing-sm); /* Abstand zwischen Posts */
-    background-color: var(--light-color); /* Hintergrund für die Karte */
-    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+    margin-bottom: var(--spacing-sm);
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Styling für die Hauptüberschrift */
 h2 {
-    margin-bottom: var(--spacing-md); /* Abstand unter der Überschrift */
+    margin-bottom: var(--spacing-md);
 }
 
 .header-search-results-dropdown {
     padding: var(--spacing-xs);
     border-bottom: var(--border-width) solid var(--border-color);
-    background-color: var(--bg-color); /* Hintergrund für die Karte */
-    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Styling für jedes einzelne Suchergebnis Item */
@@ -36,47 +36,46 @@ h2 {
     background-color: var(--light-color);
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius-md);
-    margin-bottom: var(--spacing-sm); /* Abstand zwischen den Ergebnissen */
-    padding: var(--spacing-xs) var(--spacing-sm); /* Innerer Abstand */
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: box-shadow var(--transition-fast); /* Übergang für Hover */
+    transition: box-shadow var(--transition-fast);
 }
 
 .search-result-item:hover {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Schatten bei Hover */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 /* Styling für den Link im Suchergebnis */
 .search-result-item a {
-    display: flex; /* Ordnet Bild und Text nebeneinander an */
-    align-items: center; /* Vertikal zentrieren */
-    text-decoration: none; /* Entfernt Unterstreichung */
-    color: var(--text-primary); /* Textfarbe */
-    transition: color var(--transition-fast); /* Übergang für Textfarbe, falls Hover-Effekt */
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: color var(--transition-fast);
 }
 
 /* Hover-Effekt für den Link */
 .search-result-item a:hover {
-    color: var(--primary-color); /* Farbe bei Hover */
+    color: var(--primary-color);
 }
 
 /* Styling für das Profilbild im Suchergebnis */
 .search-result-item img {
     display: block;
-    width: 40px; /* Breite */
-    height: 40px; /* Höhe */
-    border-radius: 50%; /* Runde das Bild */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     object-fit: cover;
-    margin-right: var(--spacing-sm); /* Abstand zum Namen */
-    flex-shrink: 0; /* Verhindert, dass das Bild schrumpft */
+    margin-right: var(--spacing-sm);
+    flex-shrink: 0;
 }
 
 /* Styling für den Benutzernamen im Suchergebnis */
 .search-result-item span {
     font-weight: bold;
-    color: var(--text-primary); /* Textfarbe */
+    color: var(--text-primary);
 }
-
 
 /* Responsive Anpassungen */
 @media (max-width: 480px) {
@@ -86,19 +85,17 @@ h2 {
     }
 
     .search-bar {
-        /* Entferne die Zeile 'flex-direction: column;' hier */
         align-items: stretch;
         gap: var(--spacing-sm);
     }
 
-
     .search-result-item {
-        padding: var(--spacing-xs); /* Weniger Padding auf sehr kleinen Bildschirmen */
+        padding: var(--spacing-xs);
     }
 
     .search-result-item img {
-        width: 30px; /* Etwas kleinere Bilder */
+        width: 30px;
         height: 30px;
-        margin-right: var(--spacing-xs); /* Weniger Abstand */
+        margin-right: var(--spacing-xs);
     }
 }

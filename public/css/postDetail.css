@@ -1,6 +1,5 @@
 /* Nutzt den body als Container */
 body {
-    /* padding-top für Abstand unter einem eventuellen Header */
     padding-top: var(--spacing-sm);
     padding-bottom: var(--spacing-md);
     max-width: var(--container-max-width);
@@ -13,14 +12,14 @@ body {
 /* Container für Zurück-Button und Überschrift */
 .page-header-container {
     display: flex;
-    align-items: center; /* Vertikal zentrieren */
-    gap: var(--spacing-sm); /* Abstand zwischen Button und Überschrift */
-    margin-bottom: var(--spacing-md); /* Abstand unter dem Header-Bereich */
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
 }
 
 /* Styling für den Zurück-Button Container */
 .back-button {
-    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
+    flex-shrink: 0;
 }
 
 /* Styling für den Button im Zurück-Button Container */
@@ -31,10 +30,9 @@ body {
 
 /* Styling für die Überschrift in der Detailansicht */
 .page-header-container h1 {
-    /* Schriftgröße kleiner als der Standard h1 */
     font-size: var(--font-size-lg);
-    margin-bottom: 0; /* Entfernt den Standard-Margin-Bottom von h1 im Flex-Container */
-    flex-grow: 1; /* Lässt die Überschrift verfügbaren Platz einnehmen */
+    margin-bottom: 0;
+    flex-grow: 1;
 }
 
 /* Styling für den Haupt-Post in der Detailansicht */
@@ -42,7 +40,7 @@ body {
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius-md);
     padding: var(--spacing-md);
-    margin-bottom: var(--spacing-md); /* Abstand zum Kommentare-Bereich */
+    margin-bottom: var(--spacing-md);
     background-color: var(--light-color);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -63,7 +61,7 @@ body {
     margin-left: var(--spacing-xs);
     align-items: center;
     gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-xs); /* Abstand zu den Aktionen */
+    margin-bottom: var(--spacing-xs);
     color: var(--text-secondary);
     font-size: var(--font-size-xs);
 }
@@ -72,29 +70,27 @@ body {
 /* Diese Sektion enthält nun die Emoji-Reaktionen und die Kommentar-Input-Gruppe */
 .post-actions.detail-actions {
     display: flex;
-    /* Ordnet den Reaktions-Container und die Kommentar-Input-Gruppe untereinander an */
-    flex-direction: column; /* Elemente werden vertikal gestapelt */
-    align-items: flex-start; /* Elemente linksbündig ausrichten */
-    gap: var(--spacing-sm); /* Abstand zwischen den gestapelten Elementen (Reaktionen und Input-Gruppe) */
-    padding: 0; /* Entfernt Padding, da die Kindelemente ihr eigenes Padding haben */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: 0;
 }
 
 /* Styling für den Container der Emoji-Reaktionen */
 .post-actions .post-reactions {
-    display: flex; /* Ordnet die Emoji-Buttons nebeneinander an */
-    gap: var(--spacing-xs); /* Kleiner Abstand zwischen den Emoji-Buttons */
-    align-items: center; /* Vertikal zentrieren der Buttons selbst */
-    /* flex-grow: 1; /* Optional: Lässt den Reaktionsbereich Platz einnehmen */
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
 }
 
 /* Gruppierung für Input und Kommentar-Button */
 .post-actions.detail-actions .comment-input-group {
     display: flex;
-    flex-grow: 1; /* Lässt die Gruppe den verfügbaren horizontalen Platz einnehmen */
+    flex-grow: 1;
     gap: var(--spacing-xs);
     align-items: center;
-    width: 100%; /* Stellt sicher, dass die Gruppe die Breite nutzen kann */
-    padding: 0 var(--spacing-xs); /* Horizontales Padding passend zur Detailansicht */
+    width: 100%;
+    padding: 0 var(--spacing-xs);
 }
 
 /* Styling für das Kommentar-Eingabefeld */
@@ -102,7 +98,6 @@ body {
     flex-grow: 1;
     margin-bottom: 0;
     font-family: var(--font-family-main);
-
 }
 
 /* Styling für den Kommentar-Button */
@@ -119,8 +114,8 @@ body {
 
 /* Styling für die Kommentare-Sektion */
 .comments-section {
-    padding: var(--spacing-md) 0; /* Vertikales Padding */
-    padding-left: var(--spacing-sm); /* Horizontales Padding */
+    padding: var(--spacing-md) 0;
+    padding-left: var(--spacing-sm);
     padding-right: var(--spacing-sm);
 }
 
@@ -144,16 +139,13 @@ body {
         padding-right: var(--spacing-xs);
     }
 
-
     .page-header-container h1 {
         font-size: var(--font-size-lg);
     }
 
     /* Anpassung der Aktions-Sektion in der Detailansicht für kleine Bildschirme */
     .post-actions.detail-actions {
-        /* Bleibt bei flex-direction: column, da es die Standardausrichtung im Detail ist */
-    gap: var(--spacing-sm); /* Abstand zwischen gestapelten Elementen */
-        /* padding passt sich durch die Kindelemente an */
+        gap: var(--spacing-sm);
     }
 
     .post-actions .post-reactions {
@@ -162,10 +154,10 @@ body {
 
     /* Anpassung der Kommentar-Input-Gruppe auf kleinen Bildschirmen */
     .post-actions.detail-actions .comment-input-group {
-        flex-direction: column; /* Input und Button untereinander */
+        flex-direction: column;
         gap: var(--spacing-sm);
         width: 100%;
-        padding: 0 var(--spacing-sm); /* Kleineres horizontales Padding auf kleinen Screens */
+        padding: 0 var(--spacing-sm);
     }
 
     .post-actions.detail-actions #comment-input {
@@ -175,5 +167,4 @@ body {
     .post-actions.detail-actions #comment-button {
         width: 100%;
     }
-
 }

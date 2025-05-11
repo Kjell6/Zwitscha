@@ -229,49 +229,6 @@ footer {
 .mb-8 { margin-bottom: 2rem; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 
-/* Komponenten für den Kurznachrichtendienst ?vielleicht in anderer Datei?*/
-.post {
-  border-bottom: var(--border-width) solid var(--border-color);
-  padding: var(--spacing-sm) 0;
-}
-
-.post-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing-xs);
-}
-
-.post-username {
-  font-weight: bold;
-  margin-right: var(--spacing-xs);
-}
-
-.post-timestamp {
-  color: var(--text-secondary);
-  font-size: var(--font-size-xs);
-}
-
-.post-content {
-  margin-bottom: var(--spacing-xs);
-}
-
-.post-actions {
-  display: flex;
-  gap: var(--spacing-md);
-  color: var(--text-secondary);
-}
-
-.post-actions button {
-  background: none;
-  color: var(--text-secondary);
-  padding: 0;
-  font-size: var(--font-size-sm);
-}
-
-.post-actions button:hover {
-  color: var(--primary-color);
-  background: none;
-}
 
 /* Responsive-Design-Breakpoints */
 @media (max-width: 768px) {
@@ -283,12 +240,5 @@ footer {
   .container {
     width: 95%;
     padding: var(--spacing-sm) 0;
-  }
-}
-
-@media (max-width: 480px) {
-  button, .button {
-    width: 100%;
-    text-align: center;
   }
 }
