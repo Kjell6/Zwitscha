@@ -90,16 +90,10 @@ function initHeaderSearch() {
 
         searchInput.addEventListener('blur', hideResultsDelayed);
 
-        // Optional: Listener für Klicks auf Ergebnisse im Dropdown (würde hier hinzugefügt)
-        // resultsDropdown.addEventListener('click', (event) => { ... });
 
     } else {
-        // Optional: Konsolenausgabe, falls Elemente nicht gefunden wurden (hilft beim Debugging)
         console.error("Header search elements not found after initHeaderSearch was called.");
     }
 
     // Kein document.addEventListener('DOMContentLoaded', ...) hier mehr für die Suche!
 }
-
-// Die Funktion 'initHeaderSearch' wird jetzt von der Hauptseite aufgerufen,
-// nachdem der Header geladen wurde.

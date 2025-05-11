@@ -8,25 +8,25 @@
 }
 
 .mobile-header {
-
     padding-bottom: var(--spacing-sm);
 }
 
 /* Nutzt deine Container-Definition */
 .logo-container {
-    width: var(--container-width);
-    max-width: var(--container-max-width);
     display: flex;
     justify-content: center;
     align-items: center;
 
     background-color: var(--light-color);
     border-radius: var(--border-radius-md); /* Abgerundete Ecken */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
 
-
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .container.logo-container {
+    width: 100%;
     padding-top: 0;
     padding-bottom: 0;
 }

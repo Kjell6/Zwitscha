@@ -11,29 +11,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-<div id="header-placeholder"></div>
+    <div id="header-placeholder"></div>
 
+    <div class="main-content">
+        <h2>Benutzer suchen</h2>
 
-<h1>Benutzer suchen</h1>
-
-<div class="header-section search-section">
-    <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
-    <div class="header-search-results-dropdown">
+        <div class="header-section search-section">
+            <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
+            <div class="header-search-results-dropdown"></div>
+        </div>
     </div>
-</div>
 
-<script>
-    const script = document.createElement('script');
-    script.src = 'js/search.js';
-    script.onload = () => {
-        if (typeof initHeaderSearch === 'function') {
-            initHeaderSearch();
-        }
-    };
-    document.body.appendChild(script);
-</script>
+    <script>
+        const script = document.createElement('script');
+        script.src = 'js/search.js';
+        script.onload = () => {
+            if (typeof initHeaderSearch === 'function') {
+                initHeaderSearch();
+            }
+        };
+        document.body.appendChild(script);
+    </script>
 
-<script src="js/includeHeader.js"></script>
+    <script src="js/includeHeader.js"></script>
 
 
 </body>

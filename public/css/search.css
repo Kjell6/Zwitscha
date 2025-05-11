@@ -9,57 +9,30 @@ body {
     padding-right: var(--spacing-sm);
 }
 
+.main-content {
+    padding: var(--spacing-sm);
+    border-bottom: var(--border-width) solid var(--border-color);
+    margin-bottom: var(--spacing-sm); /* Abstand zwischen Posts */
+    background-color: var(--light-color); /* Hintergrund für die Karte */
+    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+}
+
 /* Styling für die Hauptüberschrift */
-h1 {
+h2 {
     margin-bottom: var(--spacing-md); /* Abstand unter der Überschrift */
 }
 
-/* Container für das Suchfeld und den Button */
-.search-bar {
-    display: flex; /* Elemente nebeneinander anordnen */
-    gap: var(--spacing-sm); /* Abstand zwischen Input und Button */
-    margin-bottom: var(--spacing-lg); /* Abstand unter der Suchleiste */
-    align-items: center; /* Vertikal zentrieren */
-}
-
-/* Styling für das Such-Eingabefeld */
-#search-input {
-    flex-grow: 1; /* Lässt das Input-Feld den verfügbaren Platz einnehmen */
-    margin-bottom: 0; /* Entfernt den Standard-Margin-Bottom */
-}
-
-/* Styling für den Suchen-Button */
-#search-button {
-    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
-}
-
-#search-button:hover {
-    background-color: var(--primary-hover);
-}
-
-
-/* Styling für die Suchergebnisse Sektion */
-.search-results {
-    /* Abstand und Layout für die Sektion */
-    margin-top: var(--spacing-md);
-}
-
-/* Styling für die Überschrift der Suchergebnisse */
-.search-results h2 {
-    /* Nutzt die h2 Stile aus style.css */
-    margin-bottom: var(--spacing-sm); /* Abstand unter der Überschrift */
-}
-
-/* Styling für die Suchergebnisse Liste */
-#results-list {
-    list-style: none; /* Entfernt Standard-Listenpunkte */
-    padding: 0;
-    margin: 0;
+.header-search-results-dropdown {
+    padding: var(--spacing-xs);
+    border-bottom: var(--border-width) solid var(--border-color);
+    background-color: var(--bg-color); /* Hintergrund für die Karte */
+    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
 }
 
 /* Styling für jedes einzelne Suchergebnis Item */
 .search-result-item {
-    /* Nutzt Karten-ähnlichen Stil */
     background-color: var(--light-color);
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius-md);
