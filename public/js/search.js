@@ -1,4 +1,3 @@
-
 // Verpacke den gesamten Initialisierungscode in eine Funktion
 function initHeaderSearch() {
     // Hole Referenzen zu den benötigten HTML-Elementen *jetzt*, da der Header im DOM ist
@@ -28,7 +27,6 @@ function initHeaderSearch() {
         const heading = document.createElement('h3');
         heading.textContent = 'Suchergebnisse';
         resultsDropdown.appendChild(heading);
-
 
         const resultsList = document.createElement('ul');
         resultsList.classList.add('header-search-results-list');
@@ -64,8 +62,16 @@ function initHeaderSearch() {
         }, 100);
     }
 
+    // automatische Ausblenden bei blur wieder zu entfernen
+    function disableAutoHideOnBlur() {
+        if (searchInput) {
+            searchInput.removeEventListener('blur', hideResultsDelayed);
+            console.log('Auto-hide on blur disabled (MobileSearch.html)');
+        }
+    }
+
     // Füge Event-Listener hinzu, aber erst NACHDEM die Elemente gefunden wurden
-    if (searchInput && resultsDropdown) { // Sicherheitsüberprüfung
+    if (searchInput && resultsDropdown) {
         searchInput.addEventListener('input', (event) => {
             const searchTerm = event.target.value.toLowerCase();
             if (searchTerm.length === 0) {
@@ -88,12 +94,16 @@ function initHeaderSearch() {
             }
         });
 
+        // Standardmäßig: hide on blur
         searchInput.addEventListener('blur', hideResultsDelayed);
-
-
     } else {
         console.error("Header search elements not found after initHeaderSearch was called.");
     }
 
-    // Kein document.addEventListener('DOMContentLoaded', ...) hier mehr für die Suche!
+    // KEIN document.addEventListener('DOMContentLoaded', ...) mehr hier!
+
+    // Wenn auf MobileSearch.html sind, deaktiviert automatische Schließen
+    if (window.location.pathname.endsWith('MobileSearch.html')) {
+        disableAutoHideOnBlur();
+    }
 }
