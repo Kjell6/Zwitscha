@@ -3,6 +3,7 @@
   /* Farbpalette */
   --primary-color: #22DA26;       /* Hauptfarbe */
   --primary-hover: #1baf1e;       /* Hover-Zustand für Hauptfarbe */
+  --hover-color: #22da2619;
   --light-color: #ffffff;         /* Helle Farbe */
   --button-color: #222;           /* Button-Farbe */
   --button-hover: #444;           /* Button-Hover-Farbe */

@@ -65,21 +65,12 @@
 <section class="comments-section">
     <h2>Kommentare</h2>
     <ul id="comments-list">
-        <li class="comment-item">
-            <div id="comment-placeholder"></div>
-        </li>
+
     </ul>
 </section>
 
 <script src="js/includeHeader.js"></script>
-
-<script>
-    fetch('kommentar.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('comment-placeholder').innerHTML = data;
-        });
-</script>
+<script src="js/postDetails.js"></script>
 
 <script>
     const commentInput = document.getElementById('comment-input');
