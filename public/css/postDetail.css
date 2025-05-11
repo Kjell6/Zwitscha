@@ -79,14 +79,12 @@ body {
     padding: 0; /* Entfernt Padding, da die Kindelemente ihr eigenes Padding haben */
 }
 
-/* Styling für den Container der Emoji-Reaktionen in der Detailansicht */
-/* Nutzt das Styling für .post-reactions aus post.css */
-.post-actions.detail-actions .post-reactions {
+/* Styling für den Container der Emoji-Reaktionen */
+.post-actions .post-reactions {
     display: flex; /* Ordnet die Emoji-Buttons nebeneinander an */
     gap: var(--spacing-xs); /* Kleiner Abstand zwischen den Emoji-Buttons */
     align-items: center; /* Vertikal zentrieren der Buttons selbst */
-    flex-wrap: wrap; /* Erlaubt Umbruch der Emoji-Buttons */
-    padding: 0 var(--spacing-xs); /* Horizontales Padding passend zur Detailansicht */
+    /* flex-grow: 1; /* Optional: Lässt den Reaktionsbereich Platz einnehmen */
 }
 
 /* Gruppierung für Input und Kommentar-Button */
@@ -146,11 +144,6 @@ body {
         padding-right: var(--spacing-xs);
     }
 
-    .page-header-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-xs);
-    }
 
     .page-header-container h1 {
         font-size: var(--font-size-lg);
@@ -163,11 +156,8 @@ body {
         /* padding passt sich durch die Kindelemente an */
     }
 
-    /* Anpassung des Reaktionscontainers auf kleinen Bildschirmen */
-    .post-actions.detail-actions .post-reactions {
-        padding: 0 var(--spacing-sm); /* Kleineres horizontales Padding auf kleinen Screens */
-        justify-content: space-between; /* Kann Emojis verteilen, wenn Platz da ist */
-        width: 100%; /* Stellt sicher, dass der Container die volle Breite nutzt */
+    .post-actions .post-reactions {
+        flex-direction: row;
     }
 
     /* Anpassung der Kommentar-Input-Gruppe auf kleinen Bildschirmen */
