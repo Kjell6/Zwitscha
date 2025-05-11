@@ -101,3 +101,11 @@ body {
 .post-input-group #post-button:hover {
     background-color: var(--primary-hover);
 }
+
+/* Media Query für mobile Ansicht */
+@media (max-width: 768px) {
+    .post-input-group {
+        flex-direction: column;
+        align-items: stretch; /* Stellt sicher, dass die Elemente die volle Breite einnehmen */
+    }
+}

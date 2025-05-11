@@ -40,10 +40,7 @@
     color: var(--text-secondary);
     font-size: var(--font-size-xs);
     flex-shrink: 0;
-    /* margin-left: auto; /* Schiebt den Zeitstempel nach rechts - wird jetzt durch Button's margin-left: auto ersetzt */
     margin-right: var(--spacing-xs); /* Abstand zum neuen Options-Button */
-    /* Abstand unter dem Element bei Umbruch auf kleinen Bildschirmen (kann auch über .post-user-infos > * geregelt werden) */
-    /* margin-bottom: var(--spacing-xs); */
 }
 
 /*Styling für den Options-Button oben rechts */
@@ -58,8 +55,6 @@
     /* Schiebt den Button ganz nach rechts */
     margin-left: auto;
     border-radius: var(--border-radius-sm);
-    flex-shrink: 0;
-    /* margin-bottom: var(--spacing-xs); */
 }
 
 /*Hover-Zustand für den Options-Button */
@@ -97,7 +92,6 @@
     display: flex; /* Ordnet die Emoji-Buttons nebeneinander an */
     gap: var(--spacing-xs); /* Kleiner Abstand zwischen den Emoji-Buttons */
     align-items: center; /* Vertikal zentrieren der Buttons selbst */
-    flex-wrap: wrap; /* Erlaubt Umbruch der Emoji-Buttons, falls zu viele da sind */
     /* flex-grow: 1; /* Optional: Lässt den Reaktionsbereich Platz einnehmen */
 }
 
@@ -185,19 +179,17 @@
     }
 
     .post-user-infos {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        white-space: nowrap; /* Verhindert Umbruch */
     }
-
     .post-user-infos > * {
-        margin-bottom: var(--spacing-xs);
+        margin-bottom: 0;
     }
 
-    .post-timestamp, .post-options-button {
-        margin-left: 0;
-        width: 100%;
-        text-align: right;
+    .post-user-details {
+        display: flex;
+        flex-direction: column;
     }
-
 
     .post-actions {
         flex-direction: column;
@@ -205,19 +197,15 @@
         gap: var(--spacing-sm);
     }
 
+    /* Emojis inline wie auf Desktop */
     .post-actions .post-reactions {
-        gap: var(--spacing-xs);
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .post-actions .reaction-button {
-        padding: var(--spacing-xs);
+        flex-direction: row;
     }
 
     .post-actions .comment-link {
         width: 100%;
     }
+
 
     .post-actions .comment-button {
         width: 100%;
