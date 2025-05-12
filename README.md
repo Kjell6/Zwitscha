@@ -2,13 +2,10 @@
 
 Willkommen in Ihrem Repo für Zwitscha!
 
-Projekt-URL: https://PROJECTURLTOREPLACE.th-luebeck.dev
+Projekt-URL: https://team-25-19.gwprg.mylab.th-luebeck.dev
 
-Der Inhalt dieser Datei (`README.md`) wird in GitLab auf der Hauptseite Ihres Projektes angezeigt. Entsprechend ist hier ein guter Ort, ein paar grundlegende Angaben zu Ihrem Projekt zu machen, beispielsweise zu Besonderheiten Ihrer Ordnerstruktur und ähnliches. Diesen Absatz können Sie durch eine (kurze) Beschreibung Ihres Projektes ersetzen. Passen Sie bitte auch die Überschrift und die Mitgliederliste entsprechend an.
 
 ## Mitglieder
-
-MITGLIEDERLISTTOREPLACE
 Julian, Kjell, Ferdi
 
 ## Ordnerstruktur
