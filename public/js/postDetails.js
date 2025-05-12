@@ -53,6 +53,7 @@ function initDetail() {
     renderDetailComments();
     setupCommentCreation();
     setupReactionToggle();
+    setupPostDelete();
 }
 
 // Rendert den Haupt-Post in der Detail-Ansicht
@@ -103,6 +104,8 @@ function renderDetailComments() {
         li.innerHTML = html;
         list.append(li);
     });
+
+    setupCommentDeletes();
 }
 
 // Neue Kommentare hinzufügen
@@ -137,6 +140,7 @@ function setupCommentCreation() {
         document.querySelector('.number-comments').textContent = `${detailPost.comments} Kommentare`;
 
         input.value = '';
+        setupCommentDeletes();
     });
 
     // Automatisches Höhe-Anpassen
@@ -169,6 +173,39 @@ function setupReactionToggle() {
                 btn.classList.add('active');
                 ctr.textContent = count + 1;
             }
+        });
+}
+
+function setupPostDelete() {
+    const deleteBtn = document.querySelector('.detail-post .post-options-button');
+    const postEl    = document.querySelector('.detail-post');
+
+    deleteBtn.addEventListener('click', () => {
+        const confirmed = confirm("Möchtest du diesen Post wirklich löschen?");
+        if (!confirmed) return;
+
+        postEl.remove();
+        document.querySelector('.comments-section')?.remove();
+
+        // Nach kurzem Delay zur Startseite zurück
+        window.location.href = 'index.html';
+    });
+}
+
+
+function setupCommentDeletes() {
+    document.querySelectorAll('#comments-list .post-options-button')
+        .forEach(btn => {
+            btn.addEventListener('click', () => {
+                const confirmed = confirm("Diesen Kommentar löschen?");
+                if (!confirmed) return;
+
+                const li = btn.closest('li') || btn.closest('article.post');
+                li.remove();
+
+                detailPost.comments -= 1;
+                document.querySelector('.number-comments').textContent = `${detailPost.comments} Kommentare`;
+            });
         });
 }
 

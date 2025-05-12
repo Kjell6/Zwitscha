@@ -135,3 +135,23 @@ document.addEventListener('click', e => {
 
     userReactions.set(postId, reactedSet);
 });
+
+// Löschen eines Posts im Feed
+document.addEventListener('click', e => {
+    const deleteBtn = e.target.closest('.post-options-button');
+    if (!deleteBtn) return;
+
+    const postEl = deleteBtn.closest('li.posts');
+    if (!postEl) return;
+
+    const postId = Number(postEl.dataset.postId);
+    const confirmed = confirm("Möchtest du diesen Post wirklich löschen?");
+    if (!confirmed) return;
+
+    // Aus dem Array entfernen
+    const index = posts.findIndex(p => p.id === postId);
+    if (index !== -1) posts.splice(index, 1);
+
+    // Neu rendern
+    loadFeed();
+});
