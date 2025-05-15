@@ -123,11 +123,12 @@
     align-items: center;
 }
 
+
 /* Gemeinsame Link-Stile */
 .desktop-header .profile-section a {
     color: var(--text-primary);
     text-decoration: none;
-    font-weight: 500;
+    font-size: var(--font-size-lg); /* Icon-Größe */
     transition: color var(--transition-fast);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--border-radius-sm);
