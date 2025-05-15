@@ -16,19 +16,26 @@
 
 <body>
 
-<header class="desktop-header flex items-center justify-between px-4 py-2 bg-white border-b sticky top-0 z-50">
-  <div class="header-section logo-section flex items-center justify-start">
-    <a href="index.html">
-      <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image" />
+<header class="desktop-header">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/header.css">
+
+  <div class="header-section logo-section">
+    <a href="index.html" class="logo">
+      <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image">
     </a>
   </div>
-  <div class="header-section search-section flex justify-center">
-    <input type="text" placeholder="Suche..." class="search-bar" />
+  <div class="header-section search-section">
+    <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
+    <div class="header-search-results-dropdown">
+    </div>
   </div>
-  <div class="header-section profile-section flex justify-end">
+  <div class="header-section profile-section">
+    <a href="einstellungen.html" class="settings-link">Einstellungen</a>
     <a href="profil.html" class="profile-link">Profil</a>
   </div>
 </header>
+
 
 <main class="container">
   <section class="settings">

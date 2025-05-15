@@ -1,4 +1,3 @@
-
 .desktop-header {
     display: flex;
     align-items: center;
@@ -34,83 +33,74 @@
     flex-grow: 1;
     padding: 0 var(--spacing-sm);
     max-width: 600px;
-    position: relative; /* Macht Container zum Referenzpunkt für das absolut positionierte Dropdown */
+    position: relative; /* Container für Dropdown */
     display: flex;
 }
 
 /* Styling für den Suchergebnisse-Dropdown-Container */
 .header-search-results-dropdown {
-    position: absolute; /* Positioniert sich relativ zum nächstgelegenen positionierten Elternelement (.search-section) */
+    position: absolute;
     width: 100%;
-    /* Zentriert das absolut positionierte Element horizontal relativ zum Elternelement */
     left: 50%;
-    transform: translateX(-50%); /* Verschiebt das Element um die Hälfte seiner eigenen Breite zurück */
-    top: calc(80%); /* Beispiel: 4px Abstand unter dem Input (basierend auf deinem Code) */
-
-    max-width: 700px; /* Behalte die max-width bei, auch wenn width: 100% gesetzt ist. Sie greift, falls das Elternelement breiter als 700px würde. */
-    background-color: var(--light-color); /* Hintergrundfarbe */
-    border: var(--border-width) solid var(--border-color); /* Rahmen */
-    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Schatten nach unten */
-    max-height: 300px; /* Maximale Höhe, bevor gescrollt wird */
-    overflow-y: auto; /* Scrollbar, wenn Inhalt die max-height übersteigt */
-    z-index: 999; /* Liegt über dem Seiteninhalt, aber unter dem Header */
-    display: none; /* Standardmäßig versteckt, wird von JS geändert */
-    padding: var(--spacing-xs) 0; /* Padding innen (vertikal, horizontal 0, da padding in Items ist) */
-    box-sizing: border-box; /* Stellt sicher, dass Padding und Border in die berechnete width/height einfließen */
+    transform: translateX(-50%);
+    top: calc(80%);
+    max-width: 700px;
+    background-color: var(--light-color);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 999;
+    display: none;
+    padding: var(--spacing-xs) 0;
+    box-sizing: border-box;
 }
 
-/* Styling für die Überschrift im Dropdown*/
+/* Überschrift im Dropdown */
 .header-search-results-dropdown h3 {
     font-size: var(--font-size-sm);
     color: var(--text-secondary);
-    /* Abstand und Padding innen */
     margin: 0 var(--spacing-sm) var(--spacing-xs);
-    padding: 0; /* Entfernt eventuellen Standard-H3-Padding */
+    padding: 0;
 }
 
-
-/* Styling für die Liste im Dropdown */
+/* Liste im Dropdown */
 .header-search-results-dropdown ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-/* Styling für jedes einzelne Suchergebnis-Item im Header Dropdown */
-
+/* Einzelnes Suchergebnis im Dropdown */
 .header-search-results-dropdown .search-result-item {
-    padding: var(--spacing-xs) var(--spacing-sm); /* Innerer Abstand */
-    border-bottom: var(--border-width) solid var(--border-color); /* Trennlinie zwischen Ergebnissen */
-    margin-bottom: 0; /* Kein Abstand zwischen den Items */
-    /* Optional: Hintergrund bei Hover */
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-bottom: var(--border-width) solid var(--border-color);
+    margin-bottom: 0;
     transition: background-color var(--transition-fast);
 }
 
-/* Entferne den untersten Rahmen beim letzten Element */
 .header-search-results-dropdown .search-result-item:last-child {
     border-bottom: none;
 }
 
-/* Hover-Effekt für Suchergebnisse im Dropdown */
 .header-search-results-dropdown .search-result-item:hover {
-    background-color: var(--bg-color); /* Hellerer Hintergrund bei Hover */
-    cursor: pointer; /* Zeigt an, dass es klickbar ist */
+    background-color: var(--bg-color);
+    cursor: pointer;
 }
 
-/* Styling für den Link im Suchergebnis-Item (Layout von .search-result-item a) */
+/* Link im Suchergebnis */
 .header-search-results-dropdown .search-result-item a {
-    display: flex; /* Ordnet Bild und Text nebeneinander an */
-    align-items: center; /* Vertikal zentrieren */
-    text-decoration: none; /* Keine Unterstreichung */
-    color: var(--text-primary); /* Textfarbe */
-    /* Transition für Farbe wird durch Hover auf Item geregelt */
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-primary);
 }
 
-/* Styling für das Profilbild im Suchergebnis-Item (Layout von .search-result-item img) */
+/* Profilbild im Suchergebnis */
 .header-search-results-dropdown .search-result-item img {
     display: block;
-    width: 30px; /* Kleinere Bilder passend für Dropdown */
+    width: 30px;
     height: 30px;
     border-radius: 50%;
     object-fit: cover;
@@ -118,23 +108,39 @@
     flex-shrink: 0;
 }
 
-/* Styling für den Benutzernamen im Suchergebnis-Item (Layout von .search-result-item span) */
+/* Benutzername im Suchergebnis */
 .header-search-results-dropdown .search-result-item span {
     font-weight: bold;
     color: var(--text-primary);
 }
 
+/* Profil- und Einstellungen-Sektion */
 .desktop-header .profile-section {
     padding-left: var(--spacing-sm);
+    display: flex;           /* Flexbox für horizontale Anordnung */
+    gap: var(--spacing-md);  /* Abstand zwischen den Links */
+    justify-content: center; /* Zentriert die Links */
+    align-items: center;
 }
 
-.desktop-header .profile-section .profile-link {
+/* Gemeinsame Link-Stile */
+.desktop-header .profile-section a {
     color: var(--text-primary);
     text-decoration: none;
     font-weight: 500;
     transition: color var(--transition-fast);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
 }
 
-.desktop-header .profile-section .profile-link:hover {
+/* Hover-Effekt für Links */
+.desktop-header .profile-section a:hover {
     color: var(--primary-color);
+    background-color: var(--bg-color);
+    cursor: pointer;
 }
+
+/* Optional: extra Styling für Einstellungen-Link */
+/* .desktop-header .profile-section .settings-link {
+    // hier optionalen Stil ergänzen
+} */
