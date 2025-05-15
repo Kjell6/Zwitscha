@@ -1,0 +1,21 @@
+.logo-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+}
+
+#login-form {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+#login-form button {
+    margin-bottom: 1rem;
+}
+
+#login-form label {
+    font-weight: bold;
+}

@@ -9,24 +9,35 @@
 
     <!-- Globales Styling -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <h1>Zwitscha</h1>
-
-    <main class="container">
-        <p>Benutzernamee</p>
-        <input type="text" name="benutzername">
-        <p>Passwort</p>
-        <input type="text" name="passwort">
-        <!-- Anmelde Button -->
-        <a href="index.php"> <!-- An dieser Stelle später vielleicht lieber Verlinkung über JS machen, damit man anmeldedaten prüfen kann und dementsprechent auf die nächste Seite kommt oder nicht -->
-            <button type="button">Anmelden</button>
+    <!-- Logo -->
+    <div class="login-section logo-section">
+        <a href="index.php" class="logo">
+            <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image">
         </a>
-        <p>Falls du noch keinen Account hast und dich registrieren möchest, klicke </p>
-        <a href="Register.html">hier</a>
+    </div>
+
+    <!-- Login Karte -->
+    <main class="container">
+        <section class="Login">
+            <form id="login-form" class="card">
+                <label>Benutzername</label>
+                <input type="text" name="benutzername">
+                <label>Passwort</label>
+                <input type="password" name="passwort">
+                <!-- Anmelde Button -->
+                <a href="index.php"> <!-- An dieser Stelle später vielleicht lieber Verlinkung über JS machen, damit man anmeldedaten prüfen kann und dementsprechent auf die nächste Seite kommt oder nicht -->
+                    <button type="button">Anmelden</button>
+                </a>
+                <p>Falls du noch keinen Account hast und dich registrieren möchest, klicke <a href="Register.html">hier</a>.</p>
+
+            </form>
+        </section>
     </main>
 </body>
 </html>
