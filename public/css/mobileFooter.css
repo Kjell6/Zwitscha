@@ -1,0 +1,39 @@
+/* Mobiler Footer */
+.mobile-footer {
+    display: none; /* Wird standardmäßig nicht angezeigt */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--light-color);
+    border-top: var(--border-width) solid var(--border-color);
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: var(--spacing-xs) 0;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.footer-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.6rem;
+    padding: var(--spacing-xs);
+    transition: color var(--transition-fast);
+}
+
+
+/* Sichtbar nur auf kleinen Bildschirmen */
+@media (max-width: 768px) {
+    .mobile-footer {
+        display: block;
+    }
+
+    .desktop-header {
+        padding-bottom: calc(80px + var(--spacing-sm)); /* Platz für den Footer schaffen */
+    }
+}
