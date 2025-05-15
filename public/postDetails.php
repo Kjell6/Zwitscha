@@ -15,10 +15,10 @@
 
 </head>
 <body>
-<div id="header-placeholder"></div>
+<?php include 'headerDesktop.php'; ?>
 
 <div class="page-header-container">
-    <a href="index.html" class="back-button">
+    <a href="index.php" class="back-button">
         <button type="button">Zurück</button>
     </a>
     <h1>Post</h1>
@@ -27,7 +27,7 @@
 
 <article class="post detail-post">
     <section class="post-user-infos">
-        <a href="Profil.html">
+        <a href="Profil.php">
             <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
         </a>
         <span class="post-author-name">[Autorname]</span>
@@ -72,7 +72,7 @@
     </ul>
 </section>
 
-<script src="js/includeHeader.js"></script>
+<?php include 'footerMobile.php'; ?>
 
 <script>
     fetch('kommentar.html')

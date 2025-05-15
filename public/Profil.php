@@ -11,9 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="header-placeholder"></div>
+    <?php include 'headerDesktop.php'; ?>
 
-    <a href="index.html">
+    <a href="index.php">
         <button type="button">Zurück zur Startseite</button>
     </a>
     <!-- Abmelden Button -->
@@ -39,6 +39,8 @@
         </ul>
     </section>
 
+    <?php include 'footerMobile.php'; ?>
+
     <script>
         fetch('post.html')
             .then(response => response.text())
@@ -47,7 +49,6 @@
             });
     </script>
 
-    <script src="js/includeHeader.js"></script>
 
 </body>
 </html>

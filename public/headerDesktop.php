@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
     <div class="header-section logo-section">
-        <a href="index.html" class="logo">
+        <a href="index.php" class="logo">
             <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image">
         </a>
     </div>
@@ -15,10 +15,10 @@
     </div>
 
     <div class="header-section profile-section">
-        <a href="einstellungen.html" class="settings-link">
+        <a href="einstellungen.php" class="settings-link">
             <i class="bi bi-gear-fill"></i>
         </a>
-        <a href="Profil.html" class="profile-link">
+        <a href="Profil.php" class="profile-link">
             <i class="bi bi-person-fill"></i>
         </a>
     </div>

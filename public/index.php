@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="css/Startseite.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div id="header-placeholder"></div>
+    <?php include 'headerDesktop.php'; ?>
 
     <div class="post-input-group">
         <textarea type="text" id="post-input" placeholder="Verfasse einen Post..."></textarea>
@@ -41,9 +42,10 @@
         </ul>
     </section>
 
-    <script src="js/includeHeader.js"></script>
+    <?php include 'footerMobile.php'; ?>
 
     <script>
+        //Nur als Beispiel, um posts zu sehen
         fetch('post.html')
             .then(response => response.text())
             .then(data => {
@@ -62,7 +64,6 @@
             commentInput.style.height = commentInput.scrollHeight + 'px'; // Set height to scroll height
         });
     </script>
-
 
 </body>
 </html>

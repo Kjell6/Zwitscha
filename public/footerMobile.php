@@ -19,10 +19,10 @@
 <!-- Mobiler Footer -->
 <footer class="mobile-footer">
   <nav class="footer-nav">
-    <a href="index.html" class="footer-link" aria-label="Startseite">
+    <a href="index.php" class="footer-link" aria-label="Startseite">
       <i class="bi bi-house-fill"></i>
     </a>
-    <a href="MobileSearch.html" class="footer-link" aria-label="Suche" id="mobile-search-button">
+    <a href="MobileSearch.php" class="footer-link" aria-label="Suche" id="mobile-search-button">
       <i class="bi bi-search"></i>
     </a>
     <a href="profil.html" class="footer-link" aria-label="Profil">

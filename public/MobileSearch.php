@@ -12,7 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="header-placeholder"></div>
 
     <div class="main-content">
         <h2>Benutzer suchen</h2>
@@ -34,7 +33,7 @@
         document.body.appendChild(script);
     </script>
 
-    <script src="js/includeHeader.js"></script>
+    <?php include 'footerMobile.php'; ?>
 
 
 </body>

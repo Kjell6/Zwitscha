@@ -16,7 +16,7 @@
 
 <body>
 
-<div id="header-placeholder"></div>
+<?php include 'headerDesktop.php'; ?>
 
 
 <main class="container">
@@ -57,7 +57,7 @@
   <p>&copy; 2025 Zwitscha</p>
 </footer>
 
-<script src="js/includeHeader.js"></script>
+<?php include 'footerMobile.php'; ?>
 
 </body>
 </html>
