@@ -8,50 +8,86 @@
     <link rel="icon" href="assets/favicon.png" type="image/png">
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css"/>
+
+    <link rel="stylesheet" href="css/profil.css"/>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            /* padding-top für Abstand unter einem eventuellen Header */
+            padding-top: var(--spacing-sm);
+            padding-bottom: var(--spacing-sm);
+            max-width: var(--container-max-width);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: var(--spacing-sm);
+            padding-right: var(--spacing-sm);
+        }
+
+        .profil-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        /* Auf kleinen Geräten ausblenden */
+        @media (max-width: 768px) {
+            .mobile-only {
+                display: inline-block;
+            }
+        }
+    </style>
+
 </head>
+
 <body>
     <?php include 'headerDesktop.php'; ?>
 
-    <a href="index.php">
-        <button type="button">Zurück zur Startseite</button>
-    </a>
-    <!-- Abmelden Button -->
-    <a href="Login.html">
-        <button type="button">Abmelden</button>
-    </a>
+    <main class="container">
 
-    <h1>Nutzername</h1>
+        <div class="profil-header">
+            <!-- Profilbild Platzhalter -->
+            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" width="150" height="150">
+
+            <h1>Nutzername</h1>
+
+            <a href="einstellungen.php" class="settings-link mobile-only">
+                <i class="bi bi-gear-fill"></i>
+            </a>
+
+        </div>
 
 
-    <!-- Profilbild Platzhalter -->
-    <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" width="60" height="60">
+        <!-- Beispiel für die vergangene Posts -->
+        <section>
+            <ul id="feed-nur als test wie es aussieht">
+                <li>
+                    <?php include 'post.php'; ?>
+                </li>
 
-    <!-- Anzeige der Posts -->
-    <h2>Posts</h2>
+                <li>
+                    <?php include 'post.php'; ?>
+                </li>
+                <li>
 
-    <!-- Beispiel für die vergangene Posts -->
-    <section>
-        <ul id="feed-nur als test wie es aussieht">
-            <li>
-                <?php include 'post.php'; ?>
-            </li>
+                    <?php include 'post.php'; ?>
+                </li>
 
-            <li>
-                <?php include 'post.php'; ?>
-            </li>
-            <li>
+                <li>
+                    <?php include 'post.php'; ?>
+                </li>
+            </ul>
+        </section>
 
-                <?php include 'post.php'; ?>
-            </li>
+        <?php include 'footerMobile.php'; ?>
 
-            <li>
-                <?php include 'post.php'; ?>
-            </li>
-        </ul>
-    </section>
-
-    <?php include 'footerMobile.php'; ?>
+    </main>
 
     <footer>
         <p>&copy; 2025 Zwitscha</p>

@@ -1,3 +1,7 @@
+<?php
+    $currentPage = basename($_SERVER['PHP_SELF']); // gibt z.B. 'profil.php' zurück
+?>
+
 <header class="desktop-header">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css">
@@ -15,11 +19,22 @@
     </div>
 
     <div class="header-section profile-section">
-        <a href="einstellungen.php" class="settings-link">
-            <i class="bi bi-gear-fill"></i>
-        </a>
-        <a href="Profil.php" class="profile-link">
-            <i class="bi bi-person-fill"></i>
-        </a>
+
+        <?php if ($currentPage === 'Profil.php'): ?>
+            <a href="einstellungen.php" class="settings-link">
+                <i class="bi bi-gear-fill"></i>
+            </a>
+            <!-- Abmelden Button -->
+            <a href="Login.html">
+                <button type="button">Abmelden</button>
+            </a>
+        <?php else: ?>
+            <a href="Profil.php" class="profile-link">
+                <i class="bi bi-person-fill"></i>
+            </a>
+        <?php endif; ?>
+
+
+
     </div>
 </header>
