@@ -25,7 +25,7 @@
     <a href="MobileSearch.php" class="footer-link" aria-label="Suche" id="mobile-search-button">
       <i class="bi bi-search"></i>
     </a>
-    <a href="profil.html" class="footer-link" aria-label="Profil">
+    <a href="Profil.php" class="footer-link" aria-label="Profil">
       <i class="bi bi-person-fill"></i>
     </a>
   </nav>

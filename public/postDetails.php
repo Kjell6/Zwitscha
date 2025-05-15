@@ -65,22 +65,20 @@
 <section class="comments-section">
     <h2>Kommentare</h2>
     <ul id="comments-list">
-        <li class="posts">
-            <div id="post-placeholder"></div>
+        <li>
+            <?php include 'kommentar.php'; ?>
         </li>
+
+        <li>
+            <?php include 'kommentar.php'; ?>
+        </li>
+
 
     </ul>
 </section>
 
 <?php include 'footerMobile.php'; ?>
 
-<script>
-    fetch('kommentar.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('post-placeholder').innerHTML = data;
-        });
-</script>
 
 <script>
     const commentInput = document.getElementById('comment-input');

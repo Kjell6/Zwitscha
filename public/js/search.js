@@ -6,13 +6,13 @@ function initHeaderSearch() {
 
     // Simuliere Benutzerdaten für die Suche
     const users = [
-        { name: 'Beispiel Benutzer 1', profileUrl: 'Profil.html', avatar: 'assets/placeholder-profilbild.jpg' },
-        { name: 'Ein Anderer Benutzer', profileUrl: 'Profil.html', avatar: 'assets/placeholder-profilbild.jpg' },
-        { name: 'Test Nutzer Drei', profileUrl: 'Profil.html', avatar: 'assets/placeholder-profilbild.jpg' },
-        { name: 'Max Mustermann', profileUrl: 'Profil.html', avatar: 'assets/placeholder-profilbild.jpg' },
-        { name: 'Anna Beispiel', profileUrl: 'Profil.html', avatar: 'assets/placeholder-profilbild.jpg' },
-        { name: 'Developer User', profileUrl: 'Profil.html', avatar: 'assets/placeholder-profilbild.jpg' },
-        { name: 'Frontend Guru', profileUrl: 'Profil.html', avatar: 'assets/placeholder-profilbild.jpg' },
+        { name: 'Beispiel Benutzer 1', profileUrl: 'Profil.php', avatar: 'assets/placeholder-profilbild.jpg' },
+        { name: 'Ein Anderer Benutzer', profileUrl: 'Profil.php', avatar: 'assets/placeholder-profilbild.jpg' },
+        { name: 'Test Nutzer Drei', profileUrl: 'Profil.php', avatar: 'assets/placeholder-profilbild.jpg' },
+        { name: 'Max Mustermann', profileUrl: 'Profil.php', avatar: 'assets/placeholder-profilbild.jpg' },
+        { name: 'Anna Beispiel', profileUrl: 'Profil.php', avatar: 'assets/placeholder-profilbild.jpg' },
+        { name: 'Developer User', profileUrl: 'Profil.php', avatar: 'assets/placeholder-profilbild.jpg' },
+        { name: 'Frontend Guru', profileUrl: 'Profil.php', avatar: 'assets/placeholder-profilbild.jpg' },
     ];
 
     // Funktion zum Anzeigen der Suchergebnisse
@@ -66,7 +66,7 @@ function initHeaderSearch() {
     function disableAutoHideOnBlur() {
         if (searchInput) {
             searchInput.removeEventListener('blur', hideResultsDelayed);
-            console.log('Auto-hide on blur disabled (MobileSearch.html)');
+            console.log('Auto-hide on blur disabled (MobileSearch.php)');
         }
     }
 
@@ -102,8 +102,8 @@ function initHeaderSearch() {
 
     // KEIN document.addEventListener('DOMContentLoaded', ...) mehr hier!
 
-    // Wenn auf MobileSearch.html sind, deaktiviert automatische Schließen
-    if (window.location.pathname.endsWith('MobileSearch.html')) {
+    // Wenn auf MobileSearch.php sind, deaktiviert automatische Schließen
+    if (window.location.pathname.endsWith('MobileSearch.php')) {
         disableAutoHideOnBlur();
     }
 }

@@ -34,25 +34,27 @@
 
 
     <section>
-        <ul id="feed">
-            <li class="posts">
-                <div id="post-placeholder"></div>
+        <ul id="posts">
+            <li>
+                <?php include 'post.php'; ?>
+            </li>
+
+            <li>
+                <?php include 'post.php'; ?>
+            </li>
+
+            <li>
+                <?php include 'post.php'; ?>
+            </li>
+
+            <li>
+                <?php include 'post.php'; ?>
             </li>
 
         </ul>
     </section>
 
     <?php include 'footerMobile.php'; ?>
-
-    <script>
-        //Nur als Beispiel, um posts zu sehen
-        fetch('post.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('post-placeholder').innerHTML = data;
-            });
-    </script>
-
 
     <script>
         //Größe des Textfeldes automatisch an Textlänge anpassen
