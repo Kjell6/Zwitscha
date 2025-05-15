@@ -1,7 +1,5 @@
 /* Body wie auf der Startseite */
 body {
-    padding-top: var(--spacing-sm);
-    padding-bottom: var(--spacing-md);
     max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
@@ -11,7 +9,6 @@ body {
 
 /* Einstellungs-Wrapper */
 .settings {
-    margin-top: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
 }
 
