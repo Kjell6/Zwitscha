@@ -3,6 +3,7 @@ body {
     max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
+    padding-top: var(--spacing-sm);
     padding-left: var(--spacing-sm);
     padding-right: var(--spacing-sm);
 }

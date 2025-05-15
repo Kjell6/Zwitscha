@@ -56,6 +56,10 @@
 
     <?php include 'footerMobile.php'; ?>
 
+    <footer>
+        <p>&copy; 2025 Zwitscha</p>
+    </footer>
+
     <script>
         //Größe des Textfeldes automatisch an Textlänge anpassen
 
