@@ -1,8 +1,0 @@
-.mobile-footer {
-    position: fixed; /* Fixiert das Element am Viewport */
-    bottom: 0;       /* Platziert es am unteren Rand des Viewports */
-    left: 0;         /* Platziert es am linken Rand des Viewports */
-    width: 100%;     /* Sorgt dafür, dass es die gesamte Breite einnimmt */
-    z-index: 1000;   /* Stellt sicher, dass es über anderen Inhalten liegt */
-    background-color: white;
-}
