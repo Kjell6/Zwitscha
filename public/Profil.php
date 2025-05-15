@@ -33,22 +33,29 @@
     <!-- Beispiel für die vergangene Posts -->
     <section>
         <ul id="feed-nur als test wie es aussieht">
-            <li class="posts">
-                <div id="post-placeholder"></div>
+            <li>
+                <?php include 'post.php'; ?>
+            </li>
+
+            <li>
+                <?php include 'post.php'; ?>
+            </li>
+            <li>
+
+                <?php include 'post.php'; ?>
+            </li>
+
+            <li>
+                <?php include 'post.php'; ?>
             </li>
         </ul>
     </section>
 
     <?php include 'footerMobile.php'; ?>
 
-    <script>
-        fetch('post.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('post-placeholder').innerHTML = data;
-            });
-    </script>
-
+    <footer>
+        <p>&copy; 2025 Zwitscha</p>
+    </footer>
 
 </body>
 </html>

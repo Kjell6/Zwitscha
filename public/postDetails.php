@@ -79,6 +79,10 @@
 
 <?php include 'footerMobile.php'; ?>
 
+<footer>
+    <p>&copy; 2025 Zwitscha</p>
+</footer>
+
 
 <script>
     const commentInput = document.getElementById('comment-input');
