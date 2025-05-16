@@ -22,7 +22,7 @@
 
         <div class="profil-header">
             <!-- Profilbild Platzhalter -->
-            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" class="profilbild">
+            <img src="assets/placeholder-profilbild-2.png" alt="Profilbild" class="profilbild">
 
             <h1>Nutzername</h1>
 
