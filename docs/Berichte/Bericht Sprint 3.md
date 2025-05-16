@@ -25,6 +25,21 @@
 
 ## Ferdi
 
+### 1. Erzielte Ergebnisse
+
+- css styling für Startseite (mit Kjell zusammen)
+- css styling für login und profil seite
+- css styling anpassung für mobile
+
+### 2. Hürden
+
+- verlinkung von profil css datei mit profil php datei hat erst nicht geklappt, aber heute dann
+
+### 3. Überraschungen oder unerwartete Schwierigkeiten
+
+- Platzierung der items in dividern, mit unterschiedliechem layout bei mobile hat teilweise unerwartete ansichten angezeigt
+
+
 ## Julian
 
 1. Erzielte Ergebnisse
