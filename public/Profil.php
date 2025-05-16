@@ -9,40 +9,9 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css"/>
-
     <link rel="stylesheet" href="css/profil.css"/>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            /* padding-top für Abstand unter einem eventuellen Header */
-            padding-top: var(--spacing-sm);
-            padding-bottom: var(--spacing-sm);
-            max-width: var(--container-max-width);
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: var(--spacing-sm);
-            padding-right: var(--spacing-sm);
-        }
-
-        .profil-header {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .mobile-only {
-            display: none;
-        }
-
-        /* Auf kleinen Geräten ausblenden */
-        @media (max-width: 768px) {
-            .mobile-only {
-                display: inline-block;
-            }
-        }
-    </style>
 
 </head>
 

@@ -20,10 +20,11 @@
 
     <div class="header-section profile-section">
 
+        <a href="einstellungen.php" class="settings-link">
+            <i class="bi bi-gear-fill"></i>
+        </a>
+
         <?php if ($currentPage === 'Profil.php'): ?>
-            <a href="einstellungen.php" class="settings-link">
-                <i class="bi bi-gear-fill"></i>
-            </a>
             <!-- Abmelden Button -->
             <a href="Login.html">
                 <button type="button">Abmelden</button>

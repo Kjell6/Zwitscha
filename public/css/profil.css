@@ -14,3 +14,14 @@ body {
     align-items: center;
     gap: 2rem;
 }
+
+.mobile-only {
+    display: none;
+}
+
+/* Auf kleinen Geräten ausblenden */
+@media (max-width: 768px) {
+    .mobile-only {
+        display: inline-block;
+    }
+}
