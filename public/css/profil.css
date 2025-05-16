@@ -19,14 +19,29 @@ body {
     display: none;
 }
 
-.settings-link i {
+.einstellungen-link i {
     font-size: var(--font-size-xl);
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
 }
 
-/* Auf kleinen Geräten ausblenden */
+.einstellungen-link-position {
+
+}
+
+/* Auf kleinen Geräten Einstellungs Icon einblenden */
 @media (max-width: 768px) {
     .mobile-only {
         display: inline-block;
+    }
+
+    .pb-name-untereinander {
+        display: inline-block;
+    }
+
+    .einstellungen-pb-name {
+        display: flex;
     }
 }
 
@@ -51,4 +66,5 @@ body {
     width: 150px;
     height: 150px;
     border-radius: 50%;
+    margin-bottom: var(--spacing-sm);
 }

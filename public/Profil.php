@@ -20,16 +20,18 @@
 
     <main class="container">
 
-        <div class="profil-header">
-            <!-- Profilbild Platzhalter -->
-            <img src="assets/placeholder-profilbild-2.png" alt="Profilbild" class="profilbild">
-
-            <h1>Nutzername</h1>
-
-            <a href="einstellungen.php" class="settings-link mobile-only">
+        <div class="einstellungen-pb-name">
+            <a href="einstellungen.php" class="einstellungen-link mobile-only">
                 <i class="bi bi-gear-fill"></i>
             </a>
 
+            <div class="profil-header pb-name-untereinander">
+                <!-- Profilbild Platzhalter -->
+                <img src="assets/placeholder-profilbild-2.png" alt="Profilbild" class="profilbild">
+
+                <h1>Nutzername</h1>
+
+            </div>
         </div>
 
         <div class="folgen-container">
