@@ -32,6 +32,11 @@
 
         </div>
 
+        <div class="folgen-container">
+            <button id="folgenButton" class="folgen-button" type="button">Folgen</button>
+            <p class="follower-anzahl">123 Follower</p>
+        </div>
+
 
         <!-- Beispiel für die vergangene Posts -->
         <section>

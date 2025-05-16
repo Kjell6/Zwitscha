@@ -25,3 +25,19 @@ body {
         display: inline-block;
     }
 }
+
+.folgen-container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.folgen-button {
+    line-height: 1;
+}
+
+.follower-anzahl {
+    margin: 0;
+    line-height: 1;
+}
