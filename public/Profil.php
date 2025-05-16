@@ -22,7 +22,7 @@
 
         <div class="profil-header">
             <!-- Profilbild Platzhalter -->
-            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" width="150" height="150">
+            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" class="profilbild">
 
             <h1>Nutzername</h1>
 
@@ -34,7 +34,7 @@
 
         <div class="folgen-container">
             <button id="folgenButton" class="folgen-button" type="button">Folgen</button>
-            <p class="follower-anzahl">123 Follower</p>
+            <p class="follower-anzahl"> 123 Follower</p>
         </div>
 
 

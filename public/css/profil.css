@@ -38,6 +38,13 @@ body {
 }
 
 .follower-anzahl {
+    color: var(--text-secondary);
     margin: 0;
     line-height: 1;
+}
+
+.profilbild {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
 }
