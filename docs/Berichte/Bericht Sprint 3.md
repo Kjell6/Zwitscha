@@ -8,7 +8,7 @@
     - einzelne Posts
     - Kommentare
     - Post Detail-/Kommentaransicht
-    - teilweise auch styling der Startseite (aber das hat vor Allem Ferdi gemacht)
+    - teilweise auch styling der Startseite (mit Ferdi zusammen)
     - Mobile Search (auch Prototyp der Suche mit JavaScript)
 - Jeweils das Styling für Mobile angepasst
 - Header und Footer mit php auf den einzelnen Seiten eingebunden
