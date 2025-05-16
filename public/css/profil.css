@@ -19,6 +19,10 @@ body {
     display: none;
 }
 
+.settings-link i {
+    font-size: var(--font-size-xl);
+}
+
 /* Auf kleinen Geräten ausblenden */
 @media (max-width: 768px) {
     .mobile-only {
