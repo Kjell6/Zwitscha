@@ -2,8 +2,6 @@
 
 ## Kjell
 
-## Kjell
-
 ### 1. Erzielte Ergebnisse
 
 - CSS Styling für:
