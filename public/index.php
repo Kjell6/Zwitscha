@@ -16,7 +16,7 @@
 <body>
     <?php include 'headerDesktop.php'; ?>
 
-    <main class="container">
+    <div class="main-content">
 
         <div class="post-input-group">
             <div class="user-profile">
@@ -64,7 +64,7 @@
 
             </ul>
         </section>
-    </main>
+    </div>
 
     <?php include 'footerMobile.php'; ?>
 

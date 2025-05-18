@@ -8,7 +8,11 @@ body {
     padding-right: var(--spacing-sm);
 }
 
-
+.main-content {
+    width: var(--container-width);
+    margin: 0 auto;
+    padding: var(--spacing-sm) 0;
+}
 
 /* Gruppierung für Input und Veröffentlichen-Button */
 .post-input-group {
@@ -156,4 +160,9 @@ body {
         display: none;
     }
 
+    .main-content {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
 }

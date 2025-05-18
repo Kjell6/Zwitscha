@@ -46,7 +46,7 @@
   --border-width: 1px;
 
   /* Container-Größen */
-  --container-width: 90%;
+  --container-width: 95%;
   --container-max-width: 1000px;
 
   /* Transitions */
@@ -240,7 +240,7 @@ footer {
   }
 
   .container {
-    width: 95%;
+    width: 100%;
     padding: var(--spacing-sm) 0;
   }
 }
