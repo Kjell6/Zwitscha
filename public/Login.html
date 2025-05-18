@@ -18,7 +18,19 @@
     <!-- Logo -->
     <div class="login-section logo-section">
         <a href="index.php" class="logo">
-            <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image">
+            <picture>
+                <!-- Dark Mode -->
+                <source
+                        srcset="assets/zwitscha_dark.png"
+                        media="(prefers-color-scheme: dark)"
+                >
+                <!-- Light Mode (Fallback) -->
+                <img
+                        src="assets/zwitscha.png"
+                        alt="Zwitscha Logo"
+                        class="logo-image"
+                >
+            </picture>
         </a>
     </div>
 

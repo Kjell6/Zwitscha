@@ -244,3 +244,61 @@ footer {
     padding: var(--spacing-sm) 0;
   }
 }
+
+/* Dark Mode Overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Farbpalette */
+    --primary-color: #1fd323;
+    --primary-hover: #1bae1d;
+    --hover-color: #1fd32319;
+    --light-color: #222222;
+    --button-color: #3a3a3a;
+    --button-hover: #4A4A4A;
+
+    /* Neutralfarben */
+    --text-primary: #f0f0f0;        /* Haupttext hell */
+    --text-secondary: #bbb;        /* Sekundärtext hell */
+    --border-color: #444;          /* Rahmen dunkler */
+    --input-border: #555;          /* Input-Rahmen dunkler */
+    --bg-color: #121212;           /* dunkler Seiten-Hintergrund */
+
+    --shadow-color: rgba(0, 0, 0, 0.6);
+  }
+
+  /* Karten- und Post-Shadow */
+  .card,
+  .post {
+    box-shadow: 0 1px 3px var(--shadow-color);
+  }
+
+  button, .button {
+    color: #ffffff;
+  }
+
+  /* Form-Elemente im Dark Mode */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  select {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    border: var(--border-width) solid #444;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #888;
+    opacity: 1;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(34, 218, 38, 0.4);
+  }
+}
+

@@ -9,9 +9,24 @@
 
     <div class="header-section logo-section">
         <a href="index.php" class="logo">
-            <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image">
+            <picture>
+                <!-- Dark Mode -->
+                <source
+                        srcset="assets/zwitscha_dark.png"
+                        media="(prefers-color-scheme: dark)"
+                >
+                <!-- Light Mode (Fallback) -->
+                <img
+                        src="assets/zwitscha.png"
+                        alt="Zwitscha Logo"
+                        class="logo-image"
+                >
+            </picture>
         </a>
     </div>
+
+
+
 
     <div class="header-section search-section">
         <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
