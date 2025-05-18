@@ -190,10 +190,6 @@
         gap: var(--spacing-sm);
     }
 
-    .post-actions .post-reactions {
-        flex-direction: row;
-    }
-
     .post-actions .comment-link {
         width: 100%;
     }
@@ -210,3 +206,20 @@
         background-color: var(--bg-color);
     }
 }
+
+@media (max-width: 386px) {
+    /* zentriert reactions */
+    .post-actions .post-reactions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--spacing-xs);
+    }
+
+    /* 3 nebeneinader */
+    .post-actions .post-reactions .reaction-button {
+        flex: 0 0 calc(33.333% - var(--spacing-xs));
+        justify-content: center;
+    }
+}
+
