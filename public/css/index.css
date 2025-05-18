@@ -150,3 +150,10 @@ body {
 #followed-posts:checked ~ label[for="followed-posts"] {
     color: var(--light-color);
 }
+
+@media (max-width: 768px) {
+    .post-input-group .user-profile {
+        display: none;
+    }
+
+}
