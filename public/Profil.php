@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css"/>
     <link rel="stylesheet" href="css/profil.css"/>
+    <link rel="stylesheet" href="css/post.css">
+
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 

@@ -205,11 +205,10 @@
     .post-actions .comment-button:hover {
         background-color: var(--bg-color);
     }
-}
 
-@media (max-width: 386px) {
     /* zentriert reactions */
     .post-actions .post-reactions {
+        width: 100%;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
