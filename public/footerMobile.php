@@ -20,13 +20,55 @@
 <footer class="mobile-footer">
   <nav class="footer-nav">
     <a href="index.php" class="footer-link" aria-label="Startseite">
-        <img src="assets/custom_icons/home.svg" alt="Icon" width="28" height="28">
+        <picture>
+            <!-- Dark Mode -->
+            <source
+                    srcset="assets/custom_icons/home_dark.svg"
+                    media="(prefers-color-scheme: dark)"
+            >
+            <!-- Light Mode (Fallback) -->
+            <img
+                    src="assets/custom_icons/home.svg"
+                    alt="Zwitscha Logo"
+                    class="logo-image"
+                    width="28"
+                    height="28"
+            >
+        </picture>
     </a>
     <a href="MobileSearch.php" class="footer-link" aria-label="Suche" id="mobile-search-button">
-        <img src="assets/custom_icons/search.svg" alt="Icon" width="28" height="28">
+        <picture>
+            <!-- Dark Mode -->
+            <source
+                    srcset="assets/custom_icons/search_dark.svg"
+                    media="(prefers-color-scheme: dark)"
+            >
+            <!-- Light Mode (Fallback) -->
+            <img
+                    src="assets/custom_icons/search.svg"
+                    alt="Zwitscha Logo"
+                    class="logo-image"
+                    width="28"
+                    height="28"
+            >
+        </picture>
     </a>
     <a href="Profil.php" class="footer-link" aria-label="Profil">
-        <img src="assets/custom_icons/profil.svg" alt="Icon" width="24" height="24">
+        <picture>
+            <!-- Dark Mode -->
+            <source
+                    srcset="assets/custom_icons/profil_dark.svg"
+                    media="(prefers-color-scheme: dark)"
+            >
+            <!-- Light Mode (Fallback) -->
+            <img
+                    src="assets/custom_icons/profil.svg"
+                    alt="Zwitscha Logo"
+                    class="logo-image"
+                    width="24"
+                    height="24"
+            >
+        </picture>
     </a>
   </nav>
 </footer>
