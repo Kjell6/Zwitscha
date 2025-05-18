@@ -1,7 +1,6 @@
 body {
     /* padding-top für Abstand unter einem eventuellen Header */
     padding-top: var(--spacing-sm);
-    padding-bottom: var(--spacing-sm);
     max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
@@ -9,62 +8,160 @@ body {
     padding-right: var(--spacing-sm);
 }
 
+.posts {
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+}
+/* Haupt-Container für die Profilkarte */
 .profil-header {
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding: var(--spacing-sm);
+    padding-bottom: 0;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
     display: flex;
-    align-items: center;
-    gap: 2rem;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+    position: relative;
+
+    margin-bottom: var(--spacing-md);
+}
+
+.einstellungen-pb-name {
+    position: relative;
 }
 
 .mobile-only {
     display: none;
 }
 
-.einstellungen-link i {
+.profilbild {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Container für den gesamten Textinhalt - stellt sicher, dass die Kinder stapeln */
+div.profil-header.pb-name-untereinander {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 0;
+
+    box-shadow: none;
+    border-bottom: none;
+}
+
+/* Container für Nutzername und Follow Button */
+.profil-main-infos {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.profil-name {
+    margin: 0;
     font-size: var(--font-size-xl);
-    position: absolute;
-    top: var(--spacing-sm);
-    right: var(--spacing-sm);
+    line-height: 1;
+    flex-grow: 1;
+    word-break: break-word;
 }
 
-.einstellungen-link-position {
-
+.folgen-button {
+    flex-shrink: 0;
 }
 
-/* Auf kleinen Geräten Einstellungs Icon einblenden */
-@media (max-width: 768px) {
-    .mobile-only {
-        display: inline-block;
-    }
-
-    .pb-name-untereinander {
-        display: inline-block;
-    }
-
-    .einstellungen-pb-name {
-        display: flex;
-    }
+.beitritts-datum {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
 }
 
 .folgen-container {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
 }
 
-.folgen-button {
-    line-height: 1;
-}
-
-.follower-anzahl {
-    color: var(--text-secondary);
+.folge-info {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: baseline;
     margin: 0;
-    line-height: 1;
 }
 
-.profilbild {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: var(--spacing-sm);
+.folge-info span {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: normal;
+}
+
+.einstellungen-link {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    z-index: 10;
+}
+
+.einstellungen-link i {
+    font-size: var(--font-size-xl);
+    color: var(--text-secondary);
+}
+
+
+
+/* Mobile Anpassungen */
+@media (max-width: 768px) {
+    .posts {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .profil-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding-top: var(--spacing-lg);
+    }
+
+    .profilbild {
+        width: 150px;
+        height: 150px;
+    }
+
+    /* Der innere Textblock-Container - weiterhin Column, zentriert auf Mobile */
+    div.profil-header.pb-name-untereinander {
+        flex-direction: column;
+        flex-grow: 0;
+        align-items: center;
+    }
+
+    .profil-main-infos {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        align-items: center;
+    }
+
+    .profil-name,
+    .beitritts-datum {
+        text-align: center;
+    }
+
+    .folgen-container {
+        justify-content: center;
+    }
+
+    .mobile-only {
+        display: block;
+    }
+
+    .einstellungen-link {
+        top: var(--spacing-sm);
+        right: var(--spacing-sm);
+    }
 }

@@ -20,46 +20,51 @@
 
     <main class="container">
 
-        <div class="einstellungen-pb-name">
+        <div class="profil-header">
+            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" class="profilbild">
+
+            <div class="profil-header pb-name-untereinander">
+                <div class="profil-main-infos">
+                    <h1 class="profil-name">Nutzername</h1>
+                    <button id="folgenButton" class="folgen-button" type="button">Folgen</button>
+                </div>
+                <p class="beitritts-datum"><i class="bi bi-calendar2-fill"></i>  Beigetreten Januar 2025</p>
+                <div class="folgen-container">
+                    <p class="folge-info"><strong>85</strong> <span>Follower</span></p>
+                    <p class="folge-info"><strong>123</strong> <span>Folge ich</span></p>
+                    <p class="folge-info"><strong>211</strong> <span>post</span></p>
+                </div>
+            </div>
+
             <a href="einstellungen.php" class="einstellungen-link mobile-only">
                 <i class="bi bi-gear-fill"></i>
             </a>
-
-            <div class="profil-header pb-name-untereinander">
-                <!-- Profilbild Platzhalter -->
-                <img src="assets/placeholder-profilbild-2.png" alt="Profilbild" class="profilbild">
-
-                <h1>Nutzername</h1>
-
-            </div>
-        </div>
-
-        <div class="folgen-container">
-            <button id="folgenButton" class="folgen-button" type="button">Folgen</button>
-            <p class="follower-anzahl"> 123 Follower</p>
         </div>
 
 
-        <!-- Beispiel für die vergangene Posts -->
-        <section>
-            <ul id="feed-nur als test wie es aussieht">
-                <li>
-                    <?php include 'post.php'; ?>
-                </li>
+        <div class="posts">
+            <h2>Posts</h2>
 
-                <li>
-                    <?php include 'post.php'; ?>
-                </li>
-                <li>
+            <section>
+                <ul id="feed-nur als test wie es aussieht">
+                    <li>
+                        <?php include 'post.php'; ?>
+                    </li>
 
-                    <?php include 'post.php'; ?>
-                </li>
+                    <li>
+                        <?php include 'post.php'; ?>
+                    </li>
+                    <li>
 
-                <li>
-                    <?php include 'post.php'; ?>
-                </li>
-            </ul>
-        </section>
+                        <?php include 'post.php'; ?>
+                    </li>
+
+                    <li>
+                        <?php include 'post.php'; ?>
+                    </li>
+                </ul>
+            </section>
+        </div>
 
         <?php include 'footerMobile.php'; ?>
 
