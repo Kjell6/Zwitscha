@@ -20,13 +20,13 @@
 <footer class="mobile-footer">
   <nav class="footer-nav">
     <a href="index.php" class="footer-link" aria-label="Startseite">
-      <i class="bi bi-house-fill"></i>
+        <img src="assets/custom_icons/home.svg" alt="Icon" width="28" height="28">
     </a>
     <a href="MobileSearch.php" class="footer-link" aria-label="Suche" id="mobile-search-button">
-      <i class="bi bi-search"></i>
+        <img src="assets/custom_icons/search.svg" alt="Icon" width="28" height="28">
     </a>
     <a href="Profil.php" class="footer-link" aria-label="Profil">
-      <i class="bi bi-person-fill"></i>
+        <img src="assets/custom_icons/profil.svg" alt="Icon" width="24" height="24">
     </a>
   </nav>
 </footer>
