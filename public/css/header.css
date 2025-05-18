@@ -6,7 +6,6 @@
     padding: var(--spacing-xs) var(--spacing-sm);
     border-bottom: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius-md); /* Abgerundete Ecken */
-    margin-bottom: var(--spacing-md); /* Abstand unter dem Header-Bereich */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;

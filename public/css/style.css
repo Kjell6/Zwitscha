@@ -47,7 +47,7 @@
 
   /* Container-Größen */
   --container-width: 90%;
-  --container-max-width: 1200px;
+  --container-max-width: 1000px;
 
   /* Transitions */
   --transition-fast: 0.2s ease;

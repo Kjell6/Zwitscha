@@ -10,49 +10,61 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/Startseite.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 
 <body>
     <?php include 'headerDesktop.php'; ?>
 
-    <div class="post-input-group">
-        <textarea type="text" id="post-input" placeholder="Verfasse einen Post..."></textarea>
-        <button id="post-button" type="button">Veröffentlichen</button>
-    </div>
+    <main class="container">
 
-    <div class="switch-wrapper">
-        <div class="post-toggle">
-            <input type="radio" id="all-posts" name="post-filter" checked>
-            <label for="all-posts">Alle Posts</label>
-
-            <input type="radio" id="followed-posts" name="post-filter">
-            <label for="followed-posts">Gefolgt</label>
-
-            <span class="switch-indicator"></span>
+        <div class="post-input-group">
+            <div class="user-profile">
+                <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
+            </div>
+            <div class="post-input-group-inputs">
+                <textarea type="text" id="post-input" placeholder="Verfasse einen Post..."></textarea>
+                <div class="post-input-bottom">
+                    <p class="character-count"> 0/300</p>
+                    <button id="post-button" type="button">Veröffentlichen</button>
+                </div>
+            </div>
         </div>
-    </div>
+
+        <div class="switch-wrapper">
+            <div class="post-toggle">
+                <input type="radio" id="all-posts" name="post-filter" checked>
+                <label for="all-posts">Alle Posts</label>
+
+                <input type="radio" id="followed-posts" name="post-filter">
+                <label for="followed-posts">Gefolgt</label>
+
+                <span class="switch-indicator"></span>
+            </div>
+        </div>
 
 
-    <section>
-        <ul id="posts">
-            <li>
-                <?php include 'post.php'; ?>
-            </li>
+        <section>
+            <ul id="posts">
+                <li>
+                    <?php include 'post.php'; ?>
+                </li>
 
-            <li>
-                <?php include 'post.php'; ?>
-            </li>
+                <li>
+                    <?php include 'post.php'; ?>
+                </li>
 
-            <li>
-                <?php include 'post.php'; ?>
-            </li>
+                <li>
+                    <?php include 'post.php'; ?>
+                </li>
 
-            <li>
-                <?php include 'post.php'; ?>
-            </li>
+                <li>
+                    <?php include 'post.php'; ?>
+                </li>
 
-        </ul>
-    </section>
+            </ul>
+        </section>
+    </main>
 
     <?php include 'footerMobile.php'; ?>
 

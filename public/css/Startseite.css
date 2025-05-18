@@ -1,7 +1,6 @@
 body {
     /* padding-top für Abstand unter einem eventuellen Header */
     padding-top: var(--spacing-sm);
-    padding-bottom: var(--spacing-md);
     max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
@@ -9,6 +8,85 @@ body {
     padding-right: var(--spacing-sm);
 }
 
+
+
+/* Gruppierung für Input und Veröffentlichen-Button */
+.post-input-group {
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding: var(--spacing-sm);
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-xs);
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+    align-items: flex-start;
+}
+
+/* Container für das Profilbild */
+.post-input-group .user-profile {
+    flex-shrink: 0;
+}
+
+/* Styling für das Profilbild */
+.post-input-group .user-profile img {
+    display: block;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+/* Container für Textarea und Button/Count-Bereich */
+.post-input-group .post-input-group-inputs {
+    padding-left: var(--spacing-xs);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: var(--spacing-xs);
+}
+
+/* Styling für das Post-Eingabefeld */
+.post-input-group #post-input {
+    width: 100%;
+    flex-grow: 1;
+    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-family-main);
+    min-height: 60px;
+    resize: vertical;
+    padding: var(--spacing-xs);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+}
+
+/* Container für Zeichenzähler und Button */
+.post-input-group .post-input-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Styling für den Zeichenzähler */
+.post-input-group .character-count {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* Styling für den Veröffentlichen-Button */
+.post-input-group #post-button {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    cursor: pointer;
+}
+
+.post-input-group #post-button:hover {
+    background-color: var(--primary-hover);
+}
 
 .switch-wrapper {
     display: flex;
@@ -23,6 +101,7 @@ body {
     justify-content: space-between;
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-xs);
     overflow: hidden;
     background-color: var(--light-color);
     font-size: var(--font-size-sm);
@@ -70,42 +149,4 @@ body {
 #all-posts:checked ~ label[for="all-posts"],
 #followed-posts:checked ~ label[for="followed-posts"] {
     color: var(--light-color);
-}
-
-/* Gruppierung für Input und Veröffentlichen-Button */
-.post-input-group {
-    display: flex;
-    flex-grow: 1; /* Lässt die Gruppe den verfügbaren horizontalen Platz einnehmen */
-    gap: var(--spacing-xs);
-    align-items: center;
-    width: 100%; /* Stellt sicher, dass die Gruppe die Breite nutzen kann */
-    padding: 0 var(--spacing-xs); /* NEU: Horizontales Padding passend zur Detailansicht */
-    margin-bottom: var(--spacing-md);
-}
-
-/* Styling für das Post-Eingabefeld */
-.post-input-group #post-input {
-    flex-grow: 1;
-    margin-bottom: 0;
-    font-family: var(--font-family-main);
-}
-
-/* Styling für den Veröffentlichen-Button */
-.post-input-group #post-button {
-    /* Nutzt Button-Stile aus style.css */
-    background-color: var(--primary-color);
-    color: var(--light-color);
-    flex-shrink: 0;
-}
-
-.post-input-group #post-button:hover {
-    background-color: var(--primary-hover);
-}
-
-/* Media Query für mobile Ansicht */
-@media (max-width: 768px) {
-    .post-input-group {
-        flex-direction: column;
-        align-items: stretch; /* Stellt sicher, dass die Elemente die volle Breite einnehmen */
-    }
 }
