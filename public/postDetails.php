@@ -17,6 +17,8 @@
 <body>
 <?php include 'headerDesktop.php'; ?>
 
+<main class="container">
+
 <div class="page-header-container">
     <a href="index.php" class="back-button">
         <button type="button">Zurück</button>
@@ -76,6 +78,8 @@
 
     </ul>
 </section>
+
+</main>
 
 <?php include 'footerMobile.php'; ?>
 
