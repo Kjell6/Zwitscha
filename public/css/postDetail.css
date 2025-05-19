@@ -55,16 +55,6 @@ body {
     margin-bottom: var(--spacing-md);
 }
 
-/* Styling für die Info-Details Sektion (Zeitstempel und Kommentaranzahl) */
-.post .info-details {
-    display: flex;
-    margin-left: var(--spacing-xs);
-    align-items: center;
-    gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-xs);
-    color: var(--text-secondary);
-    font-size: var(--font-size-xs);
-}
 
 /* Styling für die Aktions-Sektion in der Detailansicht */
 /* Diese Sektion enthält nun die Emoji-Reaktionen und die Kommentar-Input-Gruppe */
@@ -81,6 +71,7 @@ body {
     display: flex;
     gap: var(--spacing-xs);
     align-items: center;
+    padding: 0 var(--spacing-xs);
 }
 
 /* Gruppierung für Input und Kommentar-Button */
@@ -90,6 +81,7 @@ body {
     gap: var(--spacing-xs);
     align-items: center;
     width: 100%;
+
     padding: 0 var(--spacing-xs);
 }
 
@@ -157,7 +149,6 @@ body {
         flex-direction: column;
         gap: var(--spacing-sm);
         width: 100%;
-        padding: 0 var(--spacing-sm);
     }
 
     .post-actions.detail-actions #comment-input {

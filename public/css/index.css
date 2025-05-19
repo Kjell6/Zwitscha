@@ -1,5 +1,4 @@
 body {
-    /* padding-top für Abstand unter einem eventuellen Header */
     padding-top: var(--spacing-sm);
     max-width: var(--container-max-width);
     margin-left: auto;
@@ -14,14 +13,12 @@ body {
     padding: var(--spacing-sm) 0;
 }
 
-/* Gruppierung für Input und Veröffentlichen-Button */
 .post-input-group {
     border-bottom: var(--border-width) solid var(--border-color);
     padding: var(--spacing-sm);
     background-color: var(--light-color);
     border-radius: var(--border-radius-md);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
     display: flex;
     flex-direction: row;
     gap: var(--spacing-xs);
@@ -30,12 +27,10 @@ body {
     align-items: flex-start;
 }
 
-/* Container für das Profilbild */
 .post-input-group .user-profile {
     flex-shrink: 0;
 }
 
-/* Styling für das Profilbild */
 .post-input-group .user-profile img {
     display: block;
     border-radius: 50%;
@@ -44,7 +39,6 @@ body {
     object-fit: cover;
 }
 
-/* Container für Textarea und Button/Count-Bereich */
 .post-input-group .post-input-group-inputs {
     padding-left: var(--spacing-xs);
     display: flex;
@@ -53,7 +47,6 @@ body {
     gap: var(--spacing-xs);
 }
 
-/* Styling für das Post-Eingabefeld */
 .post-input-group #post-input {
     width: 100%;
     flex-grow: 1;
@@ -66,7 +59,62 @@ body {
     border-radius: var(--border-radius-sm);
 }
 
-/* Container für Zeichenzähler und Button */
+.image-upload {
+    margin-bottom: var(--spacing-xs);
+}
+
+.image-upload-label {
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--primary-color);
+    font-size: var(--font-size-sm);
+}
+
+/*Hover-Zustand für den Options-Button */
+.image-upload-label:hover {
+    color: var(--primary-color);
+    background-color: var(--hover-color);
+}
+
+
+.image-upload-label i {
+    margin-right: var(--spacing-xs);
+}
+
+.image-preview {
+    position: relative;
+    margin-bottom: var(--spacing-xs);
+    display: none;
+}
+
+.image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-sm);
+    object-fit: contain;
+}
+
+#remove-image {
+    position: absolute;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    background-color: #FF000080;
+    color: var(--text-primary);
+    border: none;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+/*Hover-Zustand für den Options-Button */
+#remove-image:hover {
+    background-color: #ff0000;
+}
+
 .post-input-group .post-input-bottom {
     display: flex;
     justify-content: space-between;
@@ -74,14 +122,12 @@ body {
     width: 100%;
 }
 
-/* Styling für den Zeichenzähler */
 .post-input-group .character-count {
     margin: 0;
     font-size: var(--font-size-sm);
     color: var(--text-secondary);
 }
 
-/* Styling für den Veröffentlichen-Button */
 .post-input-group #post-button {
     background-color: var(--primary-color);
     color: var(--light-color);
@@ -94,7 +140,7 @@ body {
 
 .switch-wrapper {
     display: flex;
-    justify-content: center; /* horizontal zentrieren */
+    justify-content: center;
     margin-bottom: var(--spacing-sm);
 }
 
@@ -109,8 +155,8 @@ body {
     overflow: hidden;
     background-color: var(--light-color);
     font-size: var(--font-size-sm);
-    width: 280px; /* Feste Breite für gleichmäßige Label-Breite */
-    height: 40px; /* Höhe für vertikale Zentrierung */
+    width: 280px;
+    height: 40px;
 }
 
 .post-toggle input {
@@ -159,7 +205,6 @@ body {
     .post-input-group .user-profile {
         display: none;
     }
-
     .main-content {
         width: 100%;
         margin: 0;

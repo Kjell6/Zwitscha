@@ -65,7 +65,6 @@
 
 /* Styling für den eigentlichen Post-Inhalt */
 .post-content {
-    margin-bottom: var(--spacing-xs);
     padding: 0 var(--spacing-sm);
     color: var(--text-primary);
     word-wrap: break-word;
@@ -162,6 +161,20 @@
     background-color: var(--hover-color);
 }
 
+/* Styling für den Container der Post-Bilder */
+.post-images-container {
+    margin-bottom: var(--spacing-xs);
+    padding: 0 var(--spacing-sm);
+}
+
+/* Styling für das Post-Bild */
+.post-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-sm);
+    object-fit: contain;
+}
+
 /* Responsive Anpassungen für den Post im Feed */
 @media (max-width: 550px) {
     .post-user-infos img {
@@ -221,4 +234,3 @@
         justify-content: center;
     }
 }
-

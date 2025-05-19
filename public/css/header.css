@@ -147,7 +147,7 @@
 }
 
 /* Sichtbar nur ab 768px */
-@media (min-width: 768px) {
+@media (min-width: 769px) {
     .desktop-header {
         display: flex;
     }

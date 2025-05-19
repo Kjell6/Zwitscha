@@ -3,87 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="icon" href="assets/favicon.png" type="image/png">
     <title>Startseite</title>
-
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/post.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
-
 <body>
-    <?php include 'headerDesktop.php'; ?>
+<?php include 'headerDesktop.php'; ?>
 
-    <div class="main-content">
-
-        <div class="post-input-group">
-            <div class="user-profile">
-                <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
+<div class="main-content">
+    <div class="post-input-group">
+        <div class="user-profile">
+            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
+        </div>
+        <div class="post-input-group-inputs">
+            <textarea type="text" id="post-input" placeholder="Verfasse einen Post..."></textarea>
+            <div class="image-upload">
+                <label for="image-input" class="image-upload-label">
+                    <i class="bi bi-image"></i> Bild hinzufügen
+                </label>
+                <input type="file" id="image-input" accept="image/*" style="display: none;">
             </div>
-            <div class="post-input-group-inputs">
-                <textarea type="text" id="post-input" placeholder="Verfasse einen Post..."></textarea>
-                <div class="post-input-bottom">
-                    <p class="character-count"> 0/300</p>
-                    <button id="post-button" type="button">Veröffentlichen</button>
-                </div>
+            <div class="image-preview" id="image-preview">
+                <img id="preview-img" src="#" alt="Bildvorschau">
+                <button id="remove-image" type="button"> <i class="bi bi-trash-fill"> </i></button>
+            </div>
+            <div class="post-input-bottom">
+                <p class="character-count">0/300</p>
+                <button id="post-button" type="button">Veröffentlichen</button>
             </div>
         </div>
-
-        <div class="switch-wrapper">
-            <div class="post-toggle">
-                <input type="radio" id="all-posts" name="post-filter" checked>
-                <label for="all-posts">Alle Posts</label>
-
-                <input type="radio" id="followed-posts" name="post-filter">
-                <label for="followed-posts">Gefolgt</label>
-
-                <span class="switch-indicator"></span>
-            </div>
-        </div>
-
-
-        <section>
-            <ul id="posts">
-                <li>
-                    <?php include 'post.php'; ?>
-                </li>
-
-                <li>
-                    <?php include 'post.php'; ?>
-                </li>
-
-                <li>
-                    <?php include 'post.php'; ?>
-                </li>
-
-                <li>
-                    <?php include 'post.php'; ?>
-                </li>
-
-            </ul>
-        </section>
     </div>
 
-    <?php include 'footerMobile.php'; ?>
+    <div class="switch-wrapper">
+        <div class="post-toggle">
+            <input type="radio" id="all-posts" name="post-filter" checked>
+            <label for="all-posts">Alle Posts</label>
+            <input type="radio" id="followed-posts" name="post-filter">
+            <label for="followed-posts">Gefolgt</label>
+            <span class="switch-indicator"></span>
+        </div>
+    </div>
 
-    <footer>
-        <p>&copy; 2025 Zwitscha</p>
-    </footer>
+    <section>
+        <ul id="posts">
+            <li><?php include 'post.php'; ?></li>
+            <li><?php include 'post.php'; ?></li>
+            <li><?php include 'post.php'; ?></li>
+            <li><?php include 'post.php'; ?></li>
+        </ul>
+    </section>
+</div>
+<?php include 'footerMobile.php'; ?>
+<footer>
+    <p>© 2025 Zwitscha</p>
+</footer>
+<script>
+    // Größe des Textfeldes automatisch an Textlänge anpassen
+    const commentInput = document.getElementById('post-input');
+    commentInput.addEventListener('input', () => {
+        commentInput.style.height = 'auto'; // Reset height to auto
+        commentInput.style.height = commentInput.scrollHeight + 'px'; // Set height to scroll height
+    });
 
-    <script>
-        //Größe des Textfeldes automatisch an Textlänge anpassen
+    // Bildvorschau anzeigen
+    const imageInput = document.getElementById('image-input');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    const removeImageButton = document.getElementById('remove-image');
 
-        const commentInput = document.getElementById('post-input');
+    imageInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
-        commentInput.addEventListener('input', () => {
-            commentInput.style.height = 'auto'; // Reset height to auto
-            commentInput.style.height = commentInput.scrollHeight + 'px'; // Set height to scroll height
-        });
-    </script>
-
+    // Bild entfernen
+    removeImageButton.addEventListener('click', () => {
+        imageInput.value = '';
+        previewImg.src = '#';
+        imagePreview.style.display = 'none';
+    });
+</script>
 </body>
 </html>

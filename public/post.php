@@ -1,4 +1,3 @@
-
 <article class="post">
     <section class="post-user-infos">
         <a href="Profil.php" class="no-post-details">
@@ -12,17 +11,22 @@
     </section>
 
     <div class="post-content">
-        <p>[Hier steht der Text des Zwitscha-Posts. Maximal 300 Zeichen.]</p>
+        <p>[Hier steht der Text des Zwitscha-Posts. Maximal 300 Zeichen. Und optional einem Bild]</p>
     </div>
+
+    <div class="post-images-container">
+        <!-- <img src="assets/zwitscha.png" alt="Post-Bild" class="post-image"> -->
+    </div>
+
 
     <div class="post-actions">
         <div class="post-reactions">
-            <button class="reaction-button no-post-details" type="button" data-emoji="👍">&#x1F44D; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="👎">&#x1F44E; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="❤️">&#x2764;&#xFE0F; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="🤣">&#x1F923; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="❓">&#x2753; <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="‼️">&#x203C;&#xFE0F; <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="👍">👍 <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="👎">👎 <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="❤️">❤️ <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="🤣">🤣 <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="❓">❓ <span class="reaction-counter">0</span></button>
+            <button class="reaction-button no-post-details" type="button" data-emoji="‼️">‼️ <span class="reaction-counter">0</span></button>
         </div>
 
         <a href="postDetails.php" class="comment-link">
@@ -31,5 +35,4 @@
             </button>
         </a>
     </div>
-
 </article>
