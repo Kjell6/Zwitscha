@@ -45,7 +45,9 @@
                         <img
                                 src="<?= htmlspecialchars($post['bildPfad']) ?>"
                                 alt="Post-Bild"
-                                class="post-image">
+                                class="post-image"
+                                onclick="openLightbox('<?= htmlspecialchars($post['bildPfad']) ?>')"
+                                style="cursor: pointer;">
                     </div>
                 <?php endif; ?>
             </div>
@@ -72,3 +74,5 @@
             </div>
         </main>
 </article>
+
+<?php include 'lightbox.php'; ?>

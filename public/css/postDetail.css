@@ -52,7 +52,7 @@ body {
 
     gap: var(--spacing-xs);
     margin-bottom: var(--spacing-sm);
-    padding: 0 var(--spacing-sm);
+    padding: 0 var(--spacing-xs);
     flex-wrap: wrap;
 }
 
@@ -182,5 +182,11 @@ body {
 
     .post-actions.detail-actions #comment-button {
         width: 100%;
+    }
+}
+
+@media (max-width: 390px) {
+    .post-actions .post-reactions {
+        max-width: 260px;
     }
 }

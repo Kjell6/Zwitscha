@@ -7,7 +7,7 @@ $postDetail = [
     'profilBild' => 'assets/placeholder-profilbild.jpg',
     'datumZeit' => '2025-05-01T12:00:00Z',
     'text' => 'Das ist der detaillierte Text des Posts.',
-    'bildPfad' => '',
+    'bildPfad' => 'assets/zwitscha_green.jpg',
     'reactions' => [
         '👍' => 3,
         '👎' => 0,
@@ -91,7 +91,11 @@ $postDetail['time_label'] = $datum->format('H:i, d.m.y'); // ergibt z. B.: 13:
 
             <?php if (!empty($postDetail['bildPfad'])): ?>
                 <div class="post-image-container">
-                    <img src="<?= htmlspecialchars($postDetail['bildPfad']) ?>" alt="Post-Bild" class="post-image">
+                    <img src="<?= htmlspecialchars($postDetail['bildPfad']) ?>"
+                         alt="Post-Bild"
+                         class="post-image"
+                         onclick="openLightbox('<?= htmlspecialchars($postDetail['bildPfad']) ?>')"
+                         style="cursor: pointer;">
                 </div>
             <?php endif; ?>
         </div>
@@ -149,5 +153,7 @@ $postDetail['time_label'] = $datum->format('H:i, d.m.y'); // ergibt z. B.: 13:
         commentInput.style.height = commentInput.scrollHeight + 'px';
     });
 </script>
+
+<?php include 'lightbox.php'; ?>
 </body>
 </html>
