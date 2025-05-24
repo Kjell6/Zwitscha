@@ -1,38 +1,74 @@
 <article class="post">
-    <section class="post-user-infos">
         <a href="Profil.php" class="no-post-details">
-            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
+            <img
+                    src="<?= htmlspecialchars($post['profilBild']) ?>"
+                    alt="Profilbild von <?= htmlspecialchars($post['autor']) ?>"
+                    class="post-user-image">
         </a>
-        <div class="post-user-details">
-            <span class="post-author-name">[Autorname]</span>
-            <time datetime="2025-04-27T10:30:00Z" class="post-timestamp">[vor 2 Stunden]</time>
-        </div>
-        <button class="post-options-button no-post-details" type="button" aria-label="Post-Optionen"> <i class="bi bi-trash-fill"> </i></button>
-    </section>
 
-    <div class="post-content">
-        <p>[Hier steht der Text des Zwitscha-Posts. Maximal 300 Zeichen. Und optional einem Bild]</p>
-    </div>
+        <main class="post-main-content">
+            <section class="post-user-infos">
+                <a href="Profil.php" class="no-post-details">
+                    <img
+                            src="<?= htmlspecialchars($post['profilBild']) ?>"
+                            alt="Profilbild von <?= htmlspecialchars($post['autor']) ?>"
+                            class="post-user-image-inline">
+                </a>
 
-    <div class="post-images-container">
-        <!-- <img src="assets/zwitscha.png" alt="Post-Bild" class="post-image"> -->
-    </div>
+                <div class="post-user-details">
+                    <span class="post-author-name">
+                        <?= htmlspecialchars($post['autor']) ?>
+                    </span>
+                    <time
+                            datetime="<?= htmlspecialchars($post['datumZeit']) ?>"
+                            class="post-timestamp">
+                        <?= htmlspecialchars($post['time_label']) ?>
+                    </time>
+                </div>
+                <?php if ($currentUser === $post['autor']): ?>
+                    <button
+                            class="post-options-button no-post-details"
+                            type="button"
+                            aria-label="Post-Optionen">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                <?php endif; ?>
+            </section>
 
+            <div class="post-content">
+                <p>
+                    <?= nl2br(htmlspecialchars($post['text'])) ?>
+                </p>
 
-    <div class="post-actions">
-        <div class="post-reactions">
-            <button class="reaction-button no-post-details" type="button" data-emoji="👍">👍 <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="👎">👎 <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="❤️">❤️ <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="🤣">🤣 <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="❓">❓ <span class="reaction-counter">0</span></button>
-            <button class="reaction-button no-post-details" type="button" data-emoji="‼️">‼️ <span class="reaction-counter">0</span></button>
-        </div>
+                <?php if (!empty($post['bildPfad'])): ?>
+                    <div class="post-image-container">
+                        <img
+                                src="<?= htmlspecialchars($post['bildPfad']) ?>"
+                                alt="Post-Bild"
+                                class="post-image">
+                    </div>
+                <?php endif; ?>
+            </div>
 
-        <a href="postDetails.php" class="comment-link">
-            <button class="action-button comment-button" type="button">
-                <i class="bi bi-chat-dots-fill"></i> 2 Kommentare
-            </button>
-        </a>
-    </div>
+            <div class="post-actions">
+                <div class="post-reactions">
+                    <?php foreach ($post['reactions'] as $emoji => $count): ?>
+                        <button
+                                class="reaction-button no-post-details"
+                                type="button"
+                                data-emoji="<?= htmlspecialchars($emoji) ?>">
+                            <?= $emoji ?>
+                            <span class="reaction-counter"><?= (int)$count ?></span>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+
+                <a href="postDetails.php" class="comment-link">
+                    <button class="action-button comment-button" type="button">
+                        <i class="bi bi-chat-dots-fill"></i>
+                        <?= (int)$post['comments'] ?> Kommentar<?= $post['comments'] !== 1 ? 'e' : '' ?>
+                    </button>
+                </a>
+            </div>
+        </main>
 </article>

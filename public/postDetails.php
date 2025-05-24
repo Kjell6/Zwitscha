@@ -1,3 +1,48 @@
+<?php
+$error = false;
+$currentUser = 'Benutzer1'; // Beispiel für den aktuell eingeloggten Nutzer
+
+$postDetail = [
+    'autor' => 'Benutzer1',
+    'profilBild' => 'assets/placeholder-profilbild.jpg',
+    'datumZeit' => '2025-05-01T12:00:00Z',
+    'text' => 'Das ist der detaillierte Text des Posts.',
+    'bildPfad' => '',
+    'reactions' => [
+        '👍' => 3,
+        '👎' => 0,
+        '❤️' => 5,
+        '🤣' => 2,
+        '❓' => 0,
+        '‼️' => 1
+    ],
+    'comments' => 3
+];
+
+$kommentare = [
+    [
+        'autor' => 'Kommentator1',
+        'profilBild' => 'assets/placeholder-profilbild.jpg',
+        'datumZeit' => '2025-05-01T13:00:00Z',
+        'time_label' => 'vor 5 Minuten',
+        'text' => 'Das ist ein Kommentar.'
+    ],
+    [
+        'autor' => 'Kommentator2',
+        'profilBild' => 'assets/placeholder-profilbild.jpg',
+        'datumZeit' => '2025-05-01T13:05:00Z',
+        'time_label' => 'vor 2 Minuten',
+        'text' => 'Noch ein Kommentar.'
+    ]
+];
+
+
+$datum = new DateTime($postDetail['datumZeit']);
+$postDetail['time_label'] = $datum->format('H:i, d.m.y'); // ergibt z. B.: 13:43, 30.04.25
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +51,9 @@
     <title>Post Detail</title>
     <link rel="icon" href="assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/post.css">
     <link rel="stylesheet" href="css/postDetail.css">
+    <link rel="stylesheet" href="css/post.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
@@ -22,35 +68,41 @@
         <h1>Post</h1>
     </div>
 
-    <article class="post detail-post">
-        <section class="post-user-infos">
+    <article class="detail-post">
+        <section class="post-user-infos-detail">
             <a href="Profil.php" class="no-post-details">
-                <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
+                <img src="<?= htmlspecialchars($postDetail['profilBild']) ?>" alt="Profilbild">
             </a>
-            <div class="post-user-details">
-                <span class="post-author-name">[Autorname]</span>
-                <time datetime="2025-04-27T10:30:00Z" class="post-timestamp">13:43, 30.04.25</time>
+            <div class="post-user-details-detail">
+                <span class="post-author-name"><?= htmlspecialchars($postDetail['autor']) ?></span>
+                <time datetime="<?= htmlspecialchars($postDetail['datumZeit']) ?>" class="post-timestamp">
+                    <?= htmlspecialchars($postDetail['time_label']) ?>
+                </time>
             </div>
-            <button class="post-options-button no-post-details" type="button" aria-label="Post-Optionen"> <i class="bi bi-trash-fill"> </i></button>
+            <?php if ($currentUser === $postDetail['autor']): ?>
+                <button class="post-options-button no-post-details" type="button" aria-label="Post-Optionen">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            <?php endif; ?>
         </section>
 
-        <div class="post-content">
-            <p>[Hier steht der Text des Zwitscha-Posts. Maximal 300 Zeichen.]</p>
-        </div>
+        <div class="post-content-detail">
+            <p><?= nl2br(htmlspecialchars($postDetail['text'])) ?></p>
 
-        <div class="post-images-container">
-            <!-- <img src="assets/zwitscha.png" alt="Post-Bild" class="post-image"> -->
+            <?php if (!empty($postDetail['bildPfad'])): ?>
+                <div class="post-image-container">
+                    <img src="<?= htmlspecialchars($postDetail['bildPfad']) ?>" alt="Post-Bild" class="post-image">
+                </div>
+            <?php endif; ?>
         </div>
-
 
         <section class="post-actions detail-actions">
             <div class="post-reactions">
-                <button class="reaction-button" type="button" data-emoji="👍">👍 <span class="reaction-counter">0</span></button>
-                <button class="reaction-button" type="button" data-emoji="👎">👎 <span class="reaction-counter">0</span></button>
-                <button class="reaction-button" type="button" data-emoji="❤️">❤️ <span class="reaction-counter">0</span></button>
-                <button class="reaction-button" type="button" data-emoji="🤣">🤣 <span class="reaction-counter">0</span></button>
-                <button class="reaction-button" type="button" data-emoji="❓">❓ <span class="reaction-counter">0</span></button>
-                <button class="reaction-button" type="button" data-emoji="‼️">‼️ <span class="reaction-counter">0</span></button>
+                <?php foreach ($postDetail['reactions'] as $emoji => $count): ?>
+                    <button class="reaction-button" type="button" data-emoji="<?= htmlspecialchars($emoji) ?>">
+                        <?= $emoji ?> <span class="reaction-counter"><?= (int)$count ?></span>
+                    </button>
+                <?php endforeach; ?>
             </div>
 
             <div class="comment-input-group">
@@ -58,19 +110,29 @@
                 <button id="comment-button" type="button">Kommentieren</button>
             </div>
         </section>
-
     </article>
 
+
     <section class="comments-section">
-        <h2>3 Kommentare</h2>
-        <ul id="comments-list">
-            <li>
-                <?php include 'kommentar.php'; ?>
-            </li>
-            <li>
-                <?php include 'kommentar.php'; ?>
-            </li>
-        </ul>
+        <h2><?= count($kommentare) ?> Kommentar<?= count($kommentare) !== 1 ? 'e' : '' ?></h2>
+        <?php if ($error): ?>
+            <p class="error">Fehler beim Laden der Posts. Bitte später erneut versuchen.</p>
+
+        <?php elseif (count($kommentare) === 0): ?>
+            <p class="empty">Noch keine Posts verfügbar.</p>
+
+        <?php else: ?>
+            <ul id="comments">
+                <?php foreach ($kommentare as $kommentar): ?>
+                    <li>
+                        <?php
+                        // $kommentare-Array in post.php verfügbar machen:
+                        include 'kommentar.php';
+                        ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
     </section>
 </main>
 
