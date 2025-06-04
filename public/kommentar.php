@@ -1,44 +1,46 @@
-<article class="post">
-    <a href="Profil.php" class="no-post-details">
-        <img
-                src="<?= htmlspecialchars($kommentar['profilBild']) ?>"
-                alt="Profilbild von <?= htmlspecialchars($kommentar['autor']) ?>"
-                class="post-user-image">
+<?php
+
+// Überprüfe, ob die benötigten Variablen gesetzt sind
+if (!isset($comment_for_template) || !isset($currentUser) || !isset($postId)) {
+    echo '<p style="color: red;">Fehler: Notwendige Daten für Kommentar-Anzeige fehlen.</p>';
+    return;
+}
+
+// Berechtigung zum Löschen des Kommentars prüfen
+$canDeleteComment = ($comment_for_template['autor'] === $currentUser);
+?>
+
+<article class="post comment-layout"> <a href="Profil.php?user=<?php echo urlencode($comment_for_template['autor']); ?>" class="no-post-details comment-profil-link">
+        <img src="<?php echo htmlspecialchars($comment_for_template['profilBild']); ?>" class="post-user-image" alt="Profilbild von <?php echo htmlspecialchars($comment_for_template['autor']); ?>">
     </a>
 
     <main class="post-main-content">
         <section class="post-user-infos">
-            <a href="Profil.php" class="no-post-details">
-                <img
-                        src="<?= htmlspecialchars($kommentar['profilBild']) ?>"
-                        alt="Profilbild von <?= htmlspecialchars($kommentar['autor']) ?>"
-                        class="post-user-image-inline">
+            <a href="Profil.php?user=<?php echo urlencode($comment_for_template['autor']); ?>" class="no-post-details comment-profil-link-inline">
+                <img src="<?php echo htmlspecialchars($comment_for_template['profilBild']); ?>" class="post-user-image-inline" alt="">
             </a>
 
             <div class="post-user-details">
-                    <span class="post-author-name">
-                        <?= htmlspecialchars($kommentar['autor']) ?>
-                    </span>
-                <time
-                        datetime="<?= htmlspecialchars($kommentar['datumZeit']) ?>"
-                        class="post-timestamp">
-                    <?= htmlspecialchars($kommentar['time_label']) ?>
+                <a href="Profil.php?user=<?php echo urlencode($comment_for_template['autor']); ?>" class="post-author-name">
+                    <?php echo htmlspecialchars($comment_for_template['autor']); ?>
+                </a>
+                <time datetime="<?php echo htmlspecialchars($comment_for_template['datumZeit']); ?>" class="post-timestamp">
+                    <?php echo htmlspecialchars($comment_for_template['time_label']); ?>
                 </time>
             </div>
-            <?php if ($currentUser === $kommentar['autor']): ?>
-                <button
-                        class="post-options-button no-post-details"
-                        type="button"
-                        aria-label="Post-Optionen">
-                    <i class="bi bi-trash-fill"></i>
-                </button>
+            <?php if ($canDeleteComment): ?>
+                <form method="POST" action="postDetail.php?id=<?php echo $postId; /* Bleibe auf der Detailseite */ ?>" style="display: inline;" onsubmit="return confirm('Kommentar wirklich löschen?');">
+                    <input type="hidden" name="action" value="delete_comment">
+                    <input type="hidden" name="comment_id" value="<?php echo $comment_for_template['id']; ?>">
+                    <input type="hidden" name="post_id" value="<?php echo $postId; ?>"> <button class="post-options-button no-post-details" type="submit" aria-label="Kommentar löschen">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                </form>
             <?php endif; ?>
         </section>
 
         <div class="post-content">
-            <p>
-                <?= nl2br(htmlspecialchars($kommentar['text'])) ?>
-            </p>
+            <p><?php echo nl2br(htmlspecialchars($comment_for_template['text'])); ?></p>
         </div>
     </main>
 </article>
