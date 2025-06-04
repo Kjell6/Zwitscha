@@ -15,6 +15,10 @@
   --input-border: #ccc;           /* Rahmenfarbe für Eingabefelder */
   --bg-color: #f5f5f5;            /* Hintergrundfarbe */
 
+  /* Gefahrfarben */
+  --danger-color: #e53935;
+  --danger-hover: #c62828;
+
 
   /* Typografie */
   --font-family-main: 'Roboto', sans-serif;
