@@ -1,80 +1,74 @@
-<article class="post" onclick="window.location.href = 'postDetails.php';">
-        <a href="Profil.php" class="no-post-details">
-            <img
-                    src="<?= htmlspecialchars($post['profilBild']) ?>"
-                    alt="Profilbild von <?= htmlspecialchars($post['autor']) ?>"
-                    class="post-user-image">
-        </a>
+<?php
 
-        <main class="post-main-content">
-            <section class="post-user-infos">
-                <a href="Profil.php" class="no-post-details">
-                    <img
-                            src="<?= htmlspecialchars($post['profilBild']) ?>"
-                            alt="Profilbild von <?= htmlspecialchars($post['autor']) ?>"
-                            class="post-user-image-inline">
+// Überprüfe ob die benötigten Variablen gesetzt sind
+if (!isset($post) || !isset($currentUser)) {
+    die('Post-Daten oder currentUser nicht verfügbar');
+}
+
+$canDelete = ($post['autor'] === $currentUser);
+?>
+
+<article class="post" style="cursor: pointer;" data-post-id="<?php echo $post['id']; ?>">
+    <a href="Profil.php" class="no-post-details">
+        <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" class="post-user-image">
+    </a>
+    <main class="post-main-content">
+        <section class="post-user-infos">
+            <a href="Profil.php" class="no-post-details">
+                <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" class="post-user-image-inline">
+            </a>
+            <div class="post-user-details">
+                <a href="Profil.php" class="post-author-name">
+                    <?php echo htmlspecialchars($post['autor']); ?>
                 </a>
-
-                <div class="post-user-details">
-                    <a href="Profil.php" class="post-author-name">
-                        <?= htmlspecialchars($post['autor']) ?>
-                    </a>
-                    <time
-                            datetime="<?= htmlspecialchars($post['datumZeit']) ?>"
-                            class="post-timestamp">
-                        <?= htmlspecialchars($post['time_label']) ?>
-                    </time>
-                </div>
-                <?php if ($currentUser === $post['autor']): ?>
-                    <button
-                            class="post-options-button no-post-details"
-                            type="button"
-                            aria-label="Post-Optionen"
-                            onclick="event.stopPropagation();">
+                <time datetime="<?php echo $post['datumZeit']; ?>" class="post-timestamp">
+                    <?php echo htmlspecialchars($post['time_label']); ?>
+                </time>
+            </div>
+            <?php if ($canDelete): ?>
+                <form method="POST" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
+                    <input type="hidden" name="action" value="delete_post">
+                    <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                    <button class="post-options-button no-post-details" type="submit" aria-label="Post löschen">
                         <i class="bi bi-trash-fill"></i>
                     </button>
-                <?php endif; ?>
-            </section>
-
-            <div class="post-content">
-                <p>
-                    <?= nl2br(htmlspecialchars($post['text'])) ?>
-                </p>
-
-                <?php if (!empty($post['bildPfad'])): ?>
-                    <div class="post-image-container">
-                        <img
-                                src="<?= htmlspecialchars($post['bildPfad']) ?>"
-                                alt="Post-Bild"
-                                class="post-image"
-                                onclick="openLightbox('<?= htmlspecialchars($post['bildPfad']) ?>'); event.stopPropagation()"
-                                style="cursor: pointer;">
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <div class="post-actions">
-                <div class="post-reactions">
-                    <?php foreach ($post['reactions'] as $emoji => $count): ?>
-                        <button
-                                class="reaction-button no-post-details"
-                                type="button"
-                                data-emoji="<?= htmlspecialchars($emoji) ?>"
-                                onclick="event.stopPropagation();">
-                            <?= $emoji ?>
-                            <span class="reaction-counter"><?= (int)$count ?></span>
-                        </button>
-                    <?php endforeach; ?>
+                </form>
+            <?php endif; ?>
+        </section>
+        <div class="post-content">
+            <p><?php echo nl2br(htmlspecialchars($post['text'])); ?></p>
+            <?php if (!empty($post['bildPfad'])): ?>
+                <div class="post-image-container">
+                    <img src="<?php echo htmlspecialchars($post['bildPfad']); ?>"
+                         alt="Post-Bild"
+                         class="post-image"
+                         onclick="openLightbox('<?php echo htmlspecialchars($post['bildPfad']); ?>'); event.stopPropagation()"
+                         style="cursor: pointer;">
                 </div>
-
-                <a href="postDetails.php" class="comment-link">
-                    <button class="action-button comment-button" type="button" onclick="event.stopPropagation();">
-                        <i class="bi bi-chat-dots-fill"></i>
-                        <?= (int)$post['comments'] ?> Kommentar<?= $post['comments'] !== 1 ? 'e' : '' ?>
-                    </button>
-                </a>
+            <?php endif; ?>
+        </div>
+        <div class="post-actions">
+            <div class="post-reactions">
+                <?php
+                $emojis = ['👍', '👎', '❤️', '🤣', '❓', '‼️'];
+                foreach ($emojis as $emoji):
+                    $count = $post['reactions'][$emoji] ?? 0;
+                    ?>
+                    <form method="POST" style="display: inline;" class="reaction-form">
+                        <input type="hidden" name="action" value="toggle_reaction">
+                        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                        <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
+                        <button class="reaction-button no-post-details" type="submit" data-emoji="<?php echo $emoji; ?>">
+                            <?php echo $emoji; ?> <span class="reaction-counter"><?php echo $count; ?></span>
+                        </button>
+                    </form>
+                <?php endforeach; ?>
             </div>
-        </main>
+            <a href="postDetails.php?id=<?php echo $post['id']; ?>" class="comment-link">
+                <button class="action-button comment-button" type="button">
+                    <i class="bi bi-chat-dots-fill"></i> <?php echo $post['comments']; ?> Kommentar<?php echo $post['comments'] != 1 ? 'e' : ''; ?>
+                </button>
+            </a>
+        </div>
+    </main>
 </article>
-
-<?php include 'lightbox.php'; ?>

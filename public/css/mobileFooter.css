@@ -9,7 +9,7 @@
     border-top: var(--border-width) solid var(--border-color);
     box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    padding: var(--spacing-xs) 0;
+    padding: 0;
 }
 
 .footer-nav {
@@ -41,6 +41,6 @@
     body::after {
         content: "";
         display: block;
-        height: calc(80px); /* Höhe des mobilen Footers */
+        height: calc(60px); /* Höhe des mobilen Footers */
     }
 }
