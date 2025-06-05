@@ -144,6 +144,31 @@ footer {
 }
 
 
+.image-upload {
+    margin-bottom: var(--spacing-xs);
+}
+
+.image-upload-label {
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--primary-color)!important;
+    font-size: var(--font-size-sm);
+}
+
+/*Hover-Zustand für den Options-Button */
+.image-upload-label:hover {
+    color: var(--primary-color);
+    background-color: var(--hover-color);
+}
+
+
+.image-upload-label i {
+    margin-right: var(--spacing-xs);
+}
+
 /* Vermeidet unnötig große Abstände */
 #change-avatar-form .form-group {
     margin-bottom: 0;

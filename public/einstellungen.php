@@ -43,9 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <fieldset>
                 <legend>Profilbild ändern</legend>
                 <div class="form-row compact-avatar-row">
-                    <div class="form-group">
-                        <label for="avatar">Neues Profilbild:</label>
-                        <input type="file" id="avatar" name="avatar" accept="image/*" />
+
+                    <div class="image-upload">
+                        <label for="avatar" class="image-upload-label">
+                            <i class="bi bi-image"></i> Neues Profilbild
+                        </label>
+                        <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;"/>
                     </div>
                     <div class="avatar-preview">
                         <img src="assets/placeholder-profilbild-2.png" alt="Profilbild-Vorschau" />
