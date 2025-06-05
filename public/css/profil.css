@@ -44,6 +44,21 @@ body {
     flex-shrink: 0;
 }
 
+.folgen-button {
+    cursor: pointer;
+    background-color: var(--primary-color);
+    transition: background-color 0.3s ease;
+}
+.folgen-button.gefolgt {
+    background-color: var(--primary-color)
+}
+.folgen-button:hover {
+    background-color: var(--primary-hover);
+}
+.folgen-button.gefolgt:hover {
+    background-color: var(--primary-hover);
+}
+
 /* Container für den gesamten Textinhalt - stellt sicher, dass die Kinder stapeln */
 div.profil-header.pb-name-untereinander {
     display: flex;
