@@ -39,6 +39,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="stylesheet" href="css/profil.css" />
     <link rel="stylesheet" href="css/post.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
+
+    <style>
+        .folgen-button {
+            padding: 0.4em 1em;
+            font-weight: 700;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #22DA26;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .folgen-button.gefolgt {
+            background-color: #28a745;
+        }
+        .folgen-button:hover {
+            background-color: #1baf1e;
+        }
+        .folgen-button.gefolgt:hover {
+            background-color: #1e7e34;
+        }
+    </style>
 </head>
 <body>
 
