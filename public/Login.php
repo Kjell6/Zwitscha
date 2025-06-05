@@ -46,7 +46,7 @@
                 <a href="index.php"> <!-- An dieser Stelle später vielleicht lieber Verlinkung über JS machen, damit man anmeldedaten prüfen kann und dementsprechent auf die nächste Seite kommt oder nicht -->
                     <button type="button">Anmelden</button>
                 </a>
-                <p>Falls du noch keinen Account hast und dich registrieren möchest, klicke <a href="Register.html">hier</a>.</p>
+                <p>Falls du noch keinen Account hast und dich registrieren möchest, klicke <a href="Register.php">hier</a>.</p>
 
             </form>
         </section>

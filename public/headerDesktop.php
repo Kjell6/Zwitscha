@@ -41,7 +41,7 @@
 
         <?php if ($currentPage === 'Profil.php'): ?>
             <!-- Abmelden Button -->
-            <a href="Login.html">
+            <a href="Login.php">
                 <button type="button">Abmelden</button>
             </a>
         <?php else: ?>
