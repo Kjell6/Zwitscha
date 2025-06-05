@@ -3,8 +3,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete-account'])) {
         echo "<p style='color: red; font-weight: bold;'>[Dummy] Account würde jetzt gelöscht werden.</p>";
     } elseif (isset($_POST['change-name'])) {
-        $newName = htmlspecialchars($_POST['new-name'] ?? '');
-        echo "<p style='color: green; font-weight: bold;'>[Dummy] Name würde jetzt zu „$newName“ geändert werden.</p>";
+        $newName = htmlspecialchars(isset($_POST['new-name']) ? $_POST['new-name'] : '');
+        echo "<p style='color: green; font-weight: bold;'>[Dummy] Name würde jetzt zu $newName geändert werden.</p>";
     } elseif (isset($_POST['change-password'])) {
         echo "<p style='color: blue; font-weight: bold;'>[Dummy] Passwort würde jetzt geändert werden.</p>";
     } elseif (isset($_POST['change-avatar'])) {
