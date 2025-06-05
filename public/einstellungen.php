@@ -1,3 +1,9 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete-account'])) {
+    echo "<p style='color: red; font-weight: bold;'>[Dummy] Account würde jetzt gelöscht werden.</p>";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -69,14 +75,15 @@
             </fieldset>
         </form>
 
-        <!-- Account löschen -->
-        <form id="delete-account-form" class="card danger">
+        <form action="#" method="POST" class="card" onsubmit="return confirm('Möchtest du deinen Account wirklich löschen?');">
             <fieldset>
                 <legend>Account löschen</legend>
-                <p>Bist du sicher, dass du deinen Account dauerhaft löschen möchtest?</p>
-                <button type="submit" class="button danger-button">Account löschen</button>
+                <p>Diese Aktion kann nicht rückgängig gemacht werden.</p>
+                <button type="submit" name="delete-account" class="button danger">Account löschen</button>
             </fieldset>
         </form>
+
+
 
     </section>
 </main>
