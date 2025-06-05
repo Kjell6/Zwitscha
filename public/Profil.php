@@ -5,9 +5,10 @@ $isFollowing = false;
 $postResult = '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $followerId = $_POST['followerId'] ?? '';
-    $followeeId = $_POST['followeeId'] ?? '';
-    $currentStatus = $_POST['currentStatus'] ?? 'not_following'; // neuer Wert, der aktuellen Status beschreibt
+    $followerId = isset($_POST['followerId']) ? $_POST['followerId'] : '';
+    $followeeId = isset($_POST['followeeId']) ? $_POST['followeeId'] : '';
+    $currentStatus = isset($_POST['currentStatus']) ? $_POST['currentStatus'] : 'not_following'; // neuer Wert, der aktuellen Status beschreibt
+
 
     if ($followerId && $followeeId) {
         if ($currentStatus === 'following') {
