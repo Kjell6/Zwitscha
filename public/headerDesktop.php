@@ -25,9 +25,6 @@
         </a>
     </div>
 
-
-
-
     <div class="header-section search-section">
         <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
         <div class="header-search-results-dropdown"></div>
@@ -53,4 +50,30 @@
 
 
     </div>
+
+    <!-- JavaScript Code für Live ergebnisse -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('header-search-input');
+
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value;
+
+                fetch('suchanfrage.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'query=' + encodeURIComponent(query)
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        // Ergebnisse anzeigen
+                        document.querySelector('.header-search-results-dropdown').innerHTML = data;
+                    })
+                    .catch(error => console.error('Fehler bei der Suche:', error));
+            });
+        });
+    </script>
+
 </header>
