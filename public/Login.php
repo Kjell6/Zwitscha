@@ -5,13 +5,12 @@ $dummyUsers = [
     'lisa' => 'passwort',
     'admin' => 'admin',
     'user' => 'user'
-
 ];
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $benutzername = isset($_POST['benutzername']) ? $_POST['benutzername'] : '';
+    $benutzername = isset($_POST['benutzername']) ? trim($_POST['benutzername']) : '';
     $passwort = isset($_POST['passwort']) ? $_POST['passwort'] : '';
 
     // Login prüfen
@@ -27,23 +26,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login Zwitscha</title>
-    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/Login.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/Login.css" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
 </head>
-
 <body>
 <div class="login-section logo-section">
     <a href="index.php" class="logo">
         <picture>
-            <source srcset="assets/zwitscha_dark.png" media="(prefers-color-scheme: dark)">
-            <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image">
+            <source srcset="assets/zwitscha_dark.png" media="(prefers-color-scheme: dark)" />
+            <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image" />
         </picture>
     </a>
 </div>
@@ -52,10 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section class="Login">
         <form id="login-form" class="card" method="POST" action="">
             <label for="benutzername">Benutzername</label>
-            <input type="text" name="benutzername" id="benutzername" required>
+            <input type="text" name="benutzername" id="benutzername" required />
 
             <label for="passwort">Passwort</label>
-            <input type="password" name="passwort" id="passwort" required>
+            <input type="password" name="passwort" id="passwort" required />
 
             <button type="submit">Anmelden</button>
 

@@ -6,16 +6,19 @@
     margin-bottom: 0rem;
 }
 
-#login-form {
+#login-form,
+#register-form {
     max-width: 500px;
     width: 100%;
     margin: 0 auto;
 }
 
-#login-form button {
+#login-form button,
+#register-form button {
     margin-bottom: 1rem;
 }
 
-#login-form label {
+#login-form label,
+#register-form label {
     font-weight: bold;
 }
