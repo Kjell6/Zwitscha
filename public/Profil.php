@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            background-color: #007bff;
+            background-color: #22DA26;
             color: white;
             transition: background-color 0.3s ease;
         }
@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             background-color: #28a745;
         }
         .folgen-button:hover {
-            background-color: #0056b3;
+            background-color: #1baf1e;
         }
         .folgen-button.gefolgt:hover {
             background-color: #1e7e34;
