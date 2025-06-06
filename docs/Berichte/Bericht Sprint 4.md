@@ -17,11 +17,13 @@
 ## Ferdi
 
 ### 1. Erzielte Ergebnisse
-
+- Post Request Suche
+- Dynamische Anzeige anmelde button
 
 
 ### 2. Hürden
-
+- Die Einarbeitung in Php war zunächst schwierig, vor allem die verknüpfung von html buttons und php code
+- auch die dynamische Anzeige der Suchergebnisse war nicht so leicht, weil man theoretisch javascript bräuchte, um zu erkennen, wenn es eine eingabe in das suchfeld gibt
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
 
