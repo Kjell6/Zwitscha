@@ -47,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 
 <?php include 'headerDesktop.php'; ?>
+<?php include 'footerMobile.php'; ?>
 
 <main class="container">
 
@@ -91,21 +92,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     <?php endif; ?>
 
-    <div class="posts">
+    <section class="feed">
         <h2>Posts</h2>
+        <?php
+        switch ($loadingState) {
+            case 'empty':
+                ?>
+                <div class="empty-state">
+                    <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
+                    <h3>Noch keine Posts vorhanden</h3>
+                    <p>Verfasse den ersten Post oder folge anderen Nutzern, um deren Posts zu sehen.</p>
+                </div>
+                <?php
+                break;
 
-        <section>
-            <ul id="feed-nur-als-test-wie-es-ausseht">
-                <li><?php include 'post.php'; ?></li>
-                <li><?php include 'post.php'; ?></li>
-                <li><?php include 'post.php'; ?></li>
-                <li><?php include 'post.php'; ?></li>
-            </ul>
-        </section>
-    </div>
+            case 'error':
+                ?>
+                <div class="error-state">
+                    <i class="bi bi-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                    <h3>Fehler beim Laden der Posts</h3>
+                    <p>Die Posts konnten nicht geladen werden. Bitte versuchen Sie es später erneut.</p>
+                    <button onclick="window.location.reload()" class="btn btn-primary">Neu laden</button>
+                </div>
+                <?php
+                break;
 
-    <?php include 'footerMobile.php'; ?>
+            case 'data':
+            default:
+                if (empty($posts)) {
 
+                } else {
+                    // Posts anzeigen - jeden Post über post.php einbinden
+                    foreach ($posts as $post) {
+                        include 'post.php';
+                    }
+                }
+                break;
+        }
+        ?>
+    </section>
 </main>
 
 <footer>
