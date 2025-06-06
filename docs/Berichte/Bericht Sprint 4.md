@@ -12,7 +12,7 @@
 - Die Arbeit mit PHP war bisher das komplizierteste. Ich konnte mir zu beginn nicht vorstellen, wie man es umsetzen sollte, damit später eine Datenbank implementiert werden kann. 
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
-- 
+- Überraschend war eigentlich nichts, aber es war natürlich schwierig das erste mal mit php zu arbeiten
 
 ## Ferdi
 
