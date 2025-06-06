@@ -6,7 +6,8 @@ $feedbackType = ''; // success, error, info
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_post') {
     // POST Daten auslesen und validieren
     $postText = trim($_POST['post_text'] ?? '');
-    $currentUser = 'Max Mustermann'; // später aus Session
+    // Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
+    $currentUser = 'Max Mustermann';
 
     // Einfache Validierung
     if (empty($postText)) {
@@ -15,16 +16,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     } elseif (strlen($postText) > 300) {
         $feedbackMessage = 'Post-Text darf maximal 300 Zeichen lang sein.';
         $feedbackType = 'error';
+    } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_OK) {
+        $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
+        $feedbackType = 'error';
     } else {
         // Hier später Post in Datenbank speichern
     }
 }
 
 // ---- Dynamische Inhalte: Posts laden ----
-$currentUser = 'Max Mustermann'; // später aus der Session holen
+// Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
+$currentUser = 'Max Mustermann';
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
 // Simuliere verschiedene Zustände für dynamische Inhalte
+// Für Tests: URL um ?state=empty oder ?state=error ergänzen
+// Später: Zustand basierend auf Datenbankabfrage bestimmen (Erfolg/Fehler/keine Daten)
+
 $loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
 
 // Dummy-Posts (später aus Datenbank)
@@ -103,13 +111,18 @@ if ($showFollowedOnly) {
 // Die Post-Darstellung wird jetzt durch post.php gehandhabt
 
 // POST Request für Reaktionen und Löschen
+// Später: Hier Datenbankoperationen für Reaktionen und Löschen implementieren
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'toggle_reaction') {
         // Hier in Datenbank speicern/entfernen
+        // Dummy-Ausgabe der POST-Daten für Debugging
+        // print_r($_POST);
     }
 
     if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
         // Hier aus Datenbank löschen
+        // Dummy-Ausgabe der POST-Daten für Debugging
+        // print_r($_POST);
     }
 }
 ?>
@@ -179,6 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Dynamischer Feed -->
     <section class="feed">
         <?php
+        // Logik zur Anzeige der dynamischen Zustände
         switch ($loadingState) {
             case 'empty':
                 ?>
@@ -223,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php
                     }
                 } else {
-                    // Posts anzeigen - jeden Post über post.php einbinden
+                    // Wenn Daten vorhanden, Posts anzeigen - jeden Post über post.php einbinden
                     foreach ($posts as $post) {
                         include 'post.php';
                     }

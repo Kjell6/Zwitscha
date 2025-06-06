@@ -30,6 +30,7 @@ $canDelete = ($post['autor'] === $currentUser);
                     <input type="hidden" name="action" value="delete_post">
                     <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                     <button class="post-options-button no-post-details" type="submit" aria-label="Post löschen">
+                        <?php // Hier später Datenbank-Interaktion zum Löschen des Posts ?>
                         <i class="bi bi-trash-fill"></i>
                     </button>
                 </form>
@@ -59,6 +60,7 @@ $canDelete = ($post['autor'] === $currentUser);
                         <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                         <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
                         <button class="reaction-button no-post-details" type="submit" data-emoji="<?php echo $emoji; ?>">
+                            <?php // Hier später Datenbank-Interaktion zum Togglen der Reaktion ?>
                             <?php echo $emoji; ?> <span class="reaction-counter"><?php echo $count; ?></span>
                         </button>
                     </form>

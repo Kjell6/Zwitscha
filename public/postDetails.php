@@ -3,7 +3,7 @@
 $feedbackMessage = '';
 $feedbackType = ''; // success, error, info
 
-// Aktueller Benutzer (später aus Session)
+// Aktueller Benutzer (später aus Session oder Authentifizierung holen)
 $currentUser = 'Max Mustermann';
 
 // Post ID aus URL Parameter
@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $feedbackType = 'error';
         } else {
             // Hier später Kommentar in Datenbank speichern
+            // Beispiel: print_r($_POST); // Ausgabe der POST-Daten zu Debugging-Zwecken
 
         }
     }
@@ -38,18 +39,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $postIdFromForm = (int)($_POST['post_id'] ?? 0);
 
         // Hier später Reaktion in Datenbank toggle
+        // Beispiel: print_r($_POST); // Ausgabe der POST-Daten zu Debugging-Zwecken
     }
 
     // Post löschen
     if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
         $postIdFromForm = (int)($_POST['post_id'] ?? 0);
+        // Hier später Post aus Datenbank löschen
+        // Beispiel: print_r($_POST); // Ausgabe der POST-Daten zu Debugging-Zwecken
 
     }
 
     // Kommentar löschen
     if (isset($_POST['action']) && $_POST['action'] === 'delete_comment') {
         $commentIdFromForm = (int)($_POST['comment_id'] ?? 0);
-
+        // Hier später Kommentar aus Datenbank löschen
+        // Beispiel: print_r($_POST); // Ausgabe der POST-Daten zu Debugging-Zwecken
     }
 }
 
@@ -182,9 +187,11 @@ $allComments = [
 ];
 
 // ---- Post und Kommentare laden basierend auf ID ----
+// Hier später Datenbankabfrage, um den Post mit der gegebenen ID zu laden
 $post = null;
+// Hier später Datenbankabfrage, um die Kommentare für diesen Post zu laden
 $comments = [];
-
+// Simuliere Laden basierend auf Ladezustand und Dummy-Daten
 if ($loadingState === 'data') {
     if (isset($allPosts[$postId])) {
         $post = $allPosts[$postId];
