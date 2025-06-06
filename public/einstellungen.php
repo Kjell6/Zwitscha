@@ -1,14 +1,34 @@
 <?php
+$message = '';
+$error = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete-account'])) {
-        echo "<p style='color: red; font-weight: bold;'>[Dummy] Account würde jetzt gelöscht werden.</p>";
+        $message = "[Dummy] Account würde jetzt gelöscht werden.";
     } elseif (isset($_POST['change-name'])) {
-        $newName = htmlspecialchars(isset($_POST['new-name']) ? $_POST['new-name'] : '');
-        echo "<p style='color: green; font-weight: bold;'>[Dummy] Name würde jetzt zu $newName geändert werden.</p>";
+        $newName = htmlspecialchars($_POST['new-name'] ?? '');
+        $message = "[Dummy] Name würde jetzt zu $newName geändert werden.";
     } elseif (isset($_POST['change-password'])) {
-        echo "<p style='color: blue; font-weight: bold;'>[Dummy] Passwort würde jetzt geändert werden.</p>";
+        $currentPassword = $_POST['current-password'] ?? '';
+        $newPassword = $_POST['new-password'] ?? '';
+        $confirmPassword = $_POST['confirm-password'] ?? '';
+
+        // Dummy-Passwortüberprüfung
+        $dummyCurrentPassword = '123456'; // Beispiel: angenommenes korrektes Passwort
+
+        if ($currentPassword !== $dummyCurrentPassword) {
+            $error = "[Dummy] Aktuelles Passwort ist falsch.";
+        } elseif (!ctype_alnum($newPassword)) {
+            $error = "Das neue Passwort darf nur Buchstaben und Zahlen enthalten.";
+        } elseif (strlen($newPassword) < 6) {
+            $error = "Das neue Passwort muss mindestens 6 Zeichen lang sein.";
+        } elseif ($newPassword !== $confirmPassword) {
+            $error = "Die neuen Passwörter stimmen nicht überein.";
+        } else {
+            $message = "[Dummy] Passwort wurde erfolgreich geändert.";
+        }
     } elseif (isset($_POST['change-avatar'])) {
-        echo "<p style='color: orange; font-weight: bold;'>[Dummy] Profilbild würde jetzt aktualisiert werden.</p>";
+        $message = "[Dummy] Profilbild würde jetzt aktualisiert werden.";
     }
 }
 ?>
@@ -22,11 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Zwitscha – Einstellungen</title>
     <link rel="icon" href="assets/favicon.png" type="image/png" />
 
-    <!-- Globales Styling -->
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/header.css" />
-
-    <!-- Seitenspezifisches Styling -->
     <link rel="stylesheet" href="css/einstellungen.css" />
 </head>
 
@@ -38,12 +55,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section class="settings">
         <h2>Kontoeinstellungen</h2>
 
+        <?php if (!empty($message)): ?>
+            <p style="color: green; font-weight: bold;"><?= htmlspecialchars($message) ?></p>
+        <?php elseif (!empty($error)): ?>
+            <p style="color: red; font-weight: bold;"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
+
         <!-- Profilbild ändern -->
         <form method="POST" enctype="multipart/form-data" class="card">
             <fieldset>
                 <legend>Profilbild ändern</legend>
                 <div class="form-row compact-avatar-row">
-
                     <div class="image-upload">
                         <label for="avatar" class="image-upload-label">
                             <i class="bi bi-image"></i> Neues Profilbild
@@ -77,7 +99,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="password" id="current-password" name="current-password" required />
 
                 <label for="new-password">Neues Passwort:</label>
-                <input type="password" id="new-password" name="new-password" required />
+                <input
+                        type="password"
+                        id="new-password"
+                        name="new-password"
+                        required
+                        pattern="[A-Za-z0-9]+"
+                        minlength="6"
+                        title="Nur Buchstaben und Zahlen erlaubt. Mindestens 6 Zeichen."
+                />
 
                 <label for="confirm-password">Neues Passwort bestätigen:</label>
                 <input type="password" id="confirm-password" name="confirm-password" required />
