@@ -18,7 +18,7 @@ $canDelete = ($post['autor'] === $currentUser);
                 <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" class="post-user-image-inline">
             </a>
             <div class="post-user-details">
-                <a href="Profil.php" class="post-author-name">
+                <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
                     <?php echo htmlspecialchars($post['autor']); ?>
                 </a>
                 <time datetime="<?php echo $post['datumZeit']; ?>" class="post-timestamp">
