@@ -3,7 +3,7 @@
 ## Kjell
 
 ### 1. Erzielte Ergebnisse
-- Dynamische Inhalte bei Posts, Kommentare, PostDetails und dem Feed auf der Startseite
+- Dynamische Inhalte bei Posts, Kommentare, PostDetails, Profil und dem Feed auf der Startseite
 - Post Request bei den Buttons zum Kommentieren, Reagieren und löschen von Posts und Kommentaren
 - Post Request für das erstellen von Posts und Kommentaren
 - Post Request beim Wechseln der Feeds (alle, gefolgt)
@@ -12,16 +12,18 @@
 - Die Arbeit mit PHP war bisher das komplizierteste. Ich konnte mir zu beginn nicht vorstellen, wie man es umsetzen sollte, damit später eine Datenbank implementiert werden kann. 
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
-- 
+- Überraschend war eigentlich nichts, aber es war natürlich schwierig das erste mal mit php zu arbeiten
 
 ## Ferdi
 
 ### 1. Erzielte Ergebnisse
-
+- Post Request Suche
+- Dynamische Anzeige anmelde button
 
 
 ### 2. Hürden
-
+- Die Einarbeitung in Php war zunächst schwierig, vor allem die verknüpfung von html buttons und php code
+- auch die dynamische Anzeige der Suchergebnisse war nicht so leicht, weil man theoretisch javascript bräuchte, um zu erkennen, wenn es eine eingabe in das suchfeld gibt
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
 
