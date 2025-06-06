@@ -3,13 +3,16 @@
 ## Kjell
 
 ### 1. Erzielte Ergebnisse
-
+- Dynamische Inhalte bei Posts, Kommentare, PostDetails und dem Feed auf der Startseite
+- Post Request bei den Buttons zum Kommentieren, Reagieren und löschen von Posts und Kommentaren
+- Post Request für das erstellen von Posts und Kommentaren
+- Post Request beim Wechseln der Feeds (alle, gefolgt)
 
 ### 2. Hürden
-
+- Die Arbeit mit PHP war bisher das komplizierteste. Ich konnte mir zu beginn nicht vorstellen, wie man es umsetzen sollte, damit später eine Datenbank implementiert werden kann. 
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
-
+- 
 
 ## Ferdi
 
