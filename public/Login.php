@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // Dummy-Nutzerliste
 $dummyUsers = [
     'max' => '1234',
@@ -15,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Login prüfen
     if (array_key_exists($benutzername, $dummyUsers) && $dummyUsers[$benutzername] === $passwort) {
+        $_SESSION['angemeldet'] = true;
+        $_SESSION['eingeloggt'] = true;
         header("Location: index.php");
         exit;
     } else {
@@ -30,10 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login Zwitscha</title>
     <link rel="icon" href="assets/favicon.png" type="image/png" />
-
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/Login.css" />
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
 </head>
 <body>

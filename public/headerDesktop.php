@@ -1,5 +1,19 @@
 <?php
-    $currentPage = basename($_SERVER['PHP_SELF']); // gibt z.B. 'profil.php' zurück
+session_start();
+
+
+// Abmelden: Session löschen
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+    $_SESSION = [];
+    session_destroy();
+    header("Location: Login.php");
+    echo 'test';
+    exit;
+}
+
+$eingeloggt = isset($_SESSION['eingeloggt']) && $_SESSION['eingeloggt'] === true;
+
+$currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
 ?>
 
 <header class="desktop-header">
@@ -10,17 +24,8 @@
     <div class="header-section logo-section">
         <a href="index.php" class="logo">
             <picture>
-                <!-- Dark Mode -->
-                <source
-                        srcset="assets/zwitscha_dark.png"
-                        media="(prefers-color-scheme: dark)"
-                >
-                <!-- Light Mode (Fallback) -->
-                <img
-                        src="assets/zwitscha.png"
-                        alt="Zwitscha Logo"
-                        class="logo-image"
-                >
+                <source srcset="assets/zwitscha_dark.png" media="(prefers-color-scheme: dark)">
+                <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image">
             </picture>
         </a>
     </div>
@@ -31,34 +36,35 @@
     </div>
 
     <div class="header-section profile-section">
-
         <a href="einstellungen.php" class="settings-link">
             <i class="bi bi-gear-fill"></i>
         </a>
 
-        <?php if ($currentPage === 'Profil.php'): ?>
-            <!-- Abmelden Button -->
-            <a href="Login.php">
-                <button type="button">Abmelden</button>
-            </a>
+        <?php if ($eingeloggt): ?>
+            <?php if ($currentPage === 'Profil.php'): ?>
+                <!-- Auf Profilseite: Abmelden -->
+                <form method="post" style="display:inline;">
+                    <button type="submit" name="logout">Abmelden</button>
+                </form>
+            <?php else: ?>
+                <!-- Auf anderen Seiten: Link zum Profil -->
+                <a href="Profil.php" class="profile-link">
+                    <i class="bi bi-person-fill"></i>
+                </a>
+            <?php endif; ?>
         <?php else: ?>
-            <a href="Profil.php" class="profile-link">
-                <i class="bi bi-person-fill"></i>
+            <!-- Nicht eingeloggt: Anmelden -->
+            <a href="Login.php">
+                <button type="button">Anmelden</button>
             </a>
         <?php endif; ?>
-
-
-
     </div>
 
-    <!-- JavaScript Code für Live ergebnisse -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('header-search-input');
-
             searchInput.addEventListener('input', () => {
                 const query = searchInput.value;
-
                 fetch('suchanfrage.php', {
                     method: 'POST',
                     headers: {
@@ -68,12 +74,10 @@
                 })
                     .then(response => response.text())
                     .then(data => {
-                        // Ergebnisse anzeigen
                         document.querySelector('.header-search-results-dropdown').innerHTML = data;
                     })
                     .catch(error => console.error('Fehler bei der Suche:', error));
             });
         });
     </script>
-
 </header>
