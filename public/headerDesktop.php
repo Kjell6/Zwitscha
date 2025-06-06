@@ -48,7 +48,7 @@ $currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
                 </form>
             <?php else: ?>
                 <!-- Auf anderen Seiten: Link zum Profil -->
-                <a href="Profil.php" class="profile-link">
+                <a href="Profil.php?userid=1" class="profile-link">
                     <i class="bi bi-person-fill"></i>
                 </a>
             <?php endif; ?>
