@@ -63,6 +63,7 @@ $allPosts = [
     1 => [
         'id' => 1,
         'autor' => 'Anna Beispiel',
+        'userId' => 1, // Hinzugefügt für Profil-Link
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-26T14:15:00Z',
         'time_label' => 'vor 1 Tag',
@@ -74,6 +75,7 @@ $allPosts = [
     2 => [
         'id' => 2,
         'autor' => 'Max Mustermann',
+        'userId' => 2, // Hinzugefügt für Profil-Link
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-27T10:30:00Z',
         'time_label' => 'vor 2 Stunden',
@@ -85,6 +87,7 @@ $allPosts = [
     3 => [
         'id' => 3,
         'autor' => 'Lena Neumann',
+        'userId' => 3, // Hinzugefügt für Profil-Link
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-27T08:00:00Z',
         'time_label' => 'vor 4 Stunden',
@@ -256,6 +259,7 @@ $canDeletePost = $post && ($post['autor'] === $currentUser);
                 <?php
             } else {
                 // Post anzeigen
+                // Die Darstellung eines einzelnen Posts wird jetzt durch post.php gehandhabt
                 ?>
                 <article class="detail-post">
                     <section class="post-user-infos-detail">
@@ -263,7 +267,9 @@ $canDeletePost = $post && ($post['autor'] === $currentUser);
                             <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" alt="Profilbild">
                         </a>
                         <div class="post-user-details-detail">
-                            <span class="post-author-name"><?php echo htmlspecialchars($post['autor']); ?></span>
+                            <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
+                                <?php echo htmlspecialchars($post['autor']); ?>
+                            </a>
                             <time datetime="<?php echo $post['datumZeit']; ?>" class="post-timestamp">
                                 <?php echo htmlspecialchars($post['time_label']); ?>
                             </time>
@@ -335,7 +341,9 @@ $canDeletePost = $post && ($post['autor'] === $currentUser);
                             <?php foreach ($comments as $comment): ?>
                                 <?php
                                 $comment_for_template = $comment;
+                                // Die Darstellung eines einzelnen Kommentars wird durch kommentar.php gehandhabt
                                 include 'kommentar.php';
+
                                 ?>
                             <?php endforeach; ?>
                         </ul>

@@ -16,10 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     } elseif (strlen($postText) > 300) {
         $feedbackMessage = 'Post-Text darf maximal 300 Zeichen lang sein.';
         $feedbackType = 'error';
-    } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_OK) {
-        $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
-        $feedbackType = 'error';
     } else {
+        // Dummy-Ausgabe der POST-Daten für Debugging
+    } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_OK) {
+    print_r($_POST); // Dummy-Ausgabe der POST-Daten für Debugging
+    $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
+    $feedbackType = 'error';
+} else {
         // Hier später Post in Datenbank speichern
     }
 }
@@ -40,6 +43,8 @@ $allPosts = [
     [
         'id' => 1,
         'autor' => 'Anna Beispiel',
+        'userId' => 1,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-26T14:15:00Z',
         'time_label' => 'vor 1 Tag',
@@ -52,6 +57,8 @@ $allPosts = [
     [
         'id' => 2,
         'autor' => 'Max Mustermann',
+        'userId' => 2,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-27T10:30:00Z',
         'time_label' => 'vor 2 Stunden',
@@ -64,6 +71,8 @@ $allPosts = [
     [
         'id' => 3,
         'autor' => 'Lena Neumann',
+        'userId' => 3,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-27T08:00:00Z',
         'time_label' => 'vor 4 Stunden',
@@ -76,6 +85,8 @@ $allPosts = [
     [
         'id' => 4,
         'autor' => 'Tom Testfall',
+        'userId' => 4,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-25T21:45:00Z',
         'time_label' => 'vor 2 Tagen',
@@ -88,6 +99,8 @@ $allPosts = [
     [
         'id' => 5,
         'autor' => 'Sophie Sonnenschein',
+        'userId' => 5,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-27T12:10:00Z',
         'time_label' => 'vor 30 Minuten',
@@ -115,14 +128,14 @@ if ($showFollowedOnly) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'toggle_reaction') {
         // Hier in Datenbank speicern/entfernen
-        // Dummy-Ausgabe der POST-Daten für Debugging
-        // print_r($_POST);
+        // Später: Datenbank-Interaktion zum Togglen der Reaktion implementieren
+        print_r($_POST); // Dummy-Ausgabe der POST-Daten für Debugging
     }
 
     if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
         // Hier aus Datenbank löschen
-        // Dummy-Ausgabe der POST-Daten für Debugging
-        // print_r($_POST);
+        // Später: Datenbank-Interaktion zum Löschen des Posts implementieren
+        print_r($_POST); // Dummy-Ausgabe der POST-Daten für Debugging
     }
 }
 ?>

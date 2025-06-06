@@ -70,7 +70,7 @@ $allUsers = [
 $allPosts = [
     [
         'id'         => 1,
-        'userId'     => 1,
+        'userId' => 1,
         'autor'      => 'Anna Beispiel',
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit'  => '2025-04-26T14:15:00Z',
@@ -82,7 +82,7 @@ $allPosts = [
     ],
     [
         'id'         => 2,
-        'userId'     => 2,
+        'userId' => 2,
         'autor'      => 'Max Mustermann',
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit'  => '2025-04-27T10:30:00Z',
@@ -94,7 +94,7 @@ $allPosts = [
     ],
     [
         'id'         => 3,
-        'userId'     => 3,
+        'userId' => 3,
         'autor'      => 'Lena Neumann',
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit'  => '2025-04-27T08:00:00Z',
@@ -107,7 +107,7 @@ $allPosts = [
     // Ein zusätzlicher Post, um zu zeigen, dass ein User mehrere Posts haben könnte
     [
         'id'         => 4,
-        'userId'     => 2,
+        'userId' => 2,
         'autor'      => 'Max Mustermann',
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit'  => '2025-05-01T12:00:00Z',
