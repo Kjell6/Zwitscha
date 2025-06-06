@@ -39,6 +39,6 @@
 Mir war zuerst nicht ganz genau klar, wie ich an diese POST-Requests rangehen soll, bzw. was verlangt wird von mir, aber nach Rücksprache mit meiner Gruppe, wurde es mir dann klarer. Auch der Umgang mit php selbst ist noch recht schwerfällig, aber es wird mit jedem Mal besser.
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
-Als ich dann einen Plan davon hatte, was von mir verlangt wird, hat es Spaß gemacht, die POST-Requests zu implementieren. 
+Als ich dann einen Plan davon hatte, was von mir verlangt wird, hat es Spaß gemacht, die POST-Requests zu implementieren. Schwierigkeiten siehe Punkt 2.
 
 
