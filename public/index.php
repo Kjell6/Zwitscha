@@ -3,29 +3,40 @@
 $feedbackMessage = '';
 $feedbackType = ''; // success, error, info
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_post') {
-    // POST Daten auslesen und validieren
-    $postText = trim($_POST['post_text'] ?? '');
-    // Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+    && isset($_POST['action'])
+    && $_POST['action'] === 'create_post'
+) {
+    $postText   = trim($_POST['post_text'] ?? '');
     $currentUser = 'Max Mustermann';
 
-    // Einfache Validierung
     if (empty($postText)) {
         $feedbackMessage = 'Post-Text darf nicht leer sein.';
-        $feedbackType = 'error';
+        $feedbackType    = 'error';
+
     } elseif (strlen($postText) > 300) {
         $feedbackMessage = 'Post-Text darf maximal 300 Zeichen lang sein.';
-        $feedbackType = 'error';
+        $feedbackType    = 'error';
+
+    } elseif (isset($_FILES['post_image'])
+        && $_FILES['post_image']['error'] !== UPLOAD_ERR_OK
+    ) {
+        print_r($_POST); // Dummy-Ausgabe
+        $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
+        $feedbackType    = 'error';
+
     } else {
-        // Dummy-Ausgabe der POST-Daten für Debugging
-    } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_OK) {
-    print_r($_POST); // Dummy-Ausgabe der POST-Daten für Debugging
-    $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
-    $feedbackType = 'error';
-} else {
-        // Hier später Post in Datenbank speichern
+        // Hier würden später Post und ggf. Bild in die DB geschrieben werden.
+        // Aktuell nur Debug-Ausgabe:
+        print_r($_POST);
+        if (isset($_FILES['post_image'])) {
+            print_r($_FILES['post_image']);
+        }
+        $feedbackMessage = 'Post erfolgreich angelegt (Dummy).';
+        $feedbackType    = 'success';
     }
 }
+
 
 // ---- Dynamische Inhalte: Posts laden ----
 // Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
