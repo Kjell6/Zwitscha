@@ -8,13 +8,13 @@ if (!isset($post) || !isset($currentUser)) {
 $canDelete = ($post['autor'] === $currentUser);
 ?>
 
-<article class="post" style="cursor: pointer;" data-post-id="<?php echo $post['id']; ?>">
-    <a href="Profil.php" class="no-post-details">
+<article class="post" data-post-id="<?php echo $post['id']; ?>">
+    <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
         <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" class="post-user-image">
     </a>
     <main class="post-main-content">
         <section class="post-user-infos">
-            <a href="Profil.php" class="no-post-details">
+            <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
                 <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" class="post-user-image-inline">
             </a>
             <div class="post-user-details">
@@ -25,11 +25,12 @@ $canDelete = ($post['autor'] === $currentUser);
                     <?php echo htmlspecialchars($post['time_label']); ?>
                 </time>
             </div>
-            <?php if ($canDelete): ?>
+            <?php if ($canDelete && $post['id'] != 2 && $post['id'] != 4): ?>
                 <form method="POST" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
                     <input type="hidden" name="action" value="delete_post">
                     <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                     <button class="post-options-button no-post-details" type="submit" aria-label="Post löschen">
+                        <?php // Hier später Datenbank-Interaktion zum Löschen des Posts ?>
                         <i class="bi bi-trash-fill"></i>
                     </button>
                 </form>
@@ -42,7 +43,7 @@ $canDelete = ($post['autor'] === $currentUser);
                     <img src="<?php echo htmlspecialchars($post['bildPfad']); ?>"
                          alt="Post-Bild"
                          class="post-image"
-                         onclick="openLightbox('<?php echo htmlspecialchars($post['bildPfad']); ?>'); event.stopPropagation()"
+                         onclick="openLightbox('<?php echo htmlspecialchars($post['bildPfad']); ?>')"
                          style="cursor: pointer;">
                 </div>
             <?php endif; ?>
@@ -59,6 +60,7 @@ $canDelete = ($post['autor'] === $currentUser);
                         <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                         <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
                         <button class="reaction-button no-post-details" type="submit" data-emoji="<?php echo $emoji; ?>">
+                            <?php // Hier später Datenbank-Interaktion zum Togglen der Reaktion ?>
                             <?php echo $emoji; ?> <span class="reaction-counter"><?php echo $count; ?></span>
                         </button>
                     </form>

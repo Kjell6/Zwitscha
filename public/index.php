@@ -3,28 +3,50 @@
 $feedbackMessage = '';
 $feedbackType = ''; // success, error, info
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_post') {
-    // POST Daten auslesen und validieren
-    $postText = trim($_POST['post_text'] ?? '');
-    $currentUser = 'Max Mustermann'; // später aus Session
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+    && isset($_POST['action'])
+    && $_POST['action'] === 'create_post'
+) {
+    $postText   = trim($_POST['post_text'] ?? '');
+    $currentUser = 'Max Mustermann';
 
-    // Einfache Validierung
     if (empty($postText)) {
         $feedbackMessage = 'Post-Text darf nicht leer sein.';
-        $feedbackType = 'error';
+        $feedbackType    = 'error';
+
     } elseif (strlen($postText) > 300) {
         $feedbackMessage = 'Post-Text darf maximal 300 Zeichen lang sein.';
-        $feedbackType = 'error';
+        $feedbackType    = 'error';
+
+    } elseif (isset($_FILES['post_image'])
+        && $_FILES['post_image']['error'] !== UPLOAD_ERR_OK
+    ) {
+        print_r($_POST); // Dummy-Ausgabe
+        $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
+        $feedbackType    = 'error';
+
     } else {
-        // Hier später Post in Datenbank speichern
+        // Hier würden später Post und ggf. Bild in die DB geschrieben werden.
+        // Aktuell nur Debug-Ausgabe:
+        print_r($_POST);
+        if (isset($_FILES['post_image'])) {
+            print_r($_FILES['post_image']);
+        }
+        $feedbackMessage = 'Post erfolgreich angelegt (Dummy).';
+        $feedbackType    = 'success';
     }
 }
 
+
 // ---- Dynamische Inhalte: Posts laden ----
-$currentUser = 'Max Mustermann'; // später aus der Session holen
+// Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
+$currentUser = 'Max Mustermann';
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
 // Simuliere verschiedene Zustände für dynamische Inhalte
+// Für Tests: URL um ?state=empty oder ?state=error ergänzen
+// Später: Zustand basierend auf Datenbankabfrage bestimmen (Erfolg/Fehler/keine Daten)
+
 $loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
 
 // Dummy-Posts (später aus Datenbank)
@@ -32,6 +54,8 @@ $allPosts = [
     [
         'id' => 1,
         'autor' => 'Anna Beispiel',
+        'userId' => 1,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-26T14:15:00Z',
         'time_label' => 'vor 1 Tag',
@@ -44,6 +68,8 @@ $allPosts = [
     [
         'id' => 2,
         'autor' => 'Max Mustermann',
+        'userId' => 2,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-27T10:30:00Z',
         'time_label' => 'vor 2 Stunden',
@@ -56,6 +82,8 @@ $allPosts = [
     [
         'id' => 3,
         'autor' => 'Lena Neumann',
+        'userId' => 3,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-27T08:00:00Z',
         'time_label' => 'vor 4 Stunden',
@@ -68,6 +96,8 @@ $allPosts = [
     [
         'id' => 4,
         'autor' => 'Tom Testfall',
+        'userId' => 4,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-25T21:45:00Z',
         'time_label' => 'vor 2 Tagen',
@@ -80,6 +110,8 @@ $allPosts = [
     [
         'id' => 5,
         'autor' => 'Sophie Sonnenschein',
+        'userId' => 5,
+
         'profilBild' => 'assets/placeholder-profilbild.jpg',
         'datumZeit' => '2025-04-27T12:10:00Z',
         'time_label' => 'vor 30 Minuten',
@@ -103,13 +135,18 @@ if ($showFollowedOnly) {
 // Die Post-Darstellung wird jetzt durch post.php gehandhabt
 
 // POST Request für Reaktionen und Löschen
+// Später: Hier Datenbankoperationen für Reaktionen und Löschen implementieren
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'toggle_reaction') {
         // Hier in Datenbank speicern/entfernen
+        // Später: Datenbank-Interaktion zum Togglen der Reaktion implementieren
+        print_r($_POST); // Dummy-Ausgabe der POST-Daten für Debugging
     }
 
     if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
         // Hier aus Datenbank löschen
+        // Später: Datenbank-Interaktion zum Löschen des Posts implementieren
+        print_r($_POST); // Dummy-Ausgabe der POST-Daten für Debugging
     }
 }
 
@@ -180,6 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Dynamischer Feed -->
     <section class="feed">
         <?php
+        // Logik zur Anzeige der dynamischen Zustände
         switch ($loadingState) {
             case 'empty':
                 ?>
@@ -224,7 +262,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php
                     }
                 } else {
-                    // Posts anzeigen - jeden Post über post.php einbinden
+                    // Wenn Daten vorhanden, Posts anzeigen - jeden Post über post.php einbinden
                     foreach ($posts as $post) {
                         include 'post.php';
                     }
