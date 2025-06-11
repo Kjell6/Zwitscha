@@ -1,31 +1,78 @@
 <?php
 
-// Überprüfe ob die benötigten Variablen gesetzt sind
-if (!isset($post) || !isset($currentUser)) {
-    die('Post-Daten oder currentUser nicht verfügbar');
+// ---- HILFSFUNKTION FÜR RELATIVE ZEITANGABE ----
+if (!function_exists('time_ago')) {
+    function time_ago(string $datetime, string $full = 'vor %s'): string {
+        $now = new DateTime;
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = [
+            'y' => 'Jahr',
+            'm' => 'Monat',
+            'w' => 'Woche',
+            'd' => 'Tag',
+            'h' => 'Stunde',
+            'i' => 'Minute',
+            's' => 'Sekunde',
+        ];
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 'n' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+
+        // Nur die größte Zeiteinheit anzeigen (z.B. "vor 4 Wochen" statt "vor 4 Wochen, 2 Tagen")
+        if (!empty($string)) {
+            $string = array_slice($string, 0, 1);
+        }
+
+        $time_ago = $string ? implode(', ', $string) : 'gerade jetzt';
+        return sprintf($full, $time_ago);
+    }
 }
 
-$canDelete = ($post['autor'] === $currentUser);
+// Überprüfe ob die benötigten Variablen gesetzt sind
+if (!isset($post)) {
+    die('Post-Daten nicht verfügbar');
+}
+
+// ---- PLATZHALTER FÜR FEHLENDE DATEN ----
+// Diese werden später durch echte Datenbankabfragen ersetzt.
+$post['reactions'] = ['👍' => 0, '👎' => 0, '❤️' => 0, '🤣' => 0, '❓' => 0, '‼️' => 0];
+$post['comments'] = 0;
+
+// Später die ID aus der Session verwenden: $_SESSION['user_id']
+$currentUserId = 1; 
+$canDelete = ($post['userId'] === $currentUserId);
+
+// Relative Zeit berechnen
+$time_label = time_ago($post['datumZeit']);
 ?>
 
 <article class="post" data-post-id="<?php echo $post['id']; ?>">
     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-        <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" class="post-user-image">
+        <img src="<?php echo htmlspecialchars($post['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" class="post-user-image">
     </a>
     <main class="post-main-content">
         <section class="post-user-infos">
             <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-                <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" class="post-user-image-inline">
+                <img src="<?php echo htmlspecialchars($post['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" class="post-user-image-inline">
             </a>
             <div class="post-user-details">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
                     <?php echo htmlspecialchars($post['autor']); ?>
                 </a>
-                <time datetime="<?php echo $post['datumZeit']; ?>" class="post-timestamp">
-                    <?php echo htmlspecialchars($post['time_label']); ?>
+                <time datetime="<?php echo htmlspecialchars($post['datumZeit']); ?>" class="post-timestamp">
+                    <?php echo htmlspecialchars($time_label); ?>
                 </time>
             </div>
-            <?php if ($canDelete && $post['id'] != 2 && $post['id'] != 4): ?>
+            <?php if ($canDelete): ?>
                 <form method="POST" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
                     <input type="hidden" name="action" value="delete_post">
                     <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">

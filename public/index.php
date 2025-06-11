@@ -1,4 +1,12 @@
 <?php
+// ---- NEUE INITIALISIERUNG ----
+// Laden der Klassen
+require_once __DIR__ . '/php/PostVerwaltung.php';
+
+// Repository instanziieren
+$postRepository = new PostVerwaltung();
+
+
 // ---- POST Request Handling für neue Posts ----
 $feedbackMessage = '';
 $feedbackType = ''; // success, error, info
@@ -8,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
     && $_POST['action'] === 'create_post'
 ) {
     $postText   = trim($_POST['post_text'] ?? '');
-    $currentUser = 'Max Mustermann';
+    // Später durch echte User-ID aus Session ersetzen, z.B. $_SESSION['user_id']
+    $currentUserId = 1; // Dummy-ID des eingeloggten Nutzers (beispielNutzer)
 
     if (empty($postText)) {
         $feedbackMessage = 'Post-Text darf nicht leer sein.';
@@ -18,29 +27,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
         $feedbackMessage = 'Post-Text darf maximal 300 Zeichen lang sein.';
         $feedbackType    = 'error';
 
-    } elseif (isset($_FILES['post_image'])
-        && $_FILES['post_image']['error'] !== UPLOAD_ERR_OK
-    ) {
-        print_r($_POST); // Dummy-Ausgabe
-        $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
-        $feedbackType    = 'error';
-
     } else {
-        // Hier würden später Post und ggf. Bild in die DB geschrieben werden.
-        // Aktuell nur Debug-Ausgabe:
-        print_r($_POST);
-        if (isset($_FILES['post_image'])) {
-            print_r($_FILES['post_image']);
+        $imagePath = null;
+        // Prüfen, ob ein Bild hochgeladen wurde und fehlerfrei ist
+        if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = __DIR__ . '/assets/uploads/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            // Sicherer Dateiname, um Überschreibungen und Sicherheitsrisiken zu vermeiden
+            $fileName = uniqid('', true) . '_' . basename($_FILES['post_image']['name']);
+            $targetPath = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['post_image']['tmp_name'], $targetPath)) {
+                $imagePath = 'assets/uploads/' . $fileName;
+            } else {
+                $feedbackMessage = 'Bild konnte nicht gespeichert werden.';
+                $feedbackType = 'error';
+            }
+        } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+             // Fehlerbehandlung für andere Upload-Fehler
+            $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
+            $feedbackType    = 'error';
         }
-        $feedbackMessage = 'Post erfolgreich angelegt (Dummy).';
-        $feedbackType    = 'success';
+
+        // Post nur erstellen, wenn kein Fehler beim Bild-Upload aufgetreten ist
+        if ($feedbackType !== 'error') {
+            $success = $postRepository->createPost($currentUserId, $postText, $imagePath);
+
+            if ($success) {
+                $feedbackMessage = 'Post erfolgreich angelegt.';
+                $feedbackType    = 'success';
+                // Leere die Post-Variable, um doppeltes Senden zu verhindern (Post/Redirect/Get Pattern)
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
+            } else {
+                $feedbackMessage = 'Fehler beim Speichern des Posts in der Datenbank.';
+                $feedbackType    = 'error';
+            }
+        }
     }
 }
 
 
 // ---- Dynamische Inhalte: Posts laden ----
 // Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
-$currentUser = 'Max Mustermann';
+$currentUser = 'Max Mustermann'; // Dieser Wert wird für die Anzeige oben noch verwendet
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
 // Simuliere verschiedene Zustände für dynamische Inhalte
@@ -49,87 +81,13 @@ $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
 $loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
 
-// Dummy-Posts (später aus Datenbank)
-$allPosts = [
-    [
-        'id' => 1,
-        'autor' => 'Anna Beispiel',
-        'userId' => 1,
-
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit' => '2025-04-26T14:15:00Z',
-        'time_label' => 'vor 1 Tag',
-        'text' => '👍',
-        'bildPfad' => '',
-        'reactions' => ['👍'=>2,'👎'=>0,'❤️'=>1,'🤣'=>0,'❓'=>0,'‼️'=>0],
-        'comments' => 0,
-        'isFollowed' => false
-    ],
-    [
-        'id' => 2,
-        'autor' => 'Max Mustermann',
-        'userId' => 2,
-
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit' => '2025-04-27T10:30:00Z',
-        'time_label' => 'vor 2 Stunden',
-        'text' => 'Wie findet ihr dieses neue Logo von Zwitscha? Ich finde es super! Es ist modern und frisch. Was denkt ihr?',
-        'bildPfad' => 'assets/zwitscha_green.jpg',
-        'reactions' => ['👍'=>5,'👎'=>1,'❤️'=>3,'🤣'=>0,'❓'=>0,'‼️'=>2],
-        'comments' => 2,
-        'isFollowed' => true
-    ],
-    [
-        'id' => 3,
-        'autor' => 'Lena Neumann',
-        'userId' => 3,
-
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit' => '2025-04-27T08:00:00Z',
-        'time_label' => 'vor 4 Stunden',
-        'text' => 'Guten Morgen! 🌞 Heute starte ich mit frischem Kaffee und neuen Ideen in den Tag. Manchmal reicht ein bisschen Ruhe, um wieder kreative Energie zu tanken. Was motiviert euch am Morgen?',
-        'bildPfad' => '',
-        'reactions' => ['👍'=>8,'👎'=>0,'❤️'=>5,'🤣'=>1,'❓'=>0,'‼️'=>0],
-        'comments' => 3,
-        'isFollowed' => true
-    ],
-    [
-        'id' => 4,
-        'autor' => 'Tom Testfall',
-        'userId' => 4,
-
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit' => '2025-04-25T21:45:00Z',
-        'time_label' => 'vor 2 Tagen',
-        'text' => 'Ich suche nach einem spannenden Buch für das Wochenende. Thriller, Science-Fiction oder gern auch etwas Philosophisches – habt ihr Empfehlungen, die euch nachhaltig beeindruckt haben?',
-        'bildPfad' => '',
-        'reactions' => ['👍'=>3,'👎'=>0,'❤️'=>2,'🤣'=>0,'❓'=>1,'‼️'=>0],
-        'comments' => 5,
-        'isFollowed' => false
-    ],
-    [
-        'id' => 5,
-        'autor' => 'Sophie Sonnenschein',
-        'userId' => 5,
-
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit' => '2025-04-27T12:10:00Z',
-        'time_label' => 'vor 30 Minuten',
-        'text' => 'Der Frühling bringt Farbe und Leben zurück! Ich war heute früh unterwegs und habe die ersten blühenden Kirschbäume gesehen. Gibt\'s etwas Schöneres, als draußen zu sitzen und einfach mal durchzuatmen?',
-        'bildPfad' => '',
-        'reactions' => ['👍'=>12,'👎'=>0,'❤️'=>9,'🤣'=>0,'❓'=>0,'‼️'=>0],
-        'comments' => 1,
-        'isFollowed' => true
-    ]
-];
-
-// Posts nach Filter filtern
+// Posts aus der Datenbank laden
+// TODO: Eine Methode für "gefolgte" Posts im Repository implementieren
 if ($showFollowedOnly) {
-    $posts = array_filter($allPosts, function($post) {
-        return $post['isFollowed'];
-    });
+    // $allPosts = $postRepository->getFollowedPosts($currentUserId);
+    $posts = $postRepository->getAllPosts(); // Vorerst alle Posts
 } else {
-    $posts = $allPosts;
+    $posts = $postRepository->getAllPosts();
 }
 
 // Die Post-Darstellung wird jetzt durch post.php gehandhabt
