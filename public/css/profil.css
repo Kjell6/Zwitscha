@@ -50,13 +50,13 @@ body {
     transition: background-color 0.3s ease;
 }
 .folgen-button.gefolgt {
-    background-color: var(--primary-color)
+    background-color: var(--button-color)
 }
 .folgen-button:hover {
     background-color: var(--primary-hover);
 }
 .folgen-button.gefolgt:hover {
-    background-color: var(--primary-hover);
+    background-color: var(--button-hover);
 }
 
 /* Container für den gesamten Textinhalt - stellt sicher, dass die Kinder stapeln */
