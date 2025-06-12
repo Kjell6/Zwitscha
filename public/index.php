@@ -9,43 +9,6 @@ $postRepository = new PostVerwaltung();
 $feedbackMessage = '';
 $feedbackType = ''; // success, error, info
 
-// ---- POST Request Handling für LÖSCHEN ----
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_post') {
-    $postId = (int)$_POST['post_id'];
-
-    // DUMMY-BENUTZERDATEN (später aus Session)
-    $currentUser = ['id' => 1, 'istAdministrator' => 0];
-
-    $postToDelete = $postRepository->findPostById($postId);
-
-    if ($postToDelete && ($currentUser['istAdministrator'] || $postToDelete['nutzer_id'] === $currentUser['id'])) {
-        $success = $postRepository->deletePost($postId);
-        if ($success) {
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        } else {
-            $feedbackMessage = 'Fehler beim Löschen des Posts.';
-            $feedbackType = 'error';
-        }
-    }
-}
-
-// ---- POST Request Handling für REAKTIONEN ----
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'toggle_reaction') {
-    $postId = (int)$_POST['post_id'];
-    $emoji = $_POST['emoji'];
-    
-    // DUMMY-BENUTZERDATEN (später aus Session)
-    $currentUser = ['id' => 1, 'istAdministrator' => 0];
-
-    // Reaktion in der Datenbank umschalten
-    $postRepository->toggleReaction($currentUser['id'], $postId, $emoji);
-    
-    // Seite neu laden, um die Änderungen zu sehen
-    header("Location: " . $_SERVER['PHP_SELF'] . "#post-" . $postId);
-    exit();
-}
-
 // ---- POST Request Handling für ERSTELLEN ----
 if ($_SERVER['REQUEST_METHOD'] === 'POST'
     && isset($_POST['action'])
@@ -251,7 +214,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php
                     }
                 } else {
-                    // Wenn Daten vorhanden, Posts anzeigen - jeden Post über post.php einbinden
                     foreach ($posts as $post) {
                         include 'post.php';
                     }

@@ -80,7 +80,7 @@ $reactionEmojiMap = [
                 </time>
             </div>
             <?php if ($canDelete): ?>
-                <form method="POST" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
+                <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
                     <input type="hidden" name="action" value="delete_post">
                     <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                     <button class="post-options-button no-post-details" type="submit" aria-label="Post löschen">
@@ -110,7 +110,7 @@ $reactionEmojiMap = [
                     $reactionTypeFromEmoji = array_search($emoji, $reactionEmojiMap);
                     $isActive = in_array($reactionTypeFromEmoji, $post['currentUserReactions']);
                     ?>
-                    <form method="POST" style="display: inline;" class="reaction-form">
+                    <form method="POST" action="php/post_action_handler.php" style="display: inline;" class="reaction-form">
                         <input type="hidden" name="action" value="toggle_reaction">
                         <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                         <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">

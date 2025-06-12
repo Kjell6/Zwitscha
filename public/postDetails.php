@@ -40,30 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
             break;
 
-        case 'toggle_reaction':
-            $emoji = $_POST['emoji'] ?? '';
-            if ($emoji) {
-                $repository->toggleReaction($currentUserId, $postId, $emoji);
-                // Redirect, um Form-Neusendung zu verhindern
-                header("Location: " . $_SERVER['REQUEST_URI']);
-                exit();
-            }
-            break;
-
-        case 'delete_post':
-             // Berechtigung erneut prüfen zur Sicherheit
-            $postToDelete = $repository->findPostById($postId);
-            if ($postToDelete) {
-                $isOwner = (int)$postToDelete['nutzer_id'] === (int)$currentUserId;
-                $isAdmin = false; // Hier echte Admin-Prüfung einfügen
-                if ($isOwner || $isAdmin) {
-                    $repository->deletePost($postId);
-                    header("Location: index.php"); // Nach dem Löschen zur Startseite
-                    exit();
-                }
-            }
-            break;
-
         case 'delete_comment':
             $commentId = (int)($_POST['comment_id'] ?? 0);
             if ($commentId) {
@@ -212,7 +188,7 @@ if (!function_exists('time_ago')) {
                             $canDeletePost = ($currentUser['istAdministrator'] || (int)$post['userId'] === (int)$currentUser['id']);
                             if ($canDeletePost): 
                         ?>
-                            <form method="POST" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
+                            <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
                                 <input type="hidden" name="action" value="delete_post">
                                 <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                                 <button class="post-options-button no-post-details" type="submit" aria-label="Post löschen">
@@ -251,7 +227,7 @@ if (!function_exists('time_ago')) {
                                 $reactionTypeFromEmoji = array_search($emoji, $reactionEmojiMap);
                                 $isActive = in_array($reactionTypeFromEmoji, $post['currentUserReactions']);
                                 ?>
-                                <form method="POST" style="display: inline;" class="reaction-form">
+                                <form method="POST" action="php/post_action_handler.php" style="display:inline" class="reaction-form">
                                     <input type="hidden" name="action" value="toggle_reaction">
                                     <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                                     <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
