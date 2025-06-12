@@ -45,19 +45,24 @@ if (!isset($post)) {
 // ---- DUMMY-BENUTZERDATEN (später aus der Session laden) ----
 $currentUser = ['id' => 1, 'istAdministrator' => 0];
 
-// ---- PLATZHALTER FÜR FEHLENDE DATEN ----
-// Diese werden später durch echte Datenbankabfragen ersetzt.
-$post['reactions'] = ['👍' => 0, '👎' => 0, '❤️' => 0, '🤣' => 0, '❓' => 0, '‼️' => 0];
-$post['comments'] = 0;
-
 // Berechtigung zum Löschen prüfen: Ist der Nutzer Admin ODER der Autor des Posts?
 $canDelete = ($currentUser['istAdministrator'] || (int)$post['userId'] === (int)$currentUser['id']);
 
 // Relative Zeit berechnen
 $time_label = time_ago($post['datumZeit']);
+
+// Mapping von DB-Reaktionstypen zu Emojis
+$reactionEmojiMap = [
+    'Daumen Hoch' => '👍',
+    'Daumen Runter' => '👎',
+    'Herz' => '❤️',
+    'Lachen' => '🤣',
+    'Fragezeichen' => '❓',
+    'Ausrufezeichen' => '‼️',
+];
 ?>
 
-<article class="post" data-post-id="<?php echo $post['id']; ?>">
+<article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>">
     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
         <img src="<?php echo htmlspecialchars($post['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" class="post-user-image">
     </a>
@@ -102,13 +107,14 @@ $time_label = time_ago($post['datumZeit']);
                 $emojis = ['👍', '👎', '❤️', '🤣', '❓', '‼️'];
                 foreach ($emojis as $emoji):
                     $count = $post['reactions'][$emoji] ?? 0;
+                    $reactionTypeFromEmoji = array_search($emoji, $reactionEmojiMap);
+                    $isActive = in_array($reactionTypeFromEmoji, $post['currentUserReactions']);
                     ?>
                     <form method="POST" style="display: inline;" class="reaction-form">
                         <input type="hidden" name="action" value="toggle_reaction">
                         <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                         <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
-                        <button class="reaction-button no-post-details" type="submit" data-emoji="<?php echo $emoji; ?>">
-                            <?php // Hier später Datenbank-Interaktion zum Togglen der Reaktion ?>
+                        <button class="reaction-button no-post-details <?php echo $isActive ? 'active' : ''; ?>" type="submit" data-emoji="<?php echo $emoji; ?>">
                             <?php echo $emoji; ?> <span class="reaction-counter"><?php echo $count; ?></span>
                         </button>
                     </form>

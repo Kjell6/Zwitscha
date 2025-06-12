@@ -30,6 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+// ---- POST Request Handling für REAKTIONEN ----
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'toggle_reaction') {
+    $postId = (int)$_POST['post_id'];
+    $emoji = $_POST['emoji'];
+    
+    // DUMMY-BENUTZERDATEN (später aus Session)
+    $currentUser = ['id' => 1, 'istAdministrator' => 0];
+
+    // Reaktion in der Datenbank umschalten
+    $postRepository->toggleReaction($currentUser['id'], $postId, $emoji);
+    
+    // Seite neu laden, um die Änderungen zu sehen
+    header("Location: " . $_SERVER['PHP_SELF'] . "#post-" . $postId);
+    exit();
+}
+
 // ---- POST Request Handling für ERSTELLEN ----
 if ($_SERVER['REQUEST_METHOD'] === 'POST'
     && isset($_POST['action'])
@@ -97,13 +113,16 @@ $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
 $loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
 
+// DUMMY-BENUTZERDATEN (später aus Session) für das Laden der Posts
+$currentUserIdForPosts = 1;
+
 // Posts aus der Datenbank laden
 // TODO: Eine Methode für "gefolgte" Posts im Repository implementieren
 if ($showFollowedOnly) {
-    // $allPosts = $postRepository->getFollowedPosts($currentUserId);
-    $posts = $postRepository->getAllPosts(); // Vorerst alle Posts
+    // $posts = $postRepository->getFollowedPosts($currentUserIdForPosts);
+    $posts = $postRepository->getAllPosts($currentUserIdForPosts); // Vorerst alle Posts
 } else {
-    $posts = $postRepository->getAllPosts();
+    $posts = $postRepository->getAllPosts($currentUserIdForPosts);
 }
 
 // POST Request für Reaktionen und Löschen
