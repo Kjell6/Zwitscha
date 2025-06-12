@@ -348,4 +348,37 @@ class PostVerwaltung {
 
         return $success;
     }
+
+    /**
+     * Holt alle Posts für einen bestimmten Nutzer.
+     *
+     * @param int $userId Die ID des Nutzers, dessen Posts geholt werden sollen.
+     * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers (für Reaktions-Status).
+     * @return array Ein Array von Posts.
+     */
+    public function getPostsByUserId(int $userId, int $currentUserId): array {
+        $sql = "
+            SELECT 
+                p.id, p.text, p.bildPfad, p.datumZeit,
+                n.nutzerName AS autor, n.profilBild, n.id as userId,
+                COUNT(DISTINCT k.id) AS comments,
+                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Hoch' THEN 1 ELSE 0 END) AS count_like,
+                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Runter' THEN 1 ELSE 0 END) AS count_dislike,
+                SUM(CASE WHEN r.reaktionsTyp = 'Herz' THEN 1 ELSE 0 END) AS count_heart,
+                SUM(CASE WHEN r.reaktionsTyp = 'Lachen' THEN 1 ELSE 0 END) AS count_laugh,
+                SUM(CASE WHEN r.reaktionsTyp = 'Fragezeichen' THEN 1 ELSE 0 END) AS count_question,
+                SUM(CASE WHEN r.reaktionsTyp = 'Ausrufezeichen' THEN 1 ELSE 0 END) AS count_exclamation,
+                (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
+            FROM post p
+            JOIN nutzer n ON p.nutzer_id = n.id
+            LEFT JOIN kommentar k ON p.id = k.post_id
+            LEFT JOIN Reaktion r ON p.id = r.post_id
+            WHERE p.nutzer_id = ?
+            GROUP BY p.id
+            ORDER BY p.datumZeit DESC
+        ";
+        
+        // Zuerst $currentUserId für die Subquery, dann $userId für die WHERE-Klausel.
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $userId], 'ii');
+    }
 } 

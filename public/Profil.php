@@ -1,153 +1,71 @@
 <?php
-// ==========================
-// 1) POST-Request-Handling für Follow/Unfollow
-// ==========================
-$isFollowing = false;
-$postResult = '';
+// Aktiviere Error Reporting für Debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// TODO: Später: Authentifizierung des aktuellen Benutzers hier (um dessen ID für Follow/Unfollow zu erhalten)
-$currentUserId = 123; // Dummy-ID des aktuellen Benutzers
+try {
+    require_once __DIR__ . '/php/PostVerwaltung.php';
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $followerId    = isset($_POST['followerId'])   ? $_POST['followerId']   : '';
-    $followeeId    = isset($_POST['followeeId'])   ? $_POST['followeeId']   : '';
-    $currentStatus = isset($_POST['currentStatus']) ? $_POST['currentStatus'] : 'not_following';
+    // === Initialisierung ===
+    $postVerwaltung = new PostVerwaltung();
+    $nutzerVerwaltung = new NutzerVerwaltung();
 
-    if ($followerId && $followeeId) {
-        if ($currentStatus === 'following') {
-            $isFollowing = false;
-            $postResult = "Entfolgt!<br>Follower-ID: $followerId<br>Followee-ID: $followeeId";
-        } else {
-            $isFollowing = true;
-            $postResult = "Gefolgt!<br>Follower-ID: $followerId<br>Followee-ID: $followeeId";
-        }
-        // TODO: Später: Speichern des Follow/Unfollow-Status in der Datenbank
-        print_r($_POST); // Debugging-Ausgabe der POST-Daten
-    } else {
-        $postResult = "Fehler: Fehlende Daten.";
-    }
-}
+// Aktueller Benutzer (später aus Session oder Authentifizierung holen)
+$currentUserId = 1; 
 
-// TODO: Später: Hier die Profildaten des Benutzers mit der ID $profileId aus der Datenbank laden
-// (Ersetzt die Dummy-Daten in $allUsers)
-// ==========================
-// 2) URL-Parameter: Welches Profil soll geladen werden?
-// ==========================
+// Welches Profil soll geladen werden?
 $profileId = isset($_GET['userid']) ? (int)$_GET['userid'] : 0;
-
-// ==========================
-// 3) Dummy-Daten: Alle Nutzer
-// ==========================
-$allUsers = [
-    1 => [
-        'id'             => 1,
-        'username'       => 'Anna Beispiel',
-        'joinDateLabel'  => 'Januar 2025',
-        'followerCount'  => 120,
-        'followingCount' => 45
-    ],
-    2 => [
-        'id'             => 2,
-        'username'       => 'Max Mustermann',
-        'joinDateLabel'  => 'März 2025',
-        'followerCount'  => 85,
-        'followingCount' => 123
-    ],
-    3 => [
-        'id'             => 3,
-        'username'       => 'Lena Neumann',
-        'joinDateLabel'  => 'Februar 2025',
-        'followerCount'  => 200,
-        'followingCount' => 75
-    ]
-];
-
-// TODO: Später: Hier die Posts des Benutzers mit der ID $profileId aus der Datenbank laden
-// (Ersetzt die Dummy-Daten in $allPosts und die Filterung)
-// ==========================
-// 4) Dummy-Daten: Alle Posts (mit userId zum Filtern)
-// ==========================
-$allPosts = [
-    [
-        'id'         => 1,
-        'userId' => 1,
-        'autor'      => 'Anna Beispiel',
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit'  => '2025-04-26T14:15:00Z',
-        'time_label' => 'vor 1 Tag',
-        'text'       => '👍 Dieses neue Feature ist wirklich großartig! Es macht die Bedienung so viel einfacher.',
-        'bildPfad'   => '',
-        'reactions'  => ['👍'=>2,'👎'=>0,'❤️'=>1,'🤣'=>0,'❓'=>0,'‼️'=>0],
-        'comments'   => 3
-    ],
-    [
-        'id'         => 2,
-        'userId' => 2,
-        'autor'      => 'Max Mustermann',
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit'  => '2025-04-27T10:30:00Z',
-        'time_label' => 'vor 2 Stunden',
-        'text'       => 'Wie findet ihr dieses neue Logo von Zwitscha? Ich finde es super! Es ist modern und frisch. Was denkt ihr?',
-        'bildPfad'   => 'assets/zwitscha_green.jpg',
-        'reactions'  => ['👍'=>5,'👎'=>1,'❤️'=>3,'🤣'=>0,'❓'=>0,'‼️'=>2],
-        'comments'   => 2
-    ],
-    [
-        'id'         => 3,
-        'userId' => 3,
-        'autor'      => 'Lena Neumann',
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit'  => '2025-04-27T08:00:00Z',
-        'time_label' => 'vor 4 Stunden',
-        'text'       => 'Guten Morgen! 🌞 Heute starte ich mit frischem Kaffee und neuen Ideen in den Tag. Manchmal reicht ein bisschen Ruhe, um wieder kreative Energie zu tanken. Was motiviert euch am Morgen?',
-        'bildPfad'   => '',
-        'reactions'  => ['👍'=>8,'👎'=>0,'❤️'=>5,'🤣'=>1,'❓'=>0,'‼️'=>0],
-        'comments'   => 4
-    ],
-    // Ein zusätzlicher Post, um zu zeigen, dass ein User mehrere Posts haben könnte
-    [
-        'id'         => 4,
-        'userId' => 2,
-        'autor'      => 'Max Mustermann',
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit'  => '2025-05-01T12:00:00Z',
-        'time_label' => 'vor 6 Tagen',
-        'text'       => 'Heute gibt’s einen neuen Artikel auf meinem Blog! Schaut doch mal rein und lasst Feedback da.',
-        'bildPfad'   => '',
-        'reactions'  => ['👍'=>7,'👎'=>0,'❤️'=>4,'🤣'=>2,'❓'=>0,'‼️'=>1],
-        'comments'   => 1
-    ]
-];
-
-// ==========================
-// 5) Profil-Existenz prüfen
-// ==========================
-if (isset($allUsers[$profileId])) {
-    $profile         = $allUsers[$profileId];
-    $username        = $profile['username'];
-    $joinDateLabel   = $profile['joinDateLabel'];
-    $followerCount   = $profile['followerCount'];
-    $followingCount  = $profile['followingCount'];
-} else {
-    $profile = null;
+if ($profileId === 0) {
+    // Wenn keine ID übergeben wurde, standardmäßig zum eigenen Profil leiten
+    header("Location: Profil.php?userid=" . $currentUserId);
+    exit();
 }
 
-// ==========================
-// 6) Ladezustand der Posts steuern (data, empty, error)
-//    Kann per URL-Parameter gesetzt werden: ?state=empty oder ?state=error
-// ==========================
-$loadingState = isset($_GET['state']) ? $_GET['state'] : 'data';
-
-// Wenn Profil existiert und Zustand = data, dann filtere die Posts …
-$posts = [];
-if ($profile && $loadingState === 'data') {
-    foreach ($allPosts as $p) {
-        if ($p['userId'] === $profileId) {
-            $posts[] = $p;
-        }
+// === POST-Request-Handling für Follow/Unfollow ===
+$postResult = '';
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] === 'toggle_follow') {
+    $followeeId = (int)($_POST['followeeId'] ?? 0);
+    if ($followeeId > 0 && $followeeId !== $currentUserId) {
+        $nutzerVerwaltung->toggleFollow($currentUserId, $followeeId);
+        // Redirect, um Form-Neusendung zu verhindern
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit();
     }
 }
-// Wenn $posts leer ist, bleibt es leer (-> im Switch weiter unten wird dasselbe Layout wie 'empty' gezeigt).
+
+// === Daten aus der Datenbank laden ===
+$profile = $nutzerVerwaltung->getUserProfileData($profileId);
+$posts = [];
+$isFollowing = false;
+
+if ($profile) {
+    $posts = $postVerwaltung->getPostsByUserId($profileId, $currentUserId);
+    $isFollowing = $nutzerVerwaltung->isFollowing($currentUserId, $profileId);
+
+    // Konvertiere das Registrierungsdatum in ein lesbares Format
+    $date = new DateTime($profile['registrierungsDatum']);
+    $months = [
+        1 => 'Januar', 2 => 'Februar', 3 => 'März', 4 => 'April',
+        5 => 'Mai', 6 => 'Juni', 7 => 'Juli', 8 => 'August',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Dezember'
+    ];
+    $month = $months[(int)$date->format('n')];
+    $year = $date->format('Y');
+    $joinDateLabel = $month . ' ' . $year;
+}
+
+    // Ladezustand der Posts steuern
+    $loadingState = isset($_GET['state']) ? $_GET['state'] : 'data';
+
+} catch (Exception $e) {
+    // Fehlerbehandlung: Zeige eine Fehlermeldung statt HTTP 500
+    echo '<h1>Fehler beim Laden der Profilseite</h1>';
+    echo '<p>Es ist ein Fehler aufgetreten: ' . htmlspecialchars($e->getMessage()) . '</p>';
+    echo '<p>Datei: ' . htmlspecialchars($e->getFile()) . ' (Zeile ' . $e->getLine() . ')</p>';
+    echo '<a href="index.php">Zurück zur Startseite</a>';
+    exit;
+}
 
 ?>
 <!DOCTYPE html>
@@ -158,7 +76,7 @@ if ($profile && $loadingState === 'data') {
     <title>
         <?php
         if ($profile) {
-            echo 'Profil – ' . htmlspecialchars($username);
+            echo 'Profil von ' . htmlspecialchars($profile['nutzerName']);
         } else {
             echo 'Profil nicht gefunden';
         }
@@ -171,6 +89,7 @@ if ($profile && $loadingState === 'data') {
     <link rel="stylesheet" href="css/profil.css" />
     <link rel="stylesheet" href="css/post.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 <body>
 
@@ -193,27 +112,23 @@ if ($profile && $loadingState === 'data') {
               7) Profil-Kopfbereich (dynamisch)
              ============================ -->
         <div class="profil-header">
-            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild" class="profilbild" />
+            <img src="<?php echo htmlspecialchars($profile['profilBild']); ?>" alt="Profilbild" class="profilbild" />
 
             <div class="profil-header pb-name-untereinander">
                 <div class="profil-main-infos">
                     <!-- Dynamischer Nutzername -->
-                    <h1 class="profil-name"><?php echo htmlspecialchars($username); ?></h1>
+                    <h1 class="profil-name"><?php echo htmlspecialchars($profile['nutzerName']); ?></h1>
 
-                    <!-- Follow/Unfollow-Form (Dummy-Daten) -->
-                    <form id="follow-form" method="post" action="" style="display: inline;">
-                        <input type="hidden" name="followerId" value="123" />
-                        <input type="hidden" name="followeeId" value="<?php echo $profileId; ?>" />
-                        <input type="hidden" name="currentStatus" value="<?php echo $isFollowing ? 'following' : 'not_following'; ?>" />
-
-                        <button
-                                id="folgenButton"
-                                class="folgen-button <?php echo $isFollowing ? 'gefolgt' : ''; ?>"
-                                type="submit"
-                        >
-                            <?php echo $isFollowing ? 'Gefolgt' : 'Folgen'; ?>
-                        </button>
-                    </form>
+                    <?php if ($currentUserId !== $profile['id']): ?>
+                        <!-- Follow/Unfollow-Form -->
+                        <form method="post" action="" style="display: inline;">
+                            <input type="hidden" name="action" value="toggle_follow" />
+                            <input type="hidden" name="followeeId" value="<?php echo $profile['id']; ?>" />
+                            <button type="submit" class="folgen-button <?php echo $isFollowing ? 'gefolgt' : ''; ?>">
+                                <?php echo $isFollowing ? 'Gefolgt' : 'Folgen'; ?>
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Dynamisches Beitrittsdatum -->
@@ -221,32 +136,27 @@ if ($profile && $loadingState === 'data') {
 
                 <!-- Dynamische Zähler: Follower, Folge ich, Posts -->
                 <div class="folgen-container">
-                    <p class="folge-info"><strong><?php echo $followerCount; ?></strong> <span>Follower</span></p>
-                    <p class="folge-info"><strong><?php echo $followingCount; ?></strong> <span>Folge ich</span></p>
-                    <p class="folge-info"><strong><?php echo count($posts); ?></strong> <span>Posts</span></p>
+                    <p class="folge-info"><strong><?php echo $profile['followerCount']; ?></strong> <span>Follower</span></p>
+                    <p class="folge-info"><strong><?php echo $profile['followingCount']; ?></strong> <span>Folge ich</span></p>
+                    <p class="folge-info"><strong><?php echo $profile['postCount']; ?></strong> <span>Posts</span></p>
                 </div>
             </div>
-
-            <a href="einstellungen.php" class="einstellungen-link mobile-only">
-                <i class="bi bi-gear-fill"></i>
-            </a>
+            
+            <?php if ($currentUserId === $profile['id']): ?>
+                <a href="einstellungen.php" class="einstellungen-link mobile-only">
+                    <i class="bi bi-gear-fill"></i>
+                </a>
+            <?php endif; ?>
         </div>
-
-        <!-- Anzeige einer Erfolg-/Fehlermeldung nach POST -->
-        <?php if ($postResult): ?>
-            <div class="post-result" style="margin: 1em 0; padding: 1em; border: 1px solid #ccc; background: #f9f9f9;">
-                <?php echo $postResult; ?>
-            </div>
-        <?php endif; ?>
-
 
         <!-- ============================
               8) Feed-Sektion: Posts dieses Nutzers
              ============================ -->
         <section class="feed">
-            <h2>Posts von <?php echo htmlspecialchars($username); ?></h2>
+            <h2>Posts von <?php echo htmlspecialchars($profile['nutzerName']); ?></h2>
 
             <?php
+            // Die Switch-Logik bleibt erhalten für den Fall, dass man Ladezustände testen will
             switch ($loadingState) {
                 case 'empty':
                     // Explizit leerer Zustand via ?state=empty
@@ -273,18 +183,15 @@ if ($profile && $loadingState === 'data') {
 
                 case 'data':
                 default:
-                    // Datenzustand: Wenn $posts leer, zeige ebenfalls den leeren Zustand
                     if (empty($posts)) {
                         ?>
                         <div class="empty-state">
                             <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
                             <h3>Noch keine Posts vorhanden</h3>
-                            <p>Der Nutzer hat noch keine Posts erstellt.</p>
+                            <p><?php echo htmlspecialchars($profile['nutzerName']); ?> hat noch keine Posts erstellt.</p>
                         </div>
                         <?php
                     } else {
-                        // Jeden Post rendern – hier wird 'post.php' eingebunden. Achte darauf, dass post.php
-                        // auf die Variable $post zugreift und sie korrekt rendert.
                         foreach ($posts as $post) {
                             include 'post.php';
                         }

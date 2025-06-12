@@ -123,7 +123,7 @@ if (!function_exists('time_ago')) {
 
 <main class="container">
     <div class="page-header-container">
-        <a href="index.php" class="back-button">
+        <a href="<?php echo htmlspecialchars($_SERVER['HTTP_REFERER'] ?? 'index.php'); ?>" class="back-button">
             <button type="button">Zurück</button>
         </a>
         <h1>Post</h1>

@@ -7,8 +7,19 @@ if (!function_exists('time_ago')) {
         $ago = new DateTime($datetime);
         $diff = $now->diff($ago);
 
-        $diff->w = floor($diff->d / 7);
-        $diff->d -= $diff->w * 7;
+        // Berechne Wochen separat ohne dynamische Eigenschaften
+        $weeks = floor($diff->d / 7);
+        $days = $diff->d - ($weeks * 7);
+
+        $values = [
+            'y' => $diff->y,
+            'm' => $diff->m,
+            'w' => $weeks,
+            'd' => $days,
+            'h' => $diff->h,
+            'i' => $diff->i,
+            's' => $diff->s,
+        ];
 
         $string = [
             'y' => 'Jahr',
@@ -19,9 +30,10 @@ if (!function_exists('time_ago')) {
             'i' => 'Minute',
             's' => 'Sekunde',
         ];
+
         foreach ($string as $k => &$v) {
-            if ($diff->$k) {
-                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 'n' : '');
+            if ($values[$k]) {
+                $v = $values[$k] . ' ' . $v . ($values[$k] > 1 ? 'n' : '');
             } else {
                 unset($string[$k]);
             }
