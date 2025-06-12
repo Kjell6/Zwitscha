@@ -86,4 +86,41 @@ class NutzerVerwaltung {
 
         return $success;
     }
+
+    /**
+     * Sucht nach Nutzern anhand ihres Namens.
+     *
+     * @param string $searchTerm Der Suchbegriff.
+     * @param int $limit Maximale Anzahl der Ergebnisse (Standard: 10).
+     * @return array Array von Nutzerdaten.
+     */
+    public function searchUsers(string $searchTerm, int $limit = 10): array {
+        if (empty(trim($searchTerm))) {
+            return [];
+        }
+
+        $sql = "
+            SELECT 
+                n.id,
+                n.nutzerName,
+                IF(n.profilBild = '' OR n.profilBild IS NULL, 'assets/placeholder-profilbild.jpg', n.profilBild) as profilBild,
+                (SELECT COUNT(*) FROM folge WHERE gefolgter_id = n.id) AS followerCount
+            FROM nutzer n
+            WHERE n.nutzerName LIKE ?
+            ORDER BY n.nutzerName ASC
+            LIMIT ?
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        $searchPattern = '%' . $searchTerm . '%';
+        $stmt->bind_param("si", $searchPattern, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $users = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $users;
+    }
 } 

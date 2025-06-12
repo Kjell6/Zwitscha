@@ -63,20 +63,86 @@ $currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('header-search-input');
+            const resultsDropdown = document.querySelector('.header-search-results-dropdown');
+
+            // Funktion zum Anzeigen der Suchergebnisse
+            function displayResults(results) {
+                resultsDropdown.innerHTML = '';
+
+                if (results.length === 0) {
+                    resultsDropdown.style.display = 'none';
+                    return;
+                }
+
+                const heading = document.createElement('h3');
+                heading.textContent = 'Nutzer gefunden';
+                resultsDropdown.appendChild(heading);
+
+                const resultsList = document.createElement('ul');
+                resultsList.classList.add('header-search-results-list');
+
+                results.forEach(user => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('search-result-item');
+
+                    const link = document.createElement('a');
+                    link.href = user.profileUrl;
+
+                    const img = document.createElement('img');
+                    img.src = user.avatar;
+                    img.alt = 'Profilbild';
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = user.name;
+                    nameSpan.classList.add('user-name');
+
+                    link.appendChild(img);
+                    link.appendChild(nameSpan);
+                    listItem.appendChild(link);
+                    resultsList.appendChild(listItem);
+                });
+
+                resultsDropdown.appendChild(resultsList);
+                resultsDropdown.style.display = 'block';
+            }
+
             searchInput.addEventListener('input', () => {
-                const query = searchInput.value;
-                fetch('suchanfrage.php', {
+                const query = searchInput.value.trim();
+                
+                if (query.length < 2) {
+                    resultsDropdown.style.display = 'none';
+                    return;
+                }
+
+                fetch('php/search_handler.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: 'query=' + encodeURIComponent(query)
                 })
-                    .then(response => response.text())
-                    .then(data => {
-                        document.querySelector('.header-search-results-dropdown').innerHTML = data;
-                    })
-                    .catch(error => console.error('Fehler bei der Suche:', error));
+                .then(response => response.json())
+                .then(results => {
+                    displayResults(results);
+                })
+                .catch(error => {
+                    console.error('Fehler bei der Suche:', error);
+                    resultsDropdown.style.display = 'none';
+                });
+            });
+
+            // Suchergebnisse ausblenden bei Klick außerhalb
+            searchInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    resultsDropdown.style.display = 'none';
+                }, 150);
+            });
+
+            // Suchergebnisse wieder anzeigen bei Focus (falls bereits Text vorhanden)
+            searchInput.addEventListener('focus', () => {
+                if (searchInput.value.trim().length >= 2) {
+                    searchInput.dispatchEvent(new Event('input'));
+                }
             });
         });
     </script>
