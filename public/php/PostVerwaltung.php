@@ -19,22 +19,15 @@ class PostVerwaltung {
     public function getAllPosts(int $currentUserId): array {
         $sql = "
             SELECT 
-                p.id,
-                p.text,
-                p.bildPfad,
-                p.datumZeit,
-                n.nutzerName AS autor,
-                n.profilBild,
-                n.id as userId,
+                p.id, p.text, p.bildPfad, p.datumZeit,
+                n.nutzerName AS autor, n.profilBild, n.id as userId,
                 COUNT(DISTINCT k.id) AS comments,
-                -- Reaktionszähler
                 SUM(CASE WHEN r.reaktionsTyp = 'Daumen Hoch' THEN 1 ELSE 0 END) AS count_like,
                 SUM(CASE WHEN r.reaktionsTyp = 'Daumen Runter' THEN 1 ELSE 0 END) AS count_dislike,
                 SUM(CASE WHEN r.reaktionsTyp = 'Herz' THEN 1 ELSE 0 END) AS count_heart,
                 SUM(CASE WHEN r.reaktionsTyp = 'Lachen' THEN 1 ELSE 0 END) AS count_laugh,
                 SUM(CASE WHEN r.reaktionsTyp = 'Fragezeichen' THEN 1 ELSE 0 END) AS count_question,
                 SUM(CASE WHEN r.reaktionsTyp = 'Ausrufezeichen' THEN 1 ELSE 0 END) AS count_exclamation,
-                -- Die Reaktionen des aktuellen Nutzers als kommagetrennter String
                 (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
             FROM post p
             JOIN nutzer n ON p.nutzer_id = n.id
@@ -44,36 +37,42 @@ class PostVerwaltung {
             ORDER BY p.datumZeit DESC
         ";
         
-        $stmt = $this->db->prepare($sql);
-        if (!$stmt) return [];
-
-        $stmt->bind_param("i", $currentUserId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $posts = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-
-        // Die flachen Reaktions-Counts in ein verschachteltes Array umwandeln.
-        return array_map(function($post) {
-            $post['reactions'] = [
-                '👍' => (int) $post['count_like'],
-                '👎' => (int) $post['count_dislike'],
-                '❤️' => (int) $post['count_heart'],
-                '🤣' => (int) $post['count_laugh'],
-                '❓' => (int) $post['count_question'],
-                '‼️' => (int) $post['count_exclamation'],
-            ];
-            // Die Reaktionen des Nutzers in ein Array umwandeln
-            $post['currentUserReactions'] = $post['currentUserReactions'] ? explode(',', $post['currentUserReactions']) : [];
-            // Die nicht mehr benötigten flachen Zähler entfernen.
-            unset(
-                $post['count_like'], $post['count_dislike'], $post['count_heart'],
-                $post['count_laugh'], $post['count_question'], $post['count_exclamation']
-            );
-            return $post;
-        }, $posts);
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId], 'i');
     }
 
+    /**
+     * Holt nur die Posts von Nutzern, denen der aktuelle Nutzer folgt.
+     *
+     * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers.
+     * @return array Ein Array von Posts.
+     */
+    public function getFollowedPosts(int $currentUserId): array {
+        // Diese Abfrage ist fast identisch mit getAllPosts, hat aber einen zusätzlichen
+        // INNER JOIN auf die 'folge'-Tabelle, um nur relevante Posts zu filtern.
+        $sql = "
+            SELECT 
+                p.id, p.text, p.bildPfad, p.datumZeit,
+                n.nutzerName AS autor, n.profilBild, n.id as userId,
+                COUNT(DISTINCT k.id) AS comments,
+                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Hoch' THEN 1 ELSE 0 END) AS count_like,
+                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Runter' THEN 1 ELSE 0 END) AS count_dislike,
+                SUM(CASE WHEN r.reaktionsTyp = 'Herz' THEN 1 ELSE 0 END) AS count_heart,
+                SUM(CASE WHEN r.reaktionsTyp = 'Lachen' THEN 1 ELSE 0 END) AS count_laugh,
+                SUM(CASE WHEN r.reaktionsTyp = 'Fragezeichen' THEN 1 ELSE 0 END) AS count_question,
+                SUM(CASE WHEN r.reaktionsTyp = 'Ausrufezeichen' THEN 1 ELSE 0 END) AS count_exclamation,
+                (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
+            FROM post p
+            JOIN nutzer n ON p.nutzer_id = n.id
+            INNER JOIN folge f ON p.nutzer_id = f.gefolgter_id AND f.folgender_id = ?
+            LEFT JOIN kommentar k ON p.id = k.post_id
+            LEFT JOIN Reaktion r ON p.id = r.post_id
+            GROUP BY p.id
+            ORDER BY p.datumZeit DESC
+        ";
+        
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId], 'ii');
+    }
+    
     /**
      * Schaltet eine spezifische Reaktion für einen Post an oder aus.
      *
@@ -187,5 +186,43 @@ class PostVerwaltung {
         $stmt->close();
 
         return $post ?: null;
+    }
+
+    /**
+     * Private Hilfsfunktion zum Ausführen und Verarbeiten von Post-Abfragen.
+     *
+     * @param string $sql Die SQL-Abfrage mit Platzhaltern.
+     * @param array $params Die Parameter für die Abfrage.
+     * @param string $types Die Typen-Deklaration für bind_param (z.B. 'i', 'ii').
+     * @return array Das verarbeitete Array von Posts.
+     */
+    private function _fetchAndProcessPosts(string $sql, array $params, string $types): array {
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        // Binden der Parameter an die Abfrage
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $posts = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        // Gleiche Nachbearbeitung für alle Post-Abfragen
+        return array_map(function($post) {
+            $post['reactions'] = [
+                '👍' => (int) $post['count_like'],
+                '👎' => (int) $post['count_dislike'],
+                '❤️' => (int) $post['count_heart'],
+                '🤣' => (int) $post['count_laugh'],
+                '❓' => (int) $post['count_question'],
+                '‼️' => (int) $post['count_exclamation'],
+            ];
+            $post['currentUserReactions'] = $post['currentUserReactions'] ? explode(',', $post['currentUserReactions']) : [];
+            unset(
+                $post['count_like'], $post['count_dislike'], $post['count_heart'],
+                $post['count_laugh'], $post['count_question'], $post['count_exclamation']
+            );
+            return $post;
+        }, $posts);
     }
 } 

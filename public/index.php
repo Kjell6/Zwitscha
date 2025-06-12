@@ -117,10 +117,8 @@ $loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
 $currentUserIdForPosts = 1;
 
 // Posts aus der Datenbank laden
-// TODO: Eine Methode für "gefolgte" Posts im Repository implementieren
 if ($showFollowedOnly) {
-    // $posts = $postRepository->getFollowedPosts($currentUserIdForPosts);
-    $posts = $postRepository->getAllPosts($currentUserIdForPosts); // Vorerst alle Posts
+    $posts = $postRepository->getFollowedPosts($currentUserIdForPosts);
 } else {
     $posts = $postRepository->getAllPosts($currentUserIdForPosts);
 }
