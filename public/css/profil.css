@@ -47,7 +47,16 @@ body {
 .folgen-button {
     cursor: pointer;
     background-color: var(--primary-color);
-    transition: background-color 0.3s ease;
+    color: var(--light-color);
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: background-color var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xxs);
 }
 .folgen-button.gefolgt {
     background-color: var(--button-color)
@@ -56,8 +65,46 @@ body {
     background-color: var(--primary-hover);
 }
 .folgen-button.gefolgt:hover {
-    background-color: var(--button-hover);
+    background-color: var(--danger-color);
 }
+
+.folgen-button.gefolgt:hover .follow-text {
+    display: none;
+}
+
+.folgen-button.gefolgt:hover::after {
+    content: "Entfolgen";
+}
+
+/* Admin-Button Styles */
+.admin-button {
+    cursor: pointer;
+    background-color: var(--danger-color);
+    color: var(--light-color);
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: background-color var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xxs);
+}
+
+.admin-button:hover {
+    background-color: var(--danger-hover);
+}
+
+.admin-button.admin-active {
+    background-color: var(--primary-color);
+}
+
+.admin-button.admin-active:hover {
+    background-color: var(--primary-hover);
+}
+
+
 
 /* Container für den gesamten Textinhalt - stellt sicher, dass die Kinder stapeln */
 div.profil-header.pb-name-untereinander {
@@ -85,6 +132,46 @@ div.profil-header.pb-name-untereinander {
     line-height: 1;
     flex-grow: 1;
     word-break: break-word;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.admin-badge {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    padding: var(--spacing-xxs) var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    cursor: help;
+}
+
+.admin-badge::after {
+    content: "Administrator";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: var(--spacing-xxs) var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    pointer-events: none;
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+.admin-badge:hover::after {
+    opacity: 1;
+    visibility: visible;
 }
 
 .folgen-button {
@@ -160,6 +247,12 @@ div.profil-header.pb-name-untereinander {
         flex-direction: column;
         gap: var(--spacing-xs);
         align-items: center;
+    }
+
+    .admin-button,
+    .folgen-button {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-xxs) var(--spacing-xs);
     }
 
     .profil-name,

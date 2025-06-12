@@ -123,4 +123,46 @@ class NutzerVerwaltung {
 
         return $users;
     }
+
+    /**
+     * Holt die vollständigen Benutzerdaten für einen Nutzer (inklusive Admin-Status).
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @return array|null Die Benutzerdaten oder null, wenn nicht gefunden.
+     */
+    public function getUserById(int $userId): ?array {
+        $sql = "SELECT id, nutzerName, profilBild, istAdministrator, erstellungsDatum FROM nutzer WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return null;
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        
+        return $user ?: null;
+    }
+
+    /**
+     * Ändert den Admin-Status eines Nutzers.
+     *
+     * @param int $userId Die ID des Nutzers, dessen Admin-Status geändert werden soll.
+     * @param bool $isAdmin Der neue Admin-Status (true = Admin, false = normaler User).
+     * @return bool True bei Erfolg.
+     */
+    public function setAdminStatus(int $userId, bool $isAdmin): bool {
+        $adminValue = $isAdmin ? 1 : 0;
+        $sql = "UPDATE nutzer SET istAdministrator = ? WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("ii", $adminValue, $userId);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
 } 

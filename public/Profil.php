@@ -12,7 +12,8 @@ try {
     $nutzerVerwaltung = new NutzerVerwaltung();
 
 // Aktueller Benutzer (später aus Session oder Authentifizierung holen)
-$currentUserId = 1; 
+$currentUserId = 1;
+$currentUser = $nutzerVerwaltung->getUserById($currentUserId); 
 
 // Welches Profil soll geladen werden?
 $profileId = isset($_GET['userid']) ? (int)$_GET['userid'] : 0;
@@ -34,8 +35,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
     }
 }
 
+// === POST-Request-Handling für Admin-Status-Änderung ===
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] === 'toggle_admin') {
+    // Nur Admins dürfen andere zu Admins machen
+    if ($currentUser && $currentUser['istAdministrator']) {
+        $targetUserId = (int)($_POST['target_user_id'] ?? 0);
+        if ($targetUserId > 0 && $targetUserId !== $currentUserId) {
+            // Aktuelle Daten des Ziel-Benutzers holen
+            $targetUser = $nutzerVerwaltung->getUserById($targetUserId);
+            if ($targetUser) {
+                // Admin-Status umschalten
+                $newAdminStatus = !$targetUser['istAdministrator'];
+                $nutzerVerwaltung->setAdminStatus($targetUserId, $newAdminStatus);
+                // Redirect, um Form-Neusendung zu verhindern
+                header("Location: " . $_SERVER['REQUEST_URI']);
+                exit();
+            }
+        }
+    }
+}
+
 // === Daten aus der Datenbank laden ===
 $profile = $nutzerVerwaltung->getUserProfileData($profileId);
+$profileUser = $nutzerVerwaltung->getUserById($profileId); // Für Admin-Status
 $posts = [];
 $isFollowing = false;
 
@@ -73,6 +95,7 @@ if ($profile) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="assets/favicon.png" type="image/png">
     <title>
         <?php
         if ($profile) {
@@ -117,7 +140,14 @@ if ($profile) {
             <div class="profil-header pb-name-untereinander">
                 <div class="profil-main-infos">
                     <!-- Dynamischer Nutzername -->
-                    <h1 class="profil-name"><?php echo htmlspecialchars($profile['nutzerName']); ?></h1>
+                    <h1 class="profil-name">
+                        <?php echo htmlspecialchars($profile['nutzerName']); ?>
+                        <?php if ($profileUser && $profileUser['istAdministrator']): ?>
+                            <span class="admin-badge" title="Administrator">
+                                <i class="bi bi-shield-fill"></i>
+                            </span>
+                        <?php endif; ?>
+                    </h1>
 
                     <?php if ($currentUserId !== $profile['id']): ?>
                         <!-- Follow/Unfollow-Form -->
@@ -125,9 +155,29 @@ if ($profile) {
                             <input type="hidden" name="action" value="toggle_follow" />
                             <input type="hidden" name="followeeId" value="<?php echo $profile['id']; ?>" />
                             <button type="submit" class="folgen-button <?php echo $isFollowing ? 'gefolgt' : ''; ?>">
-                                <?php echo $isFollowing ? 'Gefolgt' : 'Folgen'; ?>
+                                <?php if ($isFollowing): ?>
+                                    <span class="follow-text">Folge ich</span>
+                                <?php else: ?>
+                                    Folgen
+                                <?php endif; ?>
                             </button>
                         </form>
+
+                        <!-- Admin-Status-Button (nur für Admins sichtbar) -->
+                        <?php if ($currentUser && $currentUser['istAdministrator'] && $profileUser): ?>
+                            <form method="post" action="" style="display: inline; margin-left: 10px;">
+                                <input type="hidden" name="action" value="toggle_admin" />
+                                <input type="hidden" name="target_user_id" value="<?php echo $profile['id']; ?>" />
+                                <button type="submit" class="admin-button <?php echo $profileUser['istAdministrator'] ? 'admin-active' : ''; ?>" 
+                                        onclick="return confirm('<?php echo $profileUser['istAdministrator'] ? 'Admin-Rechte entziehen?' : 'Zu Admin machen?'; ?>')">
+                                    <?php if ($profileUser['istAdministrator']): ?>
+                                        Admin entziehen
+                                    <?php else: ?>
+                                        Zu Admin machen
+                                    <?php endif; ?>
+                                </button>
+                            </form>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
 
