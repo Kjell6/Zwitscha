@@ -1,23 +1,59 @@
 <?php
+require_once __DIR__ . '/php/NutzerVerwaltung.php';
+
+$nutzerVerwaltung = new NutzerVerwaltung();
+
+// TODO: Hier sollte später die echte Session-Logik hin
+$currentUserId = 1; // Hardcoded für Development
+$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+
+if (!$currentUser) {
+    die('Benutzer nicht gefunden.');
+}
+
 $message = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete-account'])) {
-        $message = "[Dummy] Account würde jetzt gelöscht werden.";
+        // Account löschen
+        $success = $nutzerVerwaltung->deleteUser($currentUserId);
+        if ($success) {
+            // Nach dem Löschen zur Login-Seite umleiten
+            header('Location: Login.php?message=account_deleted');
+            exit;
+        } else {
+            $error = "Fehler beim Löschen des Accounts.";
+        }
+        
     } elseif (isset($_POST['change-name'])) {
-        $newName = htmlspecialchars($_POST['new-name'] ?? '');
-        $message = "[Dummy] Name würde jetzt zu $newName geändert werden.";
+        // Name ändern
+        $newName = trim($_POST['new-name'] ?? '');
+        if (empty($newName)) {
+            $error = "Der Name darf nicht leer sein.";
+        } elseif (strlen($newName) < 2) {
+            $error = "Der Name muss mindestens 2 Zeichen lang sein.";
+        } elseif (strlen($newName) > 50) {
+            $error = "Der Name darf maximal 50 Zeichen lang sein.";
+        } else {
+            $success = $nutzerVerwaltung->updateUserName($currentUserId, $newName);
+            if ($success) {
+                $message = "Name wurde erfolgreich geändert.";
+                // Aktuelle Nutzerdaten neu laden
+                $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+            } else {
+                $error = "Fehler beim Ändern des Namens.";
+            }
+        }
+        
     } elseif (isset($_POST['change-password'])) {
+        // Passwort ändern
         $currentPassword = $_POST['current-password'] ?? '';
         $newPassword = $_POST['new-password'] ?? '';
         $confirmPassword = $_POST['confirm-password'] ?? '';
 
-        // Dummy-Passwortüberprüfung
-        $dummyCurrentPassword = '123456'; // Beispiel: angenommenes korrektes Passwort
-
-        if ($currentPassword !== $dummyCurrentPassword) {
-            $error = "[Dummy] Aktuelles Passwort ist falsch.";
+        if (!$nutzerVerwaltung->verifyCurrentPassword($currentUserId, $currentPassword)) {
+            $error = "Das aktuelle Passwort ist falsch.";
         } elseif (!ctype_alnum($newPassword)) {
             $error = "Das neue Passwort darf nur Buchstaben und Zahlen enthalten.";
         } elseif (strlen($newPassword) < 6) {
@@ -25,10 +61,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($newPassword !== $confirmPassword) {
             $error = "Die neuen Passwörter stimmen nicht überein.";
         } else {
-            $message = "[Dummy] Passwort wurde erfolgreich geändert.";
+            $success = $nutzerVerwaltung->updatePassword($currentUserId, $newPassword);
+            if ($success) {
+                $message = "Passwort wurde erfolgreich geändert.";
+            } else {
+                $error = "Fehler beim Ändern des Passworts.";
+            }
         }
+        
     } elseif (isset($_POST['change-avatar'])) {
-        $message = "[Dummy] Profilbild würde jetzt aktualisiert werden.";
+        // Profilbild ändern
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+            // Datei-Validierung
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            
+            if (!in_array($_FILES['avatar']['type'], $allowedTypes)) {
+                $error = "Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.";
+            } else {
+                // Upload-Verzeichnis erstellen falls es nicht existiert
+                $uploadDir = __DIR__ . '/assets/uploads/profile/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                
+                // Sicherer Dateiname generieren
+                $fileExtension = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
+                $fileName = 'profile_' . $currentUserId . '_' . uniqid() . '.' . $fileExtension;
+                $targetPath = $uploadDir . $fileName;
+                $relativePath = 'assets/uploads/profile/' . $fileName;
+                
+                if (move_uploaded_file($_FILES['avatar']['tmp_name'], $targetPath)) {
+                    // Altes Profilbild löschen (falls es kein Placeholder ist)
+                    $oldImage = $currentUser['profilBild'];
+                    if ($oldImage && strpos($oldImage, 'placeholder') === false && file_exists(__DIR__ . '/' . $oldImage)) {
+                        unlink(__DIR__ . '/' . $oldImage);
+                    }
+                    
+                    $success = $nutzerVerwaltung->updateProfileImage($currentUserId, $relativePath);
+                    if ($success) {
+                        $message = "Profilbild wurde erfolgreich aktualisiert.";
+                        // Aktuelle Nutzerdaten neu laden
+                        $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+                    } else {
+                        $error = "Fehler beim Speichern des Profilbilds in der Datenbank.";
+                        // Hochgeladene Datei wieder löschen
+                        if (file_exists($targetPath)) {
+                            unlink($targetPath);
+                        }
+                    }
+                } else {
+                    $error = "Fehler beim Hochladen der Datei.";
+                }
+            }
+        } else {
+            $error = "Bitte wählen Sie eine Datei aus.";
+        }
     }
 }
 ?>
@@ -73,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;"/>
                     </div>
                     <div class="avatar-preview">
-                        <img src="assets/placeholder-profilbild-2.png" alt="Profilbild-Vorschau" />
+                        <img id="avatar-preview-img" src="<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>" alt="Aktuelles Profilbild" />
                     </div>
                 </div>
                 <button type="submit" name="change-avatar" class="button">Bild aktualisieren</button>
@@ -85,7 +172,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <fieldset>
                 <legend>Name ändern</legend>
                 <label for="new-name">Neuer Name:</label>
-                <input type="text" id="new-name" name="new-name" required />
+                <input type="text" id="new-name" name="new-name" 
+                       value="<?php echo htmlspecialchars($currentUser['nutzerName']); ?>" 
+                       required />
                 <button type="submit" name="change-name" class="button">Speichern</button>
             </fieldset>
         </form>
@@ -132,6 +221,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </footer>
 
 <?php include 'footerMobile.php'; ?>
+
+<script>
+    // Live-Vorschau für Profilbild-Upload
+    document.getElementById('avatar').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const previewImg = document.getElementById('avatar-preview-img');
+        
+        if (file) {
+            // Prüfe, ob es ein gültiges Bildformat ist
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.');
+                event.target.value = ''; // Input zurücksetzen
+                return;
+            }
+            
+            // Erstelle eine Vorschau-URL für das ausgewählte Bild
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Wenn keine Datei ausgewählt, zurück zum ursprünglichen Bild
+            previewImg.src = "<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>";
+        }
+    });
+</script>
 
 </body>
 </html>

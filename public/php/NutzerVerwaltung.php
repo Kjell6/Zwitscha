@@ -165,4 +165,144 @@ class NutzerVerwaltung {
 
         return $success;
     }
+
+    /**
+     * Ändert den Namen eines Nutzers.
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @param string $newName Der neue Name.
+     * @return bool True bei Erfolg.
+     */
+    public function updateUserName(int $userId, string $newName): bool {
+        $sql = "UPDATE nutzer SET nutzerName = ? WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("si", $newName, $userId);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * Überprüft das aktuelle Passwort eines Nutzers.
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @param string $currentPassword Das eingegebene aktuelle Passwort.
+     * @return bool True wenn das Passwort korrekt ist.
+     */
+    public function verifyCurrentPassword(int $userId, string $currentPassword): bool {
+        $sql = "SELECT passwort FROM nutzer WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+
+        if (!$user) return false;
+
+        // Klartext-Passwort-Vergleich (nur für Development!)
+        return $currentPassword === $user['passwort'];
+    }
+
+    /**
+     * Ändert das Passwort eines Nutzers.
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @param string $newPassword Das neue Passwort.
+     * @return bool True bei Erfolg.
+     */
+    public function updatePassword(int $userId, string $newPassword): bool {
+        // Passwort als Klartext speichern (nur für Development!)
+        $sql = "UPDATE nutzer SET passwort = ? WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("si", $newPassword, $userId);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * Aktualisiert das Profilbild eines Nutzers.
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @param string $imagePath Der Pfad zum neuen Profilbild.
+     * @return bool True bei Erfolg.
+     */
+    public function updateProfileImage(int $userId, string $imagePath): bool {
+        $sql = "UPDATE nutzer SET profilBild = ? WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("si", $imagePath, $userId);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * Löscht einen Nutzer-Account komplett aus der Datenbank.
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @return bool True bei Erfolg.
+     */
+    public function deleteUser(int $userId): bool {
+        // Da es möglicherweise Foreign Key Constraints gibt, müssen wir die 
+        // zugehörigen Daten in der richtigen Reihenfolge löschen
+        
+        $this->db->autocommit(false); // Transaction starten
+        
+        try {
+            // 1. Reaktionen des Nutzers löschen
+            $stmt = $this->db->prepare("DELETE FROM Reaktion WHERE nutzer_id = ?");
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $stmt->close();
+            
+            // 2. Kommentare des Nutzers löschen
+            $stmt = $this->db->prepare("DELETE FROM kommentar WHERE nutzer_id = ?");
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $stmt->close();
+            
+            // 3. Follow-Beziehungen löschen (als Follower und als Gefolgter)
+            $stmt = $this->db->prepare("DELETE FROM folge WHERE folgender_id = ? OR gefolgter_id = ?");
+            $stmt->bind_param("ii", $userId, $userId);
+            $stmt->execute();
+            $stmt->close();
+            
+            // 4. Posts des Nutzers löschen (inklusive zugehörige Reaktionen/Kommentare durch CASCADE)
+            $stmt = $this->db->prepare("DELETE FROM post WHERE nutzer_id = ?");
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $stmt->close();
+            
+            // 5. Schließlich den Nutzer selbst löschen
+            $stmt = $this->db->prepare("DELETE FROM nutzer WHERE id = ?");
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $stmt->close();
+            
+            $this->db->commit(); // Alles erfolgreich, Transaction bestätigen
+            return true;
+            
+        } catch (Exception $e) {
+            $this->db->rollback(); // Bei Fehler alles rückgängig machen
+            return false;
+        } finally {
+            $this->db->autocommit(true); // Autocommit wieder aktivieren
+        }
+    }
 } 
