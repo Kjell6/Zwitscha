@@ -7,21 +7,23 @@ if (!isset($comment_for_template) || !isset($currentUser) || !isset($postId)) {
 }
 
 // Berechtigung zum Löschen des Kommentars prüfen
-$canDeleteComment = ($comment_for_template['autor'] === $currentUser);
+$isOwner = (int)$comment_for_template['userId'] === (int)$currentUser['id'];
+$isAdmin = isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
+$canDeleteComment = $isOwner || $isAdmin;
 ?>
 
-<article class="post comment-layout"> <a href="Profil.php?user=<?php echo urlencode($comment_for_template['autor']); ?>" class="no-post-details comment-profil-link">
+<article class="post comment-layout"> <a href="Profil.php?userid=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="no-post-details comment-profil-link">
         <img src="<?php echo htmlspecialchars($comment_for_template['profilBild']); ?>" class="post-user-image" alt="Profilbild von <?php echo htmlspecialchars($comment_for_template['autor']); ?>">
     </a>
 
     <main class="post-main-content">
         <section class="post-user-infos">
-            <a href="Profil.php?user=<?php echo urlencode($comment_for_template['autor']); ?>" class="no-post-details comment-profil-link-inline">
+            <a href="Profil.php?userid=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="no-post-details comment-profil-link-inline">
                 <img src="<?php echo htmlspecialchars($comment_for_template['profilBild']); ?>" class="post-user-image-inline" alt="">
             </a>
 
             <div class="post-user-details">
-                <a href="Profil.php?user=<?php echo urlencode($comment_for_template['autor']); ?>" class="post-author-name">
+                <a href="Profil.php?userid=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="post-author-name">
                     <?php echo htmlspecialchars($comment_for_template['autor']); ?>
                 </a>
                 <time datetime="<?php echo htmlspecialchars($comment_for_template['datumZeit']); ?>" class="post-timestamp">
@@ -29,7 +31,7 @@ $canDeleteComment = ($comment_for_template['autor'] === $currentUser);
                 </time>
             </div>
             <?php if ($canDeleteComment): ?>
-                <form method="POST" action="postDetail.php?id=<?php echo $postId; /* Bleibe auf der Detailseite */ ?>" style="display: inline;" onsubmit="return confirm('Kommentar wirklich löschen?');">
+                <form method="POST" action="postDetails.php?id=<?php echo $postId; /* Bleibe auf der Detailseite */ ?>" style="display: inline;" onsubmit="return confirm('Kommentar wirklich löschen?');">
                     <input type="hidden" name="action" value="delete_comment">
                     <input type="hidden" name="comment_id" value="<?php echo $comment_for_template['id']; ?>">
                     <input type="hidden" name="post_id" value="<?php echo $postId; ?>"> <button class="post-options-button no-post-details" type="submit" aria-label="Kommentar löschen">

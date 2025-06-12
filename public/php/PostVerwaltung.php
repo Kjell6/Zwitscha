@@ -1,5 +1,4 @@
 <?php
-// public/php/PostVerwaltung.php
 
 require_once __DIR__ . '/db.php';
 
@@ -189,6 +188,39 @@ class PostVerwaltung {
     }
 
     /**
+     * Holt einen einzelnen Post anhand seiner ID, inklusive aller zugehörigen Informationen.
+     *
+     * @param int $postId Die ID des gesuchten Posts.
+     * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers.
+     * @return array|null Die Post-Daten oder null, wenn nicht gefunden.
+     */
+    public function getPostById(int $postId, int $currentUserId): ?array {
+        $sql = "
+            SELECT 
+                p.id, p.text, p.bildPfad, p.datumZeit,
+                n.nutzerName AS autor, n.profilBild, n.id as userId,
+                COUNT(DISTINCT k.id) AS comments,
+                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Hoch' THEN 1 ELSE 0 END) AS count_like,
+                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Runter' THEN 1 ELSE 0 END) AS count_dislike,
+                SUM(CASE WHEN r.reaktionsTyp = 'Herz' THEN 1 ELSE 0 END) AS count_heart,
+                SUM(CASE WHEN r.reaktionsTyp = 'Lachen' THEN 1 ELSE 0 END) AS count_laugh,
+                SUM(CASE WHEN r.reaktionsTyp = 'Fragezeichen' THEN 1 ELSE 0 END) AS count_question,
+                SUM(CASE WHEN r.reaktionsTyp = 'Ausrufezeichen' THEN 1 ELSE 0 END) AS count_exclamation,
+                (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
+            FROM post p
+            JOIN nutzer n ON p.nutzer_id = n.id
+            LEFT JOIN kommentar k ON p.id = k.post_id
+            LEFT JOIN Reaktion r ON p.id = r.post_id
+            WHERE p.id = ?
+            GROUP BY p.id
+        ";
+        
+        $posts = $this->_fetchAndProcessPosts($sql, [$currentUserId, $postId], 'ii');
+
+        return $posts[0] ?? null;
+    }
+
+    /**
      * Private Hilfsfunktion zum Ausführen und Verarbeiten von Post-Abfragen.
      *
      * @param string $sql Die SQL-Abfrage mit Platzhaltern.
@@ -224,5 +256,96 @@ class PostVerwaltung {
             );
             return $post;
         }, $posts);
+    }
+
+    /**
+     * Holt alle Kommentare für einen bestimmten Post.
+     *
+     * @param int $postId Die ID des Posts.
+     * @return array Ein Array von Kommentaren.
+     */
+    public function getCommentsByPostId(int $postId): array {
+        $sql = "
+            SELECT 
+                k.id, k.text, k.datumZeit,
+                n.nutzerName AS autor,
+                IF(n.profilBild = '', 'assets/placeholder-profilbild.jpg', n.profilBild) as profilBild,
+                n.id as userId
+            FROM kommentar k
+            JOIN nutzer n ON k.nutzer_id = n.id
+            WHERE k.post_id = ?
+            ORDER BY k.datumZeit ASC
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        $stmt->bind_param("i", $postId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $comments = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $comments;
+    }
+
+    /**
+     * Erstellt einen neuen Kommentar.
+     *
+     * @param int $postId Die ID des Posts.
+     * @param int $userId Die ID des Autors.
+     * @param string $text Der Kommentartext.
+     * @return bool True bei Erfolg.
+     */
+    public function createComment(int $postId, int $userId, string $text): bool {
+        $sql = "INSERT INTO kommentar (post_id, nutzer_id, text) VALUES (?, ?, ?)";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("iis", $postId, $userId, $text);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * Findet einen einzelnen Kommentar anhand seiner ID.
+     *
+     * @param int $commentId Die ID des gesuchten Kommentars.
+     * @return array|null Die Kommentar-Daten als assoziatives Array oder null, wenn nicht gefunden.
+     */
+    public function findCommentById(int $commentId): ?array {
+        $sql = "SELECT * FROM kommentar WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return null;
+
+        $stmt->bind_param("i", $commentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $comment = $result->fetch_assoc();
+        $stmt->close();
+
+        return $comment ?: null;
+    }
+
+    /**
+     * Löscht einen Kommentar aus der Datenbank.
+     *
+     * @param int $commentId Die ID des zu löschenden Kommentars.
+     * @return bool True bei Erfolg, false bei einem Fehler.
+     */
+    public function deleteComment(int $commentId): bool {
+        $sql = "DELETE FROM kommentar WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("i", $commentId);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
     }
 } 

@@ -1,209 +1,131 @@
 <?php
-// ---- POST Request Handling ----
+require_once __DIR__ . '/php/PostVerwaltung.php';
+
 $feedbackMessage = '';
-$feedbackType = ''; // success, error, info
+$feedbackType = '';
 
 // Aktueller Benutzer (später aus Session oder Authentifizierung holen)
-$currentUser = 'Max Mustermann';
+$currentUserId = 1;
 
-// Post ID aus URL Parameter
 $postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if (!$postId) {
+    // Wenn keine ID vorhanden ist, kann nichts geladen werden.
+    header("Location: index.php");
+    exit();
+}
 
-// Simuliere verschiedene Zustände für Testing
-$loadingState = $_GET['state'] ?? 'data'; // data, empty, error
+$repository = new PostVerwaltung();
 
 // POST Request Handling
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    switch ($_POST['action']) {
+        case 'create_comment':
+            $commentText = trim($_POST['comment_text'] ?? '');
 
-    // Neuen Kommentar erstellen
-    if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
-        $commentText = trim($_POST['comment_text'] ?? '');
-        $postIdFromForm = (int)($_POST['post_id'] ?? 0);
+            if (empty($commentText)) {
+                $feedbackMessage = 'Kommentar-Text darf nicht leer sein.';
+                $feedbackType = 'error';
+            } elseif (strlen($commentText) > 500) {
+                $feedbackMessage = 'Kommentar darf maximal 500 Zeichen lang sein.';
+                $feedbackType = 'error';
+            } else {
+                $success = $repository->createComment($postId, $currentUserId, $commentText);
+                if ($success) {
+                    header("Location: " . $_SERVER['REQUEST_URI']);
+                    exit();
+                } else {
+                    $feedbackMessage = 'Fehler beim Speichern des Kommentars.';
+                    $feedbackType = 'error';
+                }
+            }
+            break;
 
-        if (empty($commentText)) {
-            $feedbackMessage = 'Kommentar-Text darf nicht leer sein.';
-            $feedbackType = 'error';
-        } elseif (strlen($commentText) > 300) {
-            $feedbackMessage = 'Kommentar darf maximal 500 Zeichen lang sein.';
-            $feedbackType = 'error';
-        } else {
-            // Hier später Kommentar in Datenbank speichern
-            // Beispiel: print_r($_POST); // Ausgabe der POST-Daten zu Debugging-Zwecken
+        case 'toggle_reaction':
+            $emoji = $_POST['emoji'] ?? '';
+            if ($emoji) {
+                $repository->toggleReaction($currentUserId, $postId, $emoji);
+                // Redirect, um Form-Neusendung zu verhindern
+                header("Location: " . $_SERVER['REQUEST_URI']);
+                exit();
+            }
+            break;
 
+        case 'delete_post':
+             // Berechtigung erneut prüfen zur Sicherheit
+            $postToDelete = $repository->findPostById($postId);
+            if ($postToDelete) {
+                $isOwner = (int)$postToDelete['nutzer_id'] === (int)$currentUserId;
+                $isAdmin = false; // Hier echte Admin-Prüfung einfügen
+                if ($isOwner || $isAdmin) {
+                    $repository->deletePost($postId);
+                    header("Location: index.php"); // Nach dem Löschen zur Startseite
+                    exit();
+                }
+            }
+            break;
+
+        case 'delete_comment':
+            $commentId = (int)($_POST['comment_id'] ?? 0);
+            if ($commentId) {
+                // Sicherheitsprüfung: Ist der Nutzer Admin oder Eigentümer des Kommentars?
+                $commentToDelete = $repository->findCommentById($commentId);
+                if ($commentToDelete) {
+                    $isOwner = (int)$commentToDelete['nutzer_id'] === (int)$currentUserId;
+                    // Annahme: $currentUser['istAdministrator'] ist verfügbar
+                    $isAdmin = isset($currentUser['istAdministrator']) && $currentUser['istAdministrator']; 
+                    if ($isOwner || $isAdmin) {
+                        $repository->deleteComment($commentId);
+                        // Redirect zur selben Seite, um das Ergebnis anzuzeigen
+                        header("Location: " . $_SERVER['REQUEST_URI']);
+                        exit();
+                    }
+                }
+            }
+            break;
+    }
+}
+
+// ---- Daten für die Detailansicht laden ----
+$post = $repository->getPostById($postId, $currentUserId);
+$comments = $repository->getCommentsByPostId($postId);
+
+// Wenn der Post nicht gefunden wurde, zur Startseite umleiten.
+if (!$post) {
+    header("Location: index.php");
+    exit();
+}
+
+// Die Logik für Reaktionen und Löschen wird von der Startseite geerbt,
+// daher müssen wir die Logik hier nicht duplizieren, sondern nur die Anzeige sicherstellen.
+// Die `$post` Variable wird an die inkludierte `post.php` weitergegeben.
+
+// HILFSFUNKTION FÜR ZEITANGABE (aus post.php übernommen)
+if (!function_exists('time_ago')) {
+    function time_ago(string $datetime, string $full = 'vor %s'): string {
+        $now = new DateTime;
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = [
+            'y' => 'Jahr', 'm' => 'Monat', 'w' => 'Woche', 'd' => 'Tag',
+            'h' => 'Stunde', 'i' => 'Minute', 's' => 'Sekunde',
+        ];
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 'n' : '');
+            } else {
+                unset($string[$k]);
+            }
         }
-    }
 
-    // Reaktion togglen
-    if (isset($_POST['action']) && $_POST['action'] === 'toggle_reaction') {
-        $emoji = $_POST['emoji'] ?? '';
-        $postIdFromForm = (int)($_POST['post_id'] ?? 0);
-
-        // Hier später Reaktion in Datenbank toggle
-        // Beispiel: print_r($_POST); // Ausgabe der POST-Daten zu Debugging-Zwecken
-    }
-
-    // Post löschen
-    if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
-        $postIdFromForm = (int)($_POST['post_id'] ?? 0);
-        // Hier später Post aus Datenbank löschen
-        // Beispiel: print_r($_POST); // Ausgabe der POST-Daten zu Debugging-Zwecken
-
-    }
-
-    // Kommentar löschen
-    if (isset($_POST['action']) && $_POST['action'] === 'delete_comment') {
-        $commentIdFromForm = (int)($_POST['comment_id'] ?? 0);
-        // Hier später Kommentar aus Datenbank löschen
-        // Beispiel: print_r($_POST); // Ausgabe der POST-Daten zu Debugging-Zwecken
+        if (!empty($string)) $string = array_slice($string, 0, 1);
+        $time_ago = $string ? implode(', ', $string) : 'gerade jetzt';
+        return sprintf($full, $time_ago);
     }
 }
-
-// ---- Dummy Daten für Post ----
-$allPosts = [
-    1 => [
-        'id' => 1,
-        'autor' => 'Anna Beispiel',
-        'userId' => 1, // Hinzugefügt für Profil-Link
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit' => '2025-04-26T14:15:00Z',
-        'time_label' => 'vor 1 Tag',
-        'text' => '👍 Dieses neue Feature ist wirklich großartig! Es macht die Bedienung so viel einfacher.',
-        'bildPfad' => '',
-        'reactions' => ['👍'=>2,'👎'=>0,'❤️'=>1,'🤣'=>0,'❓'=>0,'‼️'=>0],
-        'comments' => 3
-    ],
-    2 => [
-        'id' => 2,
-        'autor' => 'Max Mustermann',
-        'userId' => 2, // Hinzugefügt für Profil-Link
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit' => '2025-04-27T10:30:00Z',
-        'time_label' => 'vor 2 Stunden',
-        'text' => 'Wie findet ihr dieses neue Logo von Zwitscha? Ich finde es super! Es ist modern und frisch. Was denkt ihr?',
-        'bildPfad' => 'assets/zwitscha_green.jpg',
-        'reactions' => ['👍'=>5,'👎'=>1,'❤️'=>3,'🤣'=>0,'❓'=>0,'‼️'=>2],
-        'comments' => 2
-    ],
-    3 => [
-        'id' => 3,
-        'autor' => 'Lena Neumann',
-        'userId' => 3, // Hinzugefügt für Profil-Link
-        'profilBild' => 'assets/placeholder-profilbild.jpg',
-        'datumZeit' => '2025-04-27T08:00:00Z',
-        'time_label' => 'vor 4 Stunden',
-        'text' => 'Guten Morgen! 🌞 Heute starte ich mit frischem Kaffee und neuen Ideen in den Tag. Manchmal reicht ein bisschen Ruhe, um wieder kreative Energie zu tanken. Was motiviert euch am Morgan?',
-        'bildPfad' => '',
-        'reactions' => ['👍'=>8,'👎'=>0,'❤️'=>5,'🤣'=>1,'❓'=>0,'‼️'=>0],
-        'comments' => 4
-    ]
-];
-
-// ---- Dummy Daten für Kommentare ----
-$allComments = [
-    1 => [ // Post ID 1
-        [
-            'id' => 101,
-            'post_id' => 1,
-            'autor' => 'Tom Testfall',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-26T15:30:00Z',
-            'time_label' => 'vor 20 Stunden',
-            'text' => 'Absolut! Das macht wirklich einen großen Unterschied.'
-        ],
-        [
-            'id' => 102,
-            'post_id' => 1,
-            'autor' => 'Sophie Sonnenschein',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-26T16:45:00Z',
-            'time_label' => 'vor 19 Stunden',
-            'text' => 'Kann ich nur zustimmen! Endlich wurde das umgesetzt.'
-        ],
-        [
-            'id' => 103,
-            'post_id' => 1,
-            'autor' => 'Max Mustermann',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-27T09:15:00Z',
-            'time_label' => 'vor 3 Stunden',
-            'text' => 'Freut mich, dass es euch auch gefällt! 😊'
-        ]
-    ],
-    2 => [ // Post ID 2
-        [
-            'id' => 201,
-            'post_id' => 2,
-            'autor' => 'Anna Beispiel',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-27T11:00:00Z',
-            'time_label' => 'vor 1 Stunde',
-            'text' => 'Das Logo ist wirklich gelungen! Sehr moderne Gestaltung.'
-        ],
-        [
-            'id' => 202,
-            'post_id' => 2,
-            'autor' => 'Lena Neumann',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-27T11:45:00Z',
-            'time_label' => 'vor 15 Minuten',
-            'text' => 'Die Farben sind perfekt gewählt! 💚'
-        ]
-    ],
-    3 => [ // Post ID 3
-        [
-            'id' => 301,
-            'post_id' => 3,
-            'autor' => 'Tom Testfall',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-27T08:30:00Z',
-            'time_label' => 'vor 3,5 Stunden',
-            'text' => 'Ein guter Kaffee am Morgen ist wirklich das Beste!'
-        ],
-        [
-            'id' => 302,
-            'post_id' => 3,
-            'autor' => 'Anna Beispiel',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-27T09:00:00Z',
-            'time_label' => 'vor 3 Stunden',
-            'text' => 'Bei mir ist es Tee und ein Spaziergang. Das weckt alle Sinne! ☕'
-        ],
-        [
-            'id' => 303,
-            'post_id' => 3,
-            'autor' => 'Sophie Sonnenschein',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-27T10:15:00Z',
-            'time_label' => 'vor 1,5 Stunden',
-            'text' => 'Musik und ein paar Minuten Meditation funktionieren bei mir am besten.'
-        ],
-        [
-            'id' => 304,
-            'post_id' => 3,
-            'autor' => 'Max Mustermann',
-            'profilBild' => 'assets/placeholder-profilbild.jpg',
-            'datumZeit' => '2025-04-27T11:30:00Z',
-            'time_label' => 'vor 30 Minuten',
-            'text' => 'Tolle Ideen! Jeder hat seine eigene Routine - das ist das Schöne daran.'
-        ]
-    ]
-];
-
-// ---- Post und Kommentare laden basierend auf ID ----
-// Hier später Datenbankabfrage, um den Post mit der gegebenen ID zu laden
-$post = null;
-// Hier später Datenbankabfrage, um die Kommentare für diesen Post zu laden
-$comments = [];
-// Simuliere Laden basierend auf Ladezustand und Dummy-Daten
-if ($loadingState === 'data') {
-    if (isset($allPosts[$postId])) {
-        $post = $allPosts[$postId];
-        $comments = $allComments[$postId] ?? [];
-    }
-}
-
-// Berechtigung zum Löschen prüfen
-$canDeletePost = $post && ($post['autor'] === $currentUser);
 ?>
 
 <!DOCTYPE html>
@@ -231,8 +153,14 @@ $canDeletePost = $post && ($post['autor'] === $currentUser);
         <h1>Post</h1>
     </div>
 
-    <!-- Dynamischer Content basierend auf Loading State -->
     <?php
+    // Definiere den Ladezustand basierend darauf, ob ein Post gefunden wurde.
+    if ($post) {
+        $loadingState = 'data';
+    } else {
+        $loadingState = 'empty';
+    }
+
     switch ($loadingState) {
         case 'error':
             ?>
@@ -271,10 +199,19 @@ $canDeletePost = $post && ($post['autor'] === $currentUser);
                                 <?php echo htmlspecialchars($post['autor']); ?>
                             </a>
                             <time datetime="<?php echo $post['datumZeit']; ?>" class="post-timestamp">
-                                <?php echo htmlspecialchars($post['time_label']); ?>
+                                <?php 
+                                    // Zeit-Label direkt hier berechnen
+                                    $time_label = time_ago($post['datumZeit']);
+                                    echo htmlspecialchars($time_label); 
+                                ?>
                             </time>
                         </div>
-                        <?php if ($canDeletePost): ?>
+                        <?php 
+                            // Berechtigung zum Löschen direkt hier prüfen
+                            $currentUser = ['id' => 1, 'istAdministrator' => 0]; // Dummy-User
+                            $canDeletePost = ($currentUser['istAdministrator'] || (int)$post['userId'] === (int)$currentUser['id']);
+                            if ($canDeletePost): 
+                        ?>
                             <form method="POST" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
                                 <input type="hidden" name="action" value="delete_post">
                                 <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
@@ -305,12 +242,20 @@ $canDeletePost = $post && ($post['autor'] === $currentUser);
                             $emojis = ['👍', '👎', '❤️', '🤣', '❓', '‼️'];
                             foreach ($emojis as $emoji):
                                 $count = $post['reactions'][$emoji] ?? 0;
+                                
+                                // Logik für aktive Reaktionen direkt in der Schleife
+                                $reactionEmojiMap = [
+                                    'Daumen Hoch' => '👍', 'Daumen Runter' => '👎', 'Herz' => '❤️',
+                                    'Lachen' => '🤣', 'Fragezeichen' => '❓', 'Ausrufezeichen' => '‼️',
+                                ];
+                                $reactionTypeFromEmoji = array_search($emoji, $reactionEmojiMap);
+                                $isActive = in_array($reactionTypeFromEmoji, $post['currentUserReactions']);
                                 ?>
                                 <form method="POST" style="display: inline;" class="reaction-form">
                                     <input type="hidden" name="action" value="toggle_reaction">
                                     <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                                     <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
-                                    <button class="reaction-button" type="submit" data-emoji="<?php echo $emoji; ?>">
+                                    <button class="reaction-button <?php echo $isActive ? 'active' : ''; ?>" type="submit" data-emoji="<?php echo $emoji; ?>">
                                         <?php echo $emoji; ?> <span class="reaction-counter"><?php echo $count; ?></span>
                                     </button>
                                 </form>
@@ -337,16 +282,18 @@ $canDeletePost = $post && ($post['autor'] === $currentUser);
                         </div>
                     <?php else: ?>
                         <h2><?php echo count($comments); ?> Kommentar<?php echo count($comments) != 1 ? 'e' : ''; ?></h2>
-                        <ul id="comments-list">
+                        <div class="comments-list">
                             <?php foreach ($comments as $comment): ?>
                                 <?php
+                                // Bereite die Daten für das Template vor
                                 $comment_for_template = $comment;
+                                $comment_for_template['time_label'] = time_ago($comment['datumZeit']);
+                                
                                 // Die Darstellung eines einzelnen Kommentars wird durch kommentar.php gehandhabt
                                 include 'kommentar.php';
-
                                 ?>
                             <?php endforeach; ?>
-                        </ul>
+                        </div>
                     <?php endif; ?>
                 </section>
 
