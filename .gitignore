@@ -2,6 +2,11 @@
 # Versteckte Dateien, die auf dem Mac automatisch angelegt werden
 .DS_Store
 
+# User-uploaded content
+# ----------------------
+# Ignore user-uploaded images and other files.
+/public/assets/uploads/
+
 
 ##################################################
 # Created by https://www.gitignore.io/api/phpstorm
