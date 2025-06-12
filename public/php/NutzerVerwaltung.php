@@ -207,7 +207,6 @@ class NutzerVerwaltung {
 
         if (!$user) return false;
 
-        // Klartext-Passwort-Vergleich (nur für Development!)
         return $currentPassword === $user['passwort'];
     }
 
@@ -219,7 +218,6 @@ class NutzerVerwaltung {
      * @return bool True bei Erfolg.
      */
     public function updatePassword(int $userId, string $newPassword): bool {
-        // Passwort als Klartext speichern (nur für Development!)
         $sql = "UPDATE nutzer SET passwort = ? WHERE id = ?";
         
         $stmt = $this->db->prepare($sql);

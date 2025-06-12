@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/PostVerwaltung.php';
+require_once __DIR__ . '/NutzerVerwaltung.php';
 
 // Stellt sicher, dass das Skript nur bei POST-Requests ausgeführt wird.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -10,9 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // === Initialisierung ===
 $postRepository = new PostVerwaltung();
+$nutzerVerwaltung = new NutzerVerwaltung();
 $action = $_POST['action'] ?? '';
 // DUMMY-BENUTZERDATEN (später aus Session holen)
 $currentUserId = 1;
+$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 
 // === Aktionen verarbeiten ===
@@ -23,9 +26,8 @@ switch ($action) {
             $postToDelete = $postRepository->findPostById($postId);
 
             // Sicherheitsprüfung: Gehört der Post dem Nutzer oder ist der Nutzer ein Admin?
-            // HINWEIS: isAdmin ist hier noch ein Platzhalter.
             $isOwner = ($postToDelete && (int)$postToDelete['nutzer_id'] === $currentUserId);
-            $isAdmin = false; // TODO: Echte Admin-Prüfung implementieren.
+            $isAdmin = ($currentUser && isset($currentUser['istAdministrator']) && $currentUser['istAdministrator']);
 
             if ($postToDelete && ($isOwner || $isAdmin)) {
                 $postRepository->deletePost($postId);

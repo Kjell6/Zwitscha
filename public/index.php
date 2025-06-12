@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . '/php/PostVerwaltung.php';
+require_once __DIR__ . '/php/NutzerVerwaltung.php';
 
 // Verwaltung instanziieren
 $postRepository = new PostVerwaltung();
+$nutzerVerwaltung = new NutzerVerwaltung();
 
 
 // ---- POST Request Handling für neue Posts ----
@@ -71,19 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 
 // ---- Dynamische Inhalte: Posts laden ----
 // Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
-$currentUser = 'Max Mustermann';
+$currentUserId = 1; // Hardcoded für Development
+$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
 $loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
 
-// DUMMY-BENUTZERDATEN (später aus Session) für das Laden der Posts
-$currentUserIdForPosts = 1;
-
 // Posts aus der Datenbank laden
 if ($showFollowedOnly) {
-    $posts = $postRepository->getFollowedPosts($currentUserIdForPosts);
+    $posts = $postRepository->getFollowedPosts($currentUserId);
 } else {
-    $posts = $postRepository->getAllPosts($currentUserIdForPosts);
+    $posts = $postRepository->getAllPosts($currentUserId);
 }
 
 // POST Request für Reaktionen und Löschen

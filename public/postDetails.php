@@ -1,11 +1,14 @@
 <?php
 require_once __DIR__ . '/php/PostVerwaltung.php';
+require_once __DIR__ . '/php/NutzerVerwaltung.php';
 
 $feedbackMessage = '';
 $feedbackType = '';
 
 // Aktueller Benutzer (später aus Session oder Authentifizierung holen)
 $currentUserId = 1;
+$nutzerVerwaltung = new NutzerVerwaltung();
+$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 $postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$postId) {
@@ -167,25 +170,28 @@ if (!function_exists('time_ago')) {
                 ?>
                 <article class="detail-post">
                     <section class="post-user-infos-detail">
-                        <a href="Profil.php" class="no-post-details">
-                            <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" alt="Profilbild">
-                        </a>
-                        <div class="post-user-details-detail">
-                            <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
-                                <?php echo htmlspecialchars($post['autor']); ?>
+                        <div class="post-user-info-left">
+                            <a href="Profil.php" class="no-post-details">
+                                <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" alt="Profilbild">
                             </a>
-                            <time datetime="<?php echo $post['datumZeit']; ?>" class="post-timestamp">
-                                <?php 
-                                    // Zeit-Label direkt hier berechnen
-                                    $time_label = time_ago($post['datumZeit']);
-                                    echo htmlspecialchars($time_label); 
-                                ?>
-                            </time>
+                            <div class="post-user-details-detail">
+                                <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
+                                    <?php echo htmlspecialchars($post['autor']); ?>
+                                </a>
+                                <time datetime="<?php echo $post['datumZeit']; ?>" class="post-timestamp">
+                                    <?php 
+                                        // Zeit-Label direkt hier berechnen
+                                        $time_label = time_ago($post['datumZeit']);
+                                        echo htmlspecialchars($time_label); 
+                                    ?>
+                                </time>
+                            </div>
                         </div>
                         <?php 
-                            // Berechtigung zum Löschen direkt hier prüfen
-                            $currentUser = ['id' => 1, 'istAdministrator' => 0]; // Dummy-User
-                            $canDeletePost = ($currentUser['istAdministrator'] || (int)$post['userId'] === (int)$currentUser['id']);
+                            // Berechtigung zum Löschen prüfen
+                            $isOwner = (int)$post['userId'] === (int)$currentUser['id'];
+                            $isAdmin = isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
+                            $canDeletePost = ($isAdmin || $isOwner);
                             if ($canDeletePost): 
                         ?>
                             <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
