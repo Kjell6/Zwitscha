@@ -1,9 +1,7 @@
 <?php
-// ---- NEUE INITIALISIERUNG ----
-// Laden der Klassen
 require_once __DIR__ . '/php/PostVerwaltung.php';
 
-// Repository instanziieren
+// Verwaltung instanziieren
 $postRepository = new PostVerwaltung();
 
 
@@ -11,6 +9,28 @@ $postRepository = new PostVerwaltung();
 $feedbackMessage = '';
 $feedbackType = ''; // success, error, info
 
+// ---- POST Request Handling für LÖSCHEN ----
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_post') {
+    $postId = (int)$_POST['post_id'];
+
+    // DUMMY-BENUTZERDATEN (später aus Session)
+    $currentUser = ['id' => 1, 'istAdministrator' => 0];
+
+    $postToDelete = $postRepository->findPostById($postId);
+
+    if ($postToDelete && ($currentUser['istAdministrator'] || $postToDelete['nutzer_id'] === $currentUser['id'])) {
+        $success = $postRepository->deletePost($postId);
+        if ($success) {
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } else {
+            $feedbackMessage = 'Fehler beim Löschen des Posts.';
+            $feedbackType = 'error';
+        }
+    }
+}
+
+// ---- POST Request Handling für ERSTELLEN ----
 if ($_SERVER['REQUEST_METHOD'] === 'POST'
     && isset($_POST['action'])
     && $_POST['action'] === 'create_post'
@@ -72,12 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 
 // ---- Dynamische Inhalte: Posts laden ----
 // Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
-$currentUser = 'Max Mustermann'; // Dieser Wert wird für die Anzeige oben noch verwendet
+$currentUser = 'Max Mustermann';
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
-
-// Simuliere verschiedene Zustände für dynamische Inhalte
-// Für Tests: URL um ?state=empty oder ?state=error ergänzen
-// Später: Zustand basierend auf Datenbankabfrage bestimmen (Erfolg/Fehler/keine Daten)
 
 $loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
 
@@ -89,8 +105,6 @@ if ($showFollowedOnly) {
 } else {
     $posts = $postRepository->getAllPosts();
 }
-
-// Die Post-Darstellung wird jetzt durch post.php gehandhabt
 
 // POST Request für Reaktionen und Löschen
 // Später: Hier Datenbankoperationen für Reaktionen und Löschen implementieren

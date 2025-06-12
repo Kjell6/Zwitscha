@@ -96,3 +96,8 @@ fabric.properties
 .idea/**/markdown-navigator/
 
 # End of https://www.gitignore.io/api/phpstorm
+
+# User-uploaded content
+# ----------------------
+# Ignore user-uploaded images and other files.
+/public/assets/uploads/

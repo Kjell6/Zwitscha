@@ -66,4 +66,50 @@ class PostVerwaltung {
 
         return $success;
     }
+
+    /**
+     * Löscht einen Post aus der Datenbank.
+     *
+     * @param int $postId Die ID des zu löschenden Posts.
+     * @return bool True bei Erfolg, false bei einem Fehler.
+     */
+    public function deletePost(int $postId): bool {
+        $sql = "DELETE FROM post WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+
+        // 'i' steht für integer
+        $stmt->bind_param("i", $postId);
+        
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * Findet einen einzelnen Post anhand seiner ID.
+     *
+     * @param int $postId Die ID des gesuchten Posts.
+     * @return array|null Die Post-Daten als assoziatives Array oder null, wenn nicht gefunden.
+     */
+    public function findPostById(int $postId): ?array {
+        $sql = "SELECT * FROM post WHERE id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            return null;
+        }
+
+        $stmt->bind_param("i", $postId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $post = $result->fetch_assoc();
+        $stmt->close();
+
+        return $post ?: null;
+    }
 } 

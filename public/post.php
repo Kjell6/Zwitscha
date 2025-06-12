@@ -1,6 +1,6 @@
 <?php
 
-// ---- HILFSFUNKTION FÜR RELATIVE ZEITANGABE ----
+// ---- HILFSFUNKTION FÜR ZEITANGABE ----
 if (!function_exists('time_ago')) {
     function time_ago(string $datetime, string $full = 'vor %s'): string {
         $now = new DateTime;
@@ -27,7 +27,7 @@ if (!function_exists('time_ago')) {
             }
         }
 
-        // Nur die größte Zeiteinheit anzeigen (z.B. "vor 4 Wochen" statt "vor 4 Wochen, 2 Tagen")
+        // Nur die größte Zeiteinheit anzeigen
         if (!empty($string)) {
             $string = array_slice($string, 0, 1);
         }
@@ -42,14 +42,16 @@ if (!isset($post)) {
     die('Post-Daten nicht verfügbar');
 }
 
+// ---- DUMMY-BENUTZERDATEN (später aus der Session laden) ----
+$currentUser = ['id' => 1, 'istAdministrator' => 0];
+
 // ---- PLATZHALTER FÜR FEHLENDE DATEN ----
 // Diese werden später durch echte Datenbankabfragen ersetzt.
 $post['reactions'] = ['👍' => 0, '👎' => 0, '❤️' => 0, '🤣' => 0, '❓' => 0, '‼️' => 0];
 $post['comments'] = 0;
 
-// Später die ID aus der Session verwenden: $_SESSION['user_id']
-$currentUserId = 1; 
-$canDelete = ($post['userId'] === $currentUserId);
+// Berechtigung zum Löschen prüfen: Ist der Nutzer Admin ODER der Autor des Posts?
+$canDelete = ($currentUser['istAdministrator'] || (int)$post['userId'] === (int)$currentUser['id']);
 
 // Relative Zeit berechnen
 $time_label = time_ago($post['datumZeit']);
@@ -77,7 +79,6 @@ $time_label = time_ago($post['datumZeit']);
                     <input type="hidden" name="action" value="delete_post">
                     <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                     <button class="post-options-button no-post-details" type="submit" aria-label="Post löschen">
-                        <?php // Hier später Datenbank-Interaktion zum Löschen des Posts ?>
                         <i class="bi bi-trash-fill"></i>
                     </button>
                 </form>
