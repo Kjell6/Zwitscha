@@ -54,11 +54,18 @@ if (!isset($post)) {
     die('Post-Daten nicht verfügbar');
 }
 
-// ---- DUMMY-BENUTZERDATEN (später aus der Session laden) ----
-$currentUser = ['id' => 1, 'istAdministrator' => 0];
+// ---- AKTUELLER BENUTZER ----
+// Verwende $currentUser aus der einbindenden Datei oder lade ihn aus der Datenbank
+if (!isset($currentUser)) {
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    $nutzerVerwaltung = new NutzerVerwaltung();
+    $currentUser = $nutzerVerwaltung->getUserById(1); // Hardcoded für Development
+}
 
 // Berechtigung zum Löschen prüfen: Ist der Nutzer Admin ODER der Autor des Posts?
-$canDelete = ($currentUser['istAdministrator'] || (int)$post['userId'] === (int)$currentUser['id']);
+$isOwner = (int)$post['userId'] === (int)$currentUser['id'];
+$isAdmin = isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
+$canDelete = ($isAdmin || $isOwner);
 
 // Relative Zeit berechnen
 $time_label = time_ago($post['datumZeit']);
