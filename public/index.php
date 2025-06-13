@@ -33,24 +33,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
         $imagePath = null;
         // Prüfen, ob ein Bild hochgeladen wurde und fehlerfrei ist
         if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . '/assets/uploads/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            // Sicherer Dateiname, um Überschreibungen und Sicherheitsrisiken zu vermeiden
-            $fileName = uniqid('', true) . '_' . basename($_FILES['post_image']['name']);
-            $targetPath = $uploadDir . $fileName;
-
-            if (move_uploaded_file($_FILES['post_image']['tmp_name'], $targetPath)) {
-                $imagePath = 'assets/uploads/' . $fileName;
-            } else {
-                $feedbackMessage = 'Bild konnte nicht gespeichert werden.';
+            // === Bild-Validierung ===
+            $file = $_FILES['post_image'];
+            
+            // Erlaubte Dateiformate
+            $allowedMimeTypes = [
+                'image/jpeg' => 'jpg',
+                'image/jpg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif',
+                'image/webp' => 'webp'
+            ];
+            
+            // MIME-Type prüfen
+            $fileMimeType = $file['type'];
+            if (!array_key_exists($fileMimeType, $allowedMimeTypes)) {
+                $feedbackMessage = 'Ungültiges Bildformat. Nur JPG, PNG, GIF und WebP sind erlaubt.';
                 $feedbackType = 'error';
+            } else {
+                // Zusätzliche Validierung mit getimagesize() für mehr Sicherheit
+                $imageInfo = getimagesize($file['tmp_name']);
+                if ($imageInfo === false) {
+                    $feedbackMessage = 'Die hochgeladene Datei ist kein gültiges Bild.';
+                    $feedbackType = 'error';
+                } else {
+                    // Prüfe, ob der MIME-Type der Datei mit dem tatsächlichen Bildtyp übereinstimmt
+                    $detectedMimeType = $imageInfo['mime'];
+                    if ($fileMimeType !== $detectedMimeType) {
+                        $feedbackMessage = 'Das Bildformat stimmt nicht mit der Dateierweiterung überein.';
+                        $feedbackType = 'error';
+                    } else {
+                        // Dateigröße prüfen (max 10 MB)
+                        $maxFileSize = 10 * 1024 * 1024; // 10 MB in Bytes
+                        if ($file['size'] > $maxFileSize) {
+                            $feedbackMessage = 'Das Bild ist zu groß. Maximal 10 MB sind erlaubt.';
+                            $feedbackType = 'error';
+                        } else {
+                            // Upload-Verzeichnis erstellen
+                            $uploadDir = __DIR__ . '/assets/uploads/';
+                            if (!is_dir($uploadDir)) {
+                                mkdir($uploadDir, 0755, true);
+                            }
+                            
+                            // Sicherer Dateiname mit korrekter Erweiterung
+                            $fileExtension = $allowedMimeTypes[$detectedMimeType];
+                            $fileName = uniqid('img_', true) . '.' . $fileExtension;
+                            $targetPath = $uploadDir . $fileName;
+
+                            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                                $imagePath = 'assets/uploads/' . $fileName;
+                            } else {
+                                $feedbackMessage = 'Bild konnte nicht gespeichert werden.';
+                                $feedbackType = 'error';
+                            }
+                        }
+                    }
+                }
             }
         } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_NO_FILE) {
-             // Fehlerbehandlung für andere Upload-Fehler
-            $feedbackMessage = 'Fehler beim Hochladen des Bildes.';
-            $feedbackType    = 'error';
+            // Erweiterte Fehlerbehandlung für Upload-Fehler
+            $uploadErrors = [
+                UPLOAD_ERR_INI_SIZE   => 'Das Bild ist größer als die Server-Einstellung erlaubt.',
+                UPLOAD_ERR_FORM_SIZE  => 'Das Bild ist größer als im Formular angegeben.',
+                UPLOAD_ERR_PARTIAL    => 'Das Bild wurde nur teilweise hochgeladen.',
+                UPLOAD_ERR_NO_TMP_DIR => 'Server-Fehler: Temporärer Ordner fehlt.',
+                UPLOAD_ERR_CANT_WRITE => 'Server-Fehler: Konnte Datei nicht schreiben.',
+                UPLOAD_ERR_EXTENSION  => 'Upload wurde durch eine PHP-Erweiterung gestoppt.',
+            ];
+            $errorCode = $_FILES['post_image']['error'];
+            $feedbackMessage = $uploadErrors[$errorCode] ?? 'Unbekannter Upload-Fehler.';
+            $feedbackType = 'error';
         }
 
         // Post nur erstellen, wenn kein Fehler beim Bild-Upload aufgetreten ist
@@ -244,11 +296,87 @@ if ($showFollowedOnly) {
     imageInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
+            // === Frontend-Validierung ===
+            
+            // Erlaubte Dateiformate
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            
+            // MIME-Type prüfen
+            if (!allowedTypes.includes(file.type)) {
+                alert('Ungültiges Bildformat. Nur JPG, PNG, GIF und WebP sind erlaubt.');
+                imageInput.value = ''; // Input zurücksetzen
+                return;
+            }
+            
+            // Dateigröße prüfen (max 10 MB)
+            const maxFileSize = 10 * 1024 * 1024; // 10 MB
+            if (file.size > maxFileSize) {
+                alert('Das Bild ist zu groß. Maximal 10 MB sind erlaubt.');
+                imageInput.value = ''; // Input zurücksetzen
+                return;
+            }
+            
+            // Dateiname-Validierung (verhindert gefährliche Zeichen)
+            const fileName = file.name;
+            const dangerousChars = /[<>:"/\\|?*]/;
+            if (dangerousChars.test(fileName)) {
+                alert('Der Dateiname enthält ungültige Zeichen.');
+                imageInput.value = ''; // Input zurücksetzen
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                imagePreview.style.display = 'block';
+                // Erstelle ein temporäres Image-Element, um die Dimensionen zu ermitteln
+                const tempImg = new Image();
+                tempImg.onload = function() {
+                    // Bildabmessungen validieren (optional: max 8000x8000 px)
+                    const maxDimension = 8000;
+                    if (this.width > maxDimension || this.height > maxDimension) {
+                        alert(`Das Bild ist zu groß. Maximale Auflösung: ${maxDimension}x${maxDimension} Pixel.`);
+                        imageInput.value = '';
+                        return;
+                    }
+                    
+                    // Prüfe ob das Bild höher als 650px ist
+                    if (this.height > 650) {
+                        // Erstelle ein Canvas, um das Bild zu skalieren
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Berechne neue Dimensionen (max 650px Höhe)
+                        const maxHeight = 650;
+                        const ratio = maxHeight / this.height;
+                        const newWidth = this.width * ratio;
+                        
+                        canvas.width = newWidth;
+                        canvas.height = maxHeight;
+                        
+                        // Zeichne das skalierte Bild auf das Canvas
+                        ctx.drawImage(this, 0, 0, newWidth, maxHeight);
+                        
+                        // Setze das skalierte Bild als Preview
+                        previewImg.src = canvas.toDataURL('image/jpeg', 0.9);
+                    } else {
+                        // Bild ist bereits klein genug, verwende es direkt
+                        previewImg.src = e.target.result;
+                    }
+                    imagePreview.style.display = 'block';
+                };
+                
+                tempImg.onerror = function() {
+                    alert('Die ausgewählte Datei ist kein gültiges Bild.');
+                    imageInput.value = '';
+                };
+                
+                tempImg.src = e.target.result;
             };
+            
+            reader.onerror = function() {
+                alert('Fehler beim Lesen der Datei.');
+                imageInput.value = '';
+            };
+            
             reader.readAsDataURL(file);
         }
     });

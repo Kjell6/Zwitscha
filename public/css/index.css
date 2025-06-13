@@ -92,9 +92,10 @@ body {
 
 .image-preview img {
     max-width: 100%;
+    max-height: 650px;
     height: auto;
     border-radius: var(--border-radius-sm);
-    object-fit: contain;
+    object-fit: cover;
 }
 
 #remove-image {

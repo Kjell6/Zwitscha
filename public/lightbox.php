@@ -18,22 +18,19 @@
         z-index: 1000;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
     }
 
     .lightbox-content {
         position: relative;
-        max-width: 90%;
-        max-height: 90%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        max-width: 100%;
+        max-height: 100%;
     }
 
     .lightbox-close {
         position: absolute;
-        top: -40px;
-        right: 0;
-        background: none;
+        right: 0px;
+        background: rgba(0, 0, 0, 0.5);
         border: none;
         color: white;
         font-size: 30px;
@@ -44,17 +41,44 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin: 4px;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
     }
 
     .lightbox-close:hover {
-        color: #ccc;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
     }
 
     #lightbox-image {
-        max-width: 100%;
-        max-height: 100%;
+        max-width: calc(100vw - 40px);
+        max-height: calc(100vh - 40px);
+        width: auto;
+        height: auto;
         object-fit: contain;
         border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Mobile Anpassungen */
+    @media (max-width: 768px) {
+        .lightbox {
+            padding: 10px;
+        }
+        
+        #lightbox-image {
+            max-width: calc(100vw - 20px);
+            max-height: calc(100vh - 20px);
+        }
+        
+        .lightbox-close {
+            top: 5px;
+            right: 5px;
+            width: 35px;
+            height: 35px;
+            font-size: 20px;
+        }
     }
 </style>
 
