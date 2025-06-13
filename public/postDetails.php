@@ -120,7 +120,7 @@ if (!function_exists('time_ago')) {
                 <article class="detail-post">
                     <section class="post-user-infos-detail">
                         <div class="post-user-info-left">
-                            <a href="Profil.php" class="no-post-details">
+                            <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
                                 <img src="<?php echo htmlspecialchars($post['profilBild']); ?>" alt="Profilbild">
                             </a>
                             <div class="post-user-details-detail">

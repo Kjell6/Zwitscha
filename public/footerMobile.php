@@ -53,7 +53,11 @@
             >
         </picture>
     </a>
-    <a href="Profil.php" class="footer-link" aria-label="Profil">
+    <?php 
+    require_once __DIR__ . '/php/session_helper.php';
+    $currentUserId = getCurrentUserIdWithFallback();
+    ?>
+    <a href="Profil.php?userid=<?php echo $currentUserId; ?>" class="footer-link" aria-label="Profil">
         <picture>
             <!-- Dark Mode -->
             <source
