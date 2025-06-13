@@ -60,13 +60,13 @@ if (!isset($currentUser)) {
     require_once __DIR__ . '/php/NutzerVerwaltung.php';
     require_once __DIR__ . '/php/session_helper.php';
     $nutzerVerwaltung = new NutzerVerwaltung();
-    $currentUserId = getCurrentUserIdWithFallback();
-    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+    $currentUserId = getCurrentUserId() ?? 0; // 0 wenn nicht angemeldet
+    $currentUser = $currentUserId ? $nutzerVerwaltung->getUserById($currentUserId) : null;
 }
 
 // Berechtigung zum Löschen prüfen: Ist der Nutzer Admin ODER der Autor des Posts?
-$isOwner = (int)$post['userId'] === (int)$currentUser['id'];
-$isAdmin = isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
+$isOwner = $currentUser && (int)$post['userId'] === (int)$currentUser['id'];
+$isAdmin = $currentUser && isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
 $canDelete = ($isAdmin || $isOwner);
 
 // Relative Zeit berechnen

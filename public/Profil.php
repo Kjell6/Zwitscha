@@ -8,17 +8,22 @@ try {
     $postVerwaltung = new PostVerwaltung();
     $nutzerVerwaltung = new NutzerVerwaltung();
 
-// Aktueller Benutzer aus Session holen
-$currentUserId = getCurrentUserIdWithFallback();
-$currentUser = $nutzerVerwaltung->getUserById($currentUserId); 
+    // Prüfen ob angemeldet
+    if (!isLoggedIn()) {
+        header("Location: Login.php");
+        exit();
+    }
 
-// Welches Profil soll geladen werden?
-$profileId = isset($_GET['userid']) ? (int)$_GET['userid'] : 0;
-if ($profileId === 0) {
-    // Wenn keine ID übergeben wurde, standardmäßig zum eigenen Profil leiten
-    header("Location: Profil.php?userid=" . $currentUserId);
-    exit();
-}
+    $currentUserId = getCurrentUserId();
+    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+
+    // Welches Profil soll geladen werden?
+    $profileId = isset($_GET['userid']) ? (int)$_GET['userid'] : 0;
+    if ($profileId === 0) {
+        // Wenn keine ID übergeben wurde, standardmäßig zum eigenen Profil leiten
+        header("Location: Profil.php?userid=" . $currentUserId);
+        exit();
+    }
 
 // === POST-Request-Handling für Follow/Unfollow ===
 $postResult = '';

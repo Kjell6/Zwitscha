@@ -14,8 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $postRepository = new PostVerwaltung();
 $nutzerVerwaltung = new NutzerVerwaltung();
 $action = $_POST['action'] ?? '';
+
+// Prüfen ob angemeldet
+if (!isLoggedIn()) {
+    header("Location: ../Login.php");
+    exit();
+}
+
 // Benutzer-ID aus Session holen
-$currentUserId = getCurrentUserIdWithFallback();
+$currentUserId = getCurrentUserId();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 

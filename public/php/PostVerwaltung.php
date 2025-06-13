@@ -9,6 +9,8 @@ class PostVerwaltung {
         $this->db = db::getInstance();
     }
 
+
+
     /**
      * Holt alle Posts aus der Datenbank, inklusive Autor-Informationen.
      *
@@ -381,4 +383,6 @@ class PostVerwaltung {
         // Zuerst $currentUserId für die Subquery, dann $userId für die WHERE-Klausel.
         return $this->_fetchAndProcessPosts($sql, [$currentUserId, $userId], 'ii');
     }
+
+
 } 

@@ -17,9 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
     && isset($_POST['action'])
     && $_POST['action'] === 'create_post'
 ) {
-    $postText   = trim($_POST['post_text'] ?? '');
-    // User-ID aus Session holen
-    $currentUserId = getCurrentUserIdWithFallback();
+    // Prüfen ob angemeldet für Post-Erstellung
+    if (!isLoggedIn()) {
+        $feedbackMessage = 'Du musst angemeldet sein, um Posts zu erstellen.';
+        $feedbackType = 'error';
+    } else {
+        $postText   = trim($_POST['post_text'] ?? '');
+        // User-ID aus Session holen
+        $currentUserId = getCurrentUserId();
 
     if (empty($postText)) {
         $feedbackMessage = 'Post-Text darf nicht leer sein.';
@@ -121,13 +126,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             }
         }
     }
+    }
 }
 
 
 // ---- Dynamische Inhalte: Posts laden ----
-// Aktuellen Benutzer aus der Session holen
-$currentUserId = getCurrentUserIdWithFallback();
+// Prüfen ob angemeldet
+if (!isLoggedIn()) {
+    header("Location: Login.php");
+    exit();
+}
+
+$currentUserId = getCurrentUserId();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
 $loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
@@ -168,7 +180,7 @@ if ($showFollowedOnly) {
     <form method="POST" enctype="multipart/form-data" class="post-input-group">
         <input type="hidden" name="action" value="create_post">
         <div class="user-profile">
-            <img src="assets/placeholder-profilbild.jpg" alt="Profilbild">
+            <img src="<?php echo htmlspecialchars($currentUser['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" alt="Profilbild">
         </div>
         <div class="post-input-group-inputs">
             <textarea name="post_text" id="post-input" placeholder="Verfasse einen Post..." maxlength="300" required></textarea>

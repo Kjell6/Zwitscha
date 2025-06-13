@@ -61,6 +61,11 @@ $currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('header-search-input');
             const resultsDropdown = document.querySelector('.header-search-results-dropdown');
+            
+            // Prüfen ob Elemente existieren
+            if (!searchInput || !resultsDropdown) {
+                return;
+            }
 
             // Funktion zum Anzeigen der Suchergebnisse
             function displayResults(results) {

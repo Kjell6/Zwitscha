@@ -55,7 +55,7 @@
     </a>
     <?php 
     require_once __DIR__ . '/php/session_helper.php';
-    $currentUserId = getCurrentUserIdWithFallback();
+    $currentUserId = getCurrentUserId();
     ?>
     <a href="Profil.php?userid=<?php echo $currentUserId; ?>" class="footer-link" aria-label="Profil">
         <picture>
