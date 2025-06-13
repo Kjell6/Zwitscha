@@ -132,7 +132,11 @@ if ($profile) {
               7) Profil-Kopfbereich (dynamisch)
              ============================ -->
         <div class="profil-header">
-            <img src="<?php echo htmlspecialchars($profile['profilBild']); ?>" alt="Profilbild" class="profilbild" />
+            <img src="<?php echo htmlspecialchars($profile['profilBild']); ?>" 
+                 alt="Profilbild" 
+                 class="profilbild" 
+                 onclick="openLightbox('<?php echo htmlspecialchars($profile['profilBild']); ?>')"
+                 style="cursor: pointer;" />
 
             <div class="profil-header pb-name-untereinander">
                 <div class="profil-main-infos">
@@ -254,6 +258,8 @@ if ($profile) {
 <footer>
     <p>&copy; 2025 Zwitscha</p>
 </footer>
+
+<?php include 'lightbox.php'; ?>
 
 </body>
 </html>
