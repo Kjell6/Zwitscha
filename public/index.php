@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/php/PostVerwaltung.php';
 require_once __DIR__ . '/php/NutzerVerwaltung.php';
+require_once __DIR__ . '/php/session_helper.php';
 
 // Verwaltung instanziieren
 $postRepository = new PostVerwaltung();
@@ -17,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
     && $_POST['action'] === 'create_post'
 ) {
     $postText   = trim($_POST['post_text'] ?? '');
-    // Später durch echte User-ID aus Session ersetzen, z.B. $_SESSION['user_id']
-    $currentUserId = 1; // Dummy-ID des eingeloggten Nutzers (beispielNutzer)
+    // User-ID aus Session holen
+    $currentUserId = getCurrentUserIdWithFallback();
 
     if (empty($postText)) {
         $feedbackMessage = 'Post-Text darf nicht leer sein.';
@@ -72,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 
 
 // ---- Dynamische Inhalte: Posts laden ----
-// Später: Aktuellen Benutzer aus der Session oder Authentifizierung holen
-$currentUserId = 1; // Hardcoded für Development
+// Aktuellen Benutzer aus der Session holen
+$currentUserId = getCurrentUserIdWithFallback();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
@@ -85,23 +86,6 @@ if ($showFollowedOnly) {
 } else {
     $posts = $postRepository->getAllPosts($currentUserId);
 }
-
-// POST Request für Reaktionen und Löschen
-// Später: Hier Datenbankoperationen für Reaktionen und Löschen implementieren
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['action']) && $_POST['action'] === 'toggle_reaction') {
-        // Hier in Datenbank speicern/entfernen
-        // Später: Datenbank-Interaktion zum Togglen der Reaktion implementieren
-        print_r($_POST); // Dummy-Ausgabe der POST-Daten für Debugging
-    }
-
-    if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
-        // Hier aus Datenbank löschen
-        // Später: Datenbank-Interaktion zum Löschen des Posts implementieren
-        print_r($_POST); // Dummy-Ausgabe der POST-Daten für Debugging
-    }
-}
-
 ?>
 
 <!DOCTYPE html>

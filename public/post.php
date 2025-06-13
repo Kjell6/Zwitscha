@@ -58,8 +58,10 @@ if (!isset($post)) {
 // Verwende $currentUser aus der einbindenden Datei oder lade ihn aus der Datenbank
 if (!isset($currentUser)) {
     require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    require_once __DIR__ . '/php/session_helper.php';
     $nutzerVerwaltung = new NutzerVerwaltung();
-    $currentUser = $nutzerVerwaltung->getUserById(1); // Hardcoded für Development
+    $currentUserId = getCurrentUserIdWithFallback();
+    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 }
 
 // Berechtigung zum Löschen prüfen: Ist der Nutzer Admin ODER der Autor des Posts?

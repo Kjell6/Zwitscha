@@ -1,10 +1,14 @@
 <?php
 require_once __DIR__ . '/php/NutzerVerwaltung.php';
+require_once __DIR__ . '/php/session_helper.php';
+
+// Überprüfen ob Nutzer angemeldet ist
+requireLogin();
 
 $nutzerVerwaltung = new NutzerVerwaltung();
 
-// TODO: Hier sollte später die echte Session-Logik hin
-$currentUserId = 1; // Hardcoded für Development
+// Aktuelle User-ID aus Session holen
+$currentUserId = getCurrentUserId();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 if (!$currentUser) {

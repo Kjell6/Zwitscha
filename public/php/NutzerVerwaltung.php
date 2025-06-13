@@ -303,4 +303,106 @@ class NutzerVerwaltung {
             $this->db->autocommit(true); // Autocommit wieder aktivieren
         }
     }
+
+    /**
+     * Registriert einen neuen Nutzer.
+     *
+     * @param string $username Der gewünschte Benutzername.
+     * @param string $password Das Passwort (Klartext).
+     * @return array Ergebnis mit ['success' => bool, 'message' => string, 'userId' => int|null]
+     */
+    public function registerUser(string $username, string $password): array {
+        // Eingabe validieren
+        $username = trim($username);
+        if (empty($username)) {
+            return ['success' => false, 'message' => 'Benutzername darf nicht leer sein.', 'userId' => null];
+        }
+        
+        if (strlen($username) < 3) {
+            return ['success' => false, 'message' => 'Benutzername muss mindestens 3 Zeichen lang sein.', 'userId' => null];
+        }
+        
+        if (strlen($username) > 15) {
+            return ['success' => false, 'message' => 'Benutzername darf maximal 15 Zeichen lang sein.', 'userId' => null];
+        }
+        
+        if (empty($password)) {
+            return ['success' => false, 'message' => 'Passwort darf nicht leer sein.', 'userId' => null];
+        }
+
+        // Prüfen ob Benutzername bereits existiert
+        if ($this->usernameExists($username)) {
+            return ['success' => false, 'message' => 'Benutzername ist bereits vergeben.', 'userId' => null];
+        }
+
+        // Nutzer in Datenbank einfügen
+        $sql = "INSERT INTO nutzer (nutzerName, passwort, profilBild, istAdministrator) VALUES (?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        
+        if (!$stmt) {
+            return ['success' => false, 'message' => 'Datenbankfehler beim Erstellen des Accounts.', 'userId' => null];
+        }
+
+        $defaultProfileImage = 'assets/placeholder-profilbild.jpg';
+        $isAdmin = 0; // Neue Nutzer sind standardmäßig keine Admins
+        
+        $stmt->bind_param("sssi", $username, $password, $defaultProfileImage, $isAdmin);
+        
+        if ($stmt->execute()) {
+            $userId = $this->db->insert_id;
+            $stmt->close();
+            return ['success' => true, 'message' => 'Account erfolgreich erstellt!', 'userId' => $userId];
+        } else {
+            $stmt->close();
+            return ['success' => false, 'message' => 'Fehler beim Erstellen des Accounts.', 'userId' => null];
+        }
+    }
+
+    /**
+     * Prüft, ob ein Benutzername bereits existiert.
+     *
+     * @param string $username Der zu prüfende Benutzername.
+     * @return bool True wenn der Benutzername bereits existiert.
+     */
+    public function usernameExists(string $username): bool {
+        $sql = "SELECT COUNT(*) as count FROM nutzer WHERE nutzerName = ?";
+        $stmt = $this->db->prepare($sql);
+        
+        if (!$stmt) return false;
+
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $result['count'] > 0;
+    }
+
+    /**
+     * Authentifiziert einen Nutzer mit Benutzername und Passwort.
+     *
+     * @param string $username Der Benutzername.
+     * @param string $password Das Passwort (Klartext).
+     * @return array|null Die Benutzerdaten bei erfolgreicher Authentifizierung oder null.
+     */
+    public function authenticateUser(string $username, string $password): ?array {
+        $sql = "SELECT id, nutzerName, passwort, profilBild, istAdministrator, erstellungsDatum FROM nutzer WHERE nutzerName = ? AND passwort = ?";
+        $stmt = $this->db->prepare($sql);
+        
+        if (!$stmt) return null;
+
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+
+        if ($user) {
+            // Passwort aus den zurückgegebenen Daten entfernen
+            unset($user['passwort']);
+            return $user;
+        }
+
+        return null;
+    }
 } 

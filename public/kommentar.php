@@ -31,10 +31,11 @@ $canDeleteComment = $isOwner || $isAdmin;
                 </time>
             </div>
             <?php if ($canDeleteComment): ?>
-                <form method="POST" action="postDetails.php?id=<?php echo $postId; /* Bleibe auf der Detailseite */ ?>" style="display: inline;" onsubmit="return confirm('Kommentar wirklich löschen?');">
+                <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Kommentar wirklich löschen?');">
                     <input type="hidden" name="action" value="delete_comment">
                     <input type="hidden" name="comment_id" value="<?php echo $comment_for_template['id']; ?>">
-                    <input type="hidden" name="post_id" value="<?php echo $postId; ?>"> <button class="post-options-button no-post-details" type="submit" aria-label="Kommentar löschen">
+                    <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
+                    <button class="post-options-button no-post-details" type="submit" aria-label="Kommentar löschen">
                         <i class="bi bi-trash-fill"></i>
                     </button>
                 </form>

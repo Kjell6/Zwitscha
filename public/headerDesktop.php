@@ -1,17 +1,14 @@
 <?php
-session_start();
-
+require_once __DIR__ . '/php/session_helper.php';
 
 // Abmelden: Session löschen
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
-    $_SESSION = [];
-    session_destroy();
-    header("Location: Login.php");
-    echo 'test';
-    exit;
+    logout();
 }
 
-$eingeloggt = isset($_SESSION['eingeloggt']) && $_SESSION['eingeloggt'] === true;
+$eingeloggt = isLoggedIn();
+$currentUserId = getCurrentUserId();
+$currentUsername = getCurrentUsername();
 
 $currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
 ?>
@@ -48,7 +45,7 @@ $currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
                 </form>
             <?php else: ?>
                 <!-- Auf anderen Seiten: Link zum Profil -->
-                <a href="Profil.php?userid=1" class="profile-link">
+                <a href="Profil.php?userid=<?php echo $currentUserId; ?>" class="profile-link" title="<?php echo htmlspecialchars($currentUsername); ?>">
                     <i class="bi bi-person-fill"></i>
                 </a>
             <?php endif; ?>

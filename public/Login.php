@@ -1,13 +1,6 @@
 <?php
 session_start();
-
-// Dummy-Nutzerliste
-$dummyUsers = [
-    'max' => '1234',
-    'lisa' => 'passwort',
-    'admin' => 'admin',
-    'user' => 'user'
-];
+require_once __DIR__ . '/php/NutzerVerwaltung.php';
 
 $error = '';
 
@@ -15,14 +8,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $benutzername = isset($_POST['benutzername']) ? trim($_POST['benutzername']) : '';
     $passwort = isset($_POST['passwort']) ? $_POST['passwort'] : '';
 
-    // Login prüfen
-    if (array_key_exists($benutzername, $dummyUsers) && $dummyUsers[$benutzername] === $passwort) {
-        $_SESSION['angemeldet'] = true;
-        $_SESSION['eingeloggt'] = true;
-        header("Location: index.php");
-        exit;
+    if (empty($benutzername) || empty($passwort)) {
+        $error = 'Benutzername und Passwort sind erforderlich.';
     } else {
-        $error = "[Dummy] Benutzername oder Passwort ist falsch.";
+        // NutzerVerwaltung instanziieren und Login versuchen
+        $nutzerVerwaltung = new NutzerVerwaltung();
+        $user = $nutzerVerwaltung->authenticateUser($benutzername, $passwort);
+        
+        if ($user) {
+            // Login erfolgreich - Session setzen
+            $_SESSION['angemeldet'] = true;
+            $_SESSION['eingeloggt'] = true;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['nutzerName'];
+            $_SESSION['ist_admin'] = $user['istAdministrator'];
+            
+            // Redirect zur ursprünglich gewünschten Seite oder zur Startseite
+            $redirectUrl = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php';
+            header("Location: " . $redirectUrl);
+            exit;
+        } else {
+            $error = 'Benutzername oder Passwort ist falsch.';
+        }
     }
 }
 ?>
@@ -52,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section class="Login">
         <form id="login-form" class="card" method="POST" action="">
             <label for="benutzername">Benutzername</label>
-            <input type="text" name="benutzername" id="benutzername" required />
+            <input type="text" name="benutzername" id="benutzername" required 
+                   value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
 
             <label for="passwort">Passwort</label>
             <input type="password" name="passwort" id="passwort" required />

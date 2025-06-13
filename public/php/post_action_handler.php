@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/PostVerwaltung.php';
 require_once __DIR__ . '/NutzerVerwaltung.php';
+require_once __DIR__ . '/session_helper.php';
 
 // Stellt sicher, dass das Skript nur bei POST-Requests ausgeführt wird.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -13,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $postRepository = new PostVerwaltung();
 $nutzerVerwaltung = new NutzerVerwaltung();
 $action = $_POST['action'] ?? '';
-// DUMMY-BENUTZERDATEN (später aus Session holen)
-$currentUserId = 1;
+// Benutzer-ID aus Session holen
+$currentUserId = getCurrentUserIdWithFallback();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 
@@ -42,8 +43,31 @@ switch ($action) {
             $postRepository->toggleReaction($currentUserId, $postId, $emoji);
         }
         break;
+
+    case 'create_comment':
+        $postId = (int)($_POST['post_id'] ?? 0);
+        $commentText = trim($_POST['comment_text'] ?? '');
+        if ($postId > 0 && !empty($commentText) && strlen($commentText) <= 500) {
+            $postRepository->createComment($postId, $currentUserId, $commentText);
+        }
+        break;
+
+    case 'delete_comment':
+        $commentId = (int)($_POST['comment_id'] ?? 0);
+        if ($commentId > 0) {
+            $commentToDelete = $postRepository->findCommentById($commentId);
+
+            // Sicherheitsprüfung: Gehört der Kommentar dem Nutzer oder ist der Nutzer ein Admin?
+            $isOwner = ($commentToDelete && (int)$commentToDelete['nutzer_id'] === $currentUserId);
+            $isAdmin = ($currentUser && isset($currentUser['istAdministrator']) && $currentUser['istAdministrator']);
+
+            if ($commentToDelete && ($isOwner || $isAdmin)) {
+                $postRepository->deleteComment($commentId);
+            }
+        }
+        break;
     
-    // Zukünftige Aktionen könnten hier hinzugefügt werden (z.B. 'edit_post')
+    // Zukünftige Aktionen könnten hier hinzugefügt werden (z.B. 'edit_post', 'edit_comment')
 }
 
 

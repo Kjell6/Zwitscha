@@ -1,11 +1,5 @@
 <?php
-// Dummy-Nutzerliste (gleich wie beim Login)
-$dummyUsers = [
-    'max' => '1234',
-    'lisa' => 'passwort',
-    'admin' => 'admin',
-    'user' => 'user'
-];
+require_once __DIR__ . '/php/NutzerVerwaltung.php';
 
 $message = '';
 $error = '';
@@ -15,14 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $benutzername = isset($_POST['benutzername']) ? trim($_POST['benutzername']) : '';
     $passwort = isset($_POST['passwort']) ? $_POST['passwort'] : '';
 
-    if (array_key_exists($benutzername, $dummyUsers)) {
-        $error = "[Dummy] Benutzername '$benutzername' ist bereits vergeben.";
-    } elseif ($benutzername === '' || $passwort === '') {
-        $error = "[Dummy] Bitte Benutzername und Passwort eingeben.";
+    if (empty($benutzername) || empty($passwort)) {
+        $error = 'Bitte Benutzername und Passwort eingeben.';
     } else {
-        $message = "[Dummy] Neuer Account für '$benutzername' wurde erstellt. Du wirst in 3 Sekunden weitergeleitet.";
-        $redirect = true;
-        header("Refresh: 3; url=index.php");
+        // NutzerVerwaltung instanziieren und Registrierung versuchen
+        $nutzerVerwaltung = new NutzerVerwaltung();
+        $result = $nutzerVerwaltung->registerUser($benutzername, $passwort);
+        
+        if ($result['success']) {
+            $message = $result['message'] . ' Du wirst in 3 Sekunden weitergeleitet.';
+            $redirect = true;
+            header("Refresh: 3; url=Login.php");
+        } else {
+            $error = $result['message'];
+        }
     }
 }
 ?>
@@ -63,7 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section class="Register">
         <form id="register-form" class="card" method="POST" action="">
             <label for="benutzername">Benutzername</label>
-            <input type="text" name="benutzername" id="benutzername" required />
+            <input type="text" name="benutzername" id="benutzername" required 
+                   value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
 
             <label for="passwort">Passwort</label>
             <input type="password" name="passwort" id="passwort" required />

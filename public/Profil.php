@@ -6,13 +6,14 @@ ini_set('display_errors', 1);
 try {
     require_once __DIR__ . '/php/PostVerwaltung.php';
     require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    require_once __DIR__ . '/php/session_helper.php';
 
     // === Initialisierung ===
     $postVerwaltung = new PostVerwaltung();
     $nutzerVerwaltung = new NutzerVerwaltung();
 
-// Aktueller Benutzer (später aus Session oder Authentifizierung holen)
-$currentUserId = 1;
+// Aktueller Benutzer aus Session holen
+$currentUserId = getCurrentUserIdWithFallback();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId); 
 
 // Welches Profil soll geladen werden?

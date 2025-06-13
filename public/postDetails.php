@@ -1,12 +1,10 @@
 <?php
 require_once __DIR__ . '/php/PostVerwaltung.php';
 require_once __DIR__ . '/php/NutzerVerwaltung.php';
+require_once __DIR__ . '/php/session_helper.php';
 
-$feedbackMessage = '';
-$feedbackType = '';
-
-// Aktueller Benutzer (später aus Session oder Authentifizierung holen)
-$currentUserId = 1;
+// Aktueller Benutzer aus Session holen
+$currentUserId = getCurrentUserIdWithFallback();
 $nutzerVerwaltung = new NutzerVerwaltung();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
@@ -19,51 +17,6 @@ if (!$postId) {
 
 $repository = new PostVerwaltung();
 
-// POST Request Handling
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    switch ($_POST['action']) {
-        case 'create_comment':
-            $commentText = trim($_POST['comment_text'] ?? '');
-
-            if (empty($commentText)) {
-                $feedbackMessage = 'Kommentar-Text darf nicht leer sein.';
-                $feedbackType = 'error';
-            } elseif (strlen($commentText) > 500) {
-                $feedbackMessage = 'Kommentar darf maximal 500 Zeichen lang sein.';
-                $feedbackType = 'error';
-            } else {
-                $success = $repository->createComment($postId, $currentUserId, $commentText);
-                if ($success) {
-                    header("Location: " . $_SERVER['REQUEST_URI']);
-                    exit();
-                } else {
-                    $feedbackMessage = 'Fehler beim Speichern des Kommentars.';
-                    $feedbackType = 'error';
-                }
-            }
-            break;
-
-        case 'delete_comment':
-            $commentId = (int)($_POST['comment_id'] ?? 0);
-            if ($commentId) {
-                // Sicherheitsprüfung: Ist der Nutzer Admin oder Eigentümer des Kommentars?
-                $commentToDelete = $repository->findCommentById($commentId);
-                if ($commentToDelete) {
-                    $isOwner = (int)$commentToDelete['nutzer_id'] === (int)$currentUserId;
-                    // Annahme: $currentUser['istAdministrator'] ist verfügbar
-                    $isAdmin = isset($currentUser['istAdministrator']) && $currentUser['istAdministrator']; 
-                    if ($isOwner || $isAdmin) {
-                        $repository->deleteComment($commentId);
-                        // Redirect zur selben Seite, um das Ergebnis anzuzeigen
-                        header("Location: " . $_SERVER['REQUEST_URI']);
-                        exit();
-                    }
-                }
-            }
-            break;
-    }
-}
-
 // ---- Daten für die Detailansicht laden ----
 $post = $repository->getPostById($postId, $currentUserId);
 $comments = $repository->getCommentsByPostId($postId);
@@ -73,10 +26,6 @@ if (!$post) {
     header("Location: index.php");
     exit();
 }
-
-// Die Logik für Reaktionen und Löschen wird von der Startseite geerbt,
-// daher müssen wir die Logik hier nicht duplizieren, sondern nur die Anzeige sicherstellen.
-// Die `$post` Variable wird an die inkludierte `post.php` weitergegeben.
 
 // HILFSFUNKTION FÜR ZEITANGABE (aus post.php übernommen)
 if (!function_exists('time_ago')) {
@@ -245,7 +194,7 @@ if (!function_exists('time_ago')) {
                         </div>
 
                         <!-- Kommentar-Eingabeformular -->
-                        <form method="POST" class="comment-input-group">
+                        <form method="POST" action="php/post_action_handler.php" class="comment-input-group">
                             <input type="hidden" name="action" value="create_comment">
                             <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                             <textarea name="comment_text" id="comment-input" placeholder="Schreibe einen Kommentar..." maxlength="500" required></textarea>

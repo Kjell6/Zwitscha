@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/NutzerVerwaltung.php';
+require_once __DIR__ . '/session_helper.php';
 
 // Stelle sicher, dass nur POST-Requests verarbeitet werden
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -10,8 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     $nutzerVerwaltung = new NutzerVerwaltung();
     
-    // Aktueller Benutzer (später aus Session holen)
-    $currentUserId = 1;
+    // Aktueller Benutzer aus Session holen
+    $currentUserId = getCurrentUserId();
+    if (!$currentUserId) {
+        http_response_code(401);
+        exit();
+    }
     $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
     
     // Prüfen ob der aktuelle Benutzer Admin ist
