@@ -32,57 +32,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Registrieren Zwitscha</title>
+    <title>Registrieren - Zwitscha</title>
     <link rel="icon" href="assets/favicon.png" type="image/png" />
-
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/Login.css" />
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
-
-    <style>
-        /* Fix für Containerbreite */
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
-<body>
-<div class="login-section logo-section">
-    <a href="index.php" class="logo">
-        <picture>
-            <source srcset="assets/zwitscha_dark.png" media="(prefers-color-scheme: dark)" />
-            <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image" />
-        </picture>
-    </a>
-</div>
+<body class="auth-body">
+    <div class="auth-container">
+        <!-- Register Form -->
+        <div class="auth-form-container">
+            <div class="logo-section">
+                    <img src="assets/favicon.png" alt="Zwitscha Logo" class="logo-image" />
+            </div>
+            <form id="register-form" class="auth-form" method="POST" action="">
+                <div class="auth-header">
+                    <h1>Willkommen bei Zwitscha</h1>
+                    <p>Erstelle deinen Account und werde Teil der Community</p>
+                </div>
 
-<main class="container">
-    <section class="Register">
-        <form id="register-form" class="card" method="POST" action="">
-            <h1>Registrieren</h1>
-            <label for="benutzername">Benutzername</label>
-            <input type="text" name="benutzername" id="benutzername" required 
-                   value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
+                <?php if ($message): ?>
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span><?= htmlspecialchars($message) ?></span>
+                    </div>
+                <?php elseif ($error): ?>
+                    <div class="alert alert-error">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span><?= htmlspecialchars($error) ?></span>
+                    </div>
+                <?php endif; ?>
 
-            <label for="passwort">Passwort</label>
-            <input type="password" name="passwort" id="passwort" required />
+                <div class="form-group">
+                    <label for="benutzername">Benutzername</label>
+                    <div class="input-wrapper">
+                        <input type="text" name="benutzername" id="benutzername" required 
+                               placeholder="Wähle einen Benutzernamen"
+                               value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
+                    </div>
+                </div>
 
-            <button type="submit">Registrieren</button>
+                <div class="form-group">
+                    <label for="passwort">Passwort</label>
+                    <div class="input-wrapper">
+                        <input type="password" name="passwort" id="passwort" required 
+                               placeholder="Erstelle ein sicheres Passwort" />
+                    </div>
+                </div>
 
-            <?php if ($message): ?>
-                <p style="color: green; font-weight: bold;"><?= htmlspecialchars($message) ?></p>
-            <?php elseif ($error): ?>
-                <p style="color: red; font-weight: bold;"><?= htmlspecialchars($error) ?></p>
-            <?php endif; ?>
+                <button type="submit" class="auth-button">
+                    Registrieren
+                </button>
 
-            <p>Falls du bereits einen Account hast und dich anmelden möchtest, klicke
-                <a href="Login.php">hier</a>.
-            </p>
-        </form>
-    </section>
-</main>
+                <div class="auth-footer">
+                    <p>Bereits einen Account?</p>
+                    <a href="Login.php" class="auth-link">Jetzt anmelden</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

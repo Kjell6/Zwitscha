@@ -39,44 +39,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login Zwitscha</title>
+    <title>Anmelden - Zwitscha</title>
     <link rel="icon" href="assets/favicon.png" type="image/png" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/Login.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
-<body>
-<div class="login-section logo-section">
-    <a href="index.php" class="logo">
-        <picture>
-            <source srcset="assets/zwitscha_dark.png" media="(prefers-color-scheme: dark)" />
-            <img src="assets/zwitscha.png" alt="Zwitscha Logo" class="logo-image" />
-        </picture>
-    </a>
-</div>
+<body class="auth-body">
+    <div class="auth-container">
+        <!-- Login Form -->
+        <div class="auth-form-container">
+            <div class="logo-section">
+                <img src="assets/favicon.png" alt="Zwitscha Logo" class="logo-image" />
+            </div>
 
-<main class="container">
-    <section class="Login">
-        <form id="login-form" class="card" method="POST" action="">
-            <h1>Anmelden</h1>
-            <label for="benutzername">Benutzername</label>
-            <input type="text" name="benutzername" id="benutzername" required 
-                   value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
+            <form id="login-form" class="auth-form" method="POST" action="">
+                <div class="auth-header">
+                    <h1>Willkommen zurück</h1>
+                    <p>Melde dich mit deinem Account an</p>
+                </div>
 
-            <label for="passwort">Passwort</label>
-            <input type="password" name="passwort" id="passwort" required />
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-error">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span><?= htmlspecialchars($error) ?></span>
+                    </div>
+                <?php endif; ?>
 
-            <button type="submit">Anmelden</button>
+                <div class="form-group">
+                    <label for="benutzername">Benutzername</label>
+                    <div class="input-wrapper">
+                        <input type="text" name="benutzername" id="benutzername" required 
+                               placeholder="Gib deinen Benutzernamen ein"
+                               value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
+                    </div>
+                </div>
 
-            <?php if (!empty($error)): ?>
-                <p style="color: red; font-weight: bold;"><?= htmlspecialchars($error) ?></p>
-            <?php endif; ?>
+                <div class="form-group">
+                    <label for="passwort">Passwort</label>
+                    <div class="input-wrapper">
+                        <input type="password" name="passwort" id="passwort" required 
+                               placeholder="Gib dein Passwort ein" />
+                    </div>
+                </div>
 
-            <p>Falls du noch keinen Account hast und dich registrieren möchtest, klicke
-                <a href="Register.php">hier</a>.
-            </p>
-        </form>
-    </section>
-</main>
+                <button type="submit" class="auth-button">
+                    Anmelden
+                </button>
+
+                <div class="auth-footer">
+                    <p>Noch keinen Account?</p>
+                    <a href="Register.php" class="auth-link">Jetzt registrieren</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
