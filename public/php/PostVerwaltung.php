@@ -22,19 +22,16 @@ class PostVerwaltung {
             SELECT 
                 p.id, p.text, p.bildPfad, p.datumZeit,
                 n.nutzerName AS autor, n.profilBild, n.id as userId,
-                COUNT(DISTINCT k.id) AS comments,
-                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Hoch' THEN 1 ELSE 0 END) AS count_like,
-                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Runter' THEN 1 ELSE 0 END) AS count_dislike,
-                SUM(CASE WHEN r.reaktionsTyp = 'Herz' THEN 1 ELSE 0 END) AS count_heart,
-                SUM(CASE WHEN r.reaktionsTyp = 'Lachen' THEN 1 ELSE 0 END) AS count_laugh,
-                SUM(CASE WHEN r.reaktionsTyp = 'Fragezeichen' THEN 1 ELSE 0 END) AS count_question,
-                SUM(CASE WHEN r.reaktionsTyp = 'Ausrufezeichen' THEN 1 ELSE 0 END) AS count_exclamation,
+                (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Herz') AS count_heart,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Lachen') AS count_laugh,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Fragezeichen') AS count_question,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Ausrufezeichen') AS count_exclamation,
                 (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
             FROM post p
             JOIN nutzer n ON p.nutzer_id = n.id
-            LEFT JOIN kommentar k ON p.id = k.post_id
-            LEFT JOIN Reaktion r ON p.id = r.post_id
-            GROUP BY p.id
             ORDER BY p.datumZeit DESC
         ";
         
@@ -54,20 +51,17 @@ class PostVerwaltung {
             SELECT 
                 p.id, p.text, p.bildPfad, p.datumZeit,
                 n.nutzerName AS autor, n.profilBild, n.id as userId,
-                COUNT(DISTINCT k.id) AS comments,
-                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Hoch' THEN 1 ELSE 0 END) AS count_like,
-                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Runter' THEN 1 ELSE 0 END) AS count_dislike,
-                SUM(CASE WHEN r.reaktionsTyp = 'Herz' THEN 1 ELSE 0 END) AS count_heart,
-                SUM(CASE WHEN r.reaktionsTyp = 'Lachen' THEN 1 ELSE 0 END) AS count_laugh,
-                SUM(CASE WHEN r.reaktionsTyp = 'Fragezeichen' THEN 1 ELSE 0 END) AS count_question,
-                SUM(CASE WHEN r.reaktionsTyp = 'Ausrufezeichen' THEN 1 ELSE 0 END) AS count_exclamation,
+                (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Herz') AS count_heart,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Lachen') AS count_laugh,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Fragezeichen') AS count_question,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Ausrufezeichen') AS count_exclamation,
                 (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
             FROM post p
             JOIN nutzer n ON p.nutzer_id = n.id
             INNER JOIN folge f ON p.nutzer_id = f.gefolgter_id AND f.folgender_id = ?
-            LEFT JOIN kommentar k ON p.id = k.post_id
-            LEFT JOIN Reaktion r ON p.id = r.post_id
-            GROUP BY p.id
             ORDER BY p.datumZeit DESC
         ";
         
@@ -201,20 +195,17 @@ class PostVerwaltung {
             SELECT 
                 p.id, p.text, p.bildPfad, p.datumZeit,
                 n.nutzerName AS autor, n.profilBild, n.id as userId,
-                COUNT(DISTINCT k.id) AS comments,
-                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Hoch' THEN 1 ELSE 0 END) AS count_like,
-                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Runter' THEN 1 ELSE 0 END) AS count_dislike,
-                SUM(CASE WHEN r.reaktionsTyp = 'Herz' THEN 1 ELSE 0 END) AS count_heart,
-                SUM(CASE WHEN r.reaktionsTyp = 'Lachen' THEN 1 ELSE 0 END) AS count_laugh,
-                SUM(CASE WHEN r.reaktionsTyp = 'Fragezeichen' THEN 1 ELSE 0 END) AS count_question,
-                SUM(CASE WHEN r.reaktionsTyp = 'Ausrufezeichen' THEN 1 ELSE 0 END) AS count_exclamation,
+                (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Herz') AS count_heart,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Lachen') AS count_laugh,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Fragezeichen') AS count_question,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Ausrufezeichen') AS count_exclamation,
                 (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
             FROM post p
             JOIN nutzer n ON p.nutzer_id = n.id
-            LEFT JOIN kommentar k ON p.id = k.post_id
-            LEFT JOIN Reaktion r ON p.id = r.post_id
             WHERE p.id = ?
-            GROUP BY p.id
         ";
         
         $posts = $this->_fetchAndProcessPosts($sql, [$currentUserId, $postId], 'ii');
@@ -363,20 +354,17 @@ class PostVerwaltung {
             SELECT 
                 p.id, p.text, p.bildPfad, p.datumZeit,
                 n.nutzerName AS autor, n.profilBild, n.id as userId,
-                COUNT(DISTINCT k.id) AS comments,
-                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Hoch' THEN 1 ELSE 0 END) AS count_like,
-                SUM(CASE WHEN r.reaktionsTyp = 'Daumen Runter' THEN 1 ELSE 0 END) AS count_dislike,
-                SUM(CASE WHEN r.reaktionsTyp = 'Herz' THEN 1 ELSE 0 END) AS count_heart,
-                SUM(CASE WHEN r.reaktionsTyp = 'Lachen' THEN 1 ELSE 0 END) AS count_laugh,
-                SUM(CASE WHEN r.reaktionsTyp = 'Fragezeichen' THEN 1 ELSE 0 END) AS count_question,
-                SUM(CASE WHEN r.reaktionsTyp = 'Ausrufezeichen' THEN 1 ELSE 0 END) AS count_exclamation,
+                (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Herz') AS count_heart,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Lachen') AS count_laugh,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Fragezeichen') AS count_question,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Ausrufezeichen') AS count_exclamation,
                 (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
             FROM post p
             JOIN nutzer n ON p.nutzer_id = n.id
-            LEFT JOIN kommentar k ON p.id = k.post_id
-            LEFT JOIN Reaktion r ON p.id = r.post_id
             WHERE p.nutzer_id = ?
-            GROUP BY p.id
             ORDER BY p.datumZeit DESC
         ";
         
