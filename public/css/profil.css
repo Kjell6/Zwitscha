@@ -206,20 +206,39 @@ div.profil-header.pb-name-untereinander {
 .einstellungen-link {
     position: absolute;
     top: var(--spacing-sm);
-    right: var(--spacing-sm);
+    left: var(--spacing-sm);
     z-index: 10;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.einstellungen-link:hover {
+    background-color: var(--hover-color);
 }
 
 .einstellungen-link i {
     font-size: var(--font-size-xl);
     color: var(--text-secondary);
+    transition: color var(--transition-fast);
+}
+
+.einstellungen-link:hover i {
+    color: var(--primary-color);
 }
 
 .logout-link {
     position: absolute;
     top: var(--spacing-sm);
-    right: calc(var(--spacing-sm) + 35px);
+    right: var(--spacing-sm);
     z-index: 10;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.logout-link:hover {
+    background-color: rgba(229, 57, 53, 0.1);
 }
 
 .logout-link i {
@@ -285,11 +304,13 @@ div.profil-header.pb-name-untereinander {
 
     .einstellungen-link {
         top: var(--spacing-sm);
-        right: var(--spacing-sm);
+        left: var(--spacing-sm);
+        padding: var(--spacing-xs);
     }
 
     .logout-link {
         top: var(--spacing-sm);
-        right: calc(var(--spacing-sm) + 35px);
+        right: var(--spacing-sm);
+        padding: var(--spacing-xs);
     }
 }
