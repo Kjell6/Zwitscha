@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main class="container">
     <section class="Login">
         <form id="login-form" class="card" method="POST" action="">
+            <h1>Anmelden</h1>
             <label for="benutzername">Benutzername</label>
             <input type="text" name="benutzername" id="benutzername" required 
                    value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
