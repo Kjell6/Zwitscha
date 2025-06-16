@@ -81,6 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if (!in_array($_FILES['avatar']['type'], $allowedTypes)) {
                 $error = "Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.";
+            } elseif ($_FILES['avatar']['size'] > 50 * 1024 * 1024) { // 50 MB Limit
+                $error = "Das Bild ist zu groß. Maximal 50 MB sind erlaubt.";
             } else {
                 // Upload-Verzeichnis erstellen falls es nicht existiert
                 $uploadDir = __DIR__ . '/assets/uploads/profile/';
@@ -161,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="avatar" class="image-upload-label">
                             <i class="bi bi-image"></i> Neues Profilbild
                         </label>
-                        <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;"/>
+                        <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" capture="environment" style="display: none;"/>
                     </div>
                     <div class="avatar-preview">
                         <img id="avatar-preview-img" src="<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>" alt="Aktuelles Profilbild" />
@@ -233,10 +235,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const previewImg = document.getElementById('avatar-preview-img');
         
         if (file) {
-            // Prüfe, ob es ein gültiges Bildformat ist
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-            if (!allowedTypes.includes(file.type)) {
+            // Prüfe, ob es ein gültiges Bildformat ist - Safari iOS kompatibel
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            const fileType = file.type.toLowerCase();
+            const isValidType = allowedTypes.some(type => 
+                fileType === type || 
+                (type === 'image/jpeg' && fileType === 'image/jpg') ||
+                (type === 'image/jpg' && fileType === 'image/jpeg')
+            );
+            
+            if (!isValidType && file.size > 0) {
                 alert('Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.');
+                event.target.value = ''; // Input zurücksetzen
+                return;
+            }
+            
+            // Dateigröße prüfen (max 50 MB)
+            const maxFileSize = 50 * 1024 * 1024; // 50 MB
+            if (file.size > maxFileSize) {
+                alert('Das Bild ist zu groß. Maximal 50 MB sind erlaubt.');
                 event.target.value = ''; // Input zurücksetzen
                 return;
             }

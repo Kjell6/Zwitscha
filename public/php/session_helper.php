@@ -77,15 +77,3 @@ function logout(): void {
     header("Location: Login.php");
     exit();
 }
-
-/**
- * DEPRECATED: Diese Funktion war unsicher und ist nicht mehr zu verwenden!
- * Sie gab automatisch User-ID 1 an nicht angemeldete Benutzer zurück.
- * Verwende stattdessen getCurrentUserId() mit null-Checks oder requireLogin().
- * 
- * @deprecated Nicht mehr verwenden! Sicherheitsrisiko!
- * @return int Die User-ID (1 als Fallback wenn nicht angemeldet)
- */
-function getCurrentUserIdWithFallback(): int {
-    throw new Exception("getCurrentUserIdWithFallback() ist deprecated und unsicher! Verwende getCurrentUserId() oder requireLogin().");
-} 
