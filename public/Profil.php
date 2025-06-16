@@ -202,6 +202,9 @@ if ($profile) {
                 <a href="einstellungen.php" class="einstellungen-link mobile-only">
                     <i class="bi bi-gear-fill"></i>
                 </a>
+                <a href="logout.php" class="logout-link mobile-only" onclick="return confirm('Möchtest du dich wirklich abmelden?')">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
             <?php endif; ?>
         </div>
 

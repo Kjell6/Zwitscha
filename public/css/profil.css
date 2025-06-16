@@ -215,7 +215,22 @@ div.profil-header.pb-name-untereinander {
     color: var(--text-secondary);
 }
 
+.logout-link {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: calc(var(--spacing-sm) + 35px);
+    z-index: 10;
+}
 
+.logout-link i {
+    font-size: var(--font-size-xl);
+    color: var(--danger-color);
+    transition: color var(--transition-fast);
+}
+
+.logout-link:hover i {
+    color: var(--danger-hover);
+}
 
 /* Mobile Anpassungen */
 @media (max-width: 768px) {
@@ -271,5 +286,10 @@ div.profil-header.pb-name-untereinander {
     .einstellungen-link {
         top: var(--spacing-sm);
         right: var(--spacing-sm);
+    }
+
+    .logout-link {
+        top: var(--spacing-sm);
+        right: calc(var(--spacing-sm) + 35px);
     }
 }
