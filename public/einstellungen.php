@@ -138,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/einstellungen.css" />
+    <script src="js/image-compression.js"></script>
 </head>
 
 <body>
@@ -230,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script>
     // Live-Vorschau für Profilbild-Upload
-    document.getElementById('avatar').addEventListener('change', function(event) {
+    document.getElementById('avatar').addEventListener('change', async function(event) {
         const file = event.target.files[0];
         const previewImg = document.getElementById('avatar-preview-img');
         
@@ -250,20 +251,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 return;
             }
             
-            // Dateigröße prüfen (max 50 MB)
-            const maxFileSize = 50 * 1024 * 1024; // 50 MB
-            if (file.size > maxFileSize) {
-                alert('Das Bild ist zu groß. Maximal 50 MB sind erlaubt.');
-                event.target.value = ''; // Input zurücksetzen
-                return;
+            try {
+                // Automatische Bildkomprimierung vor Upload
+                await window.imageCompressor.handleFileInput(event.target, previewImg, (compressedFile) => {
+                    const originalSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                    const compressedSizeMB = (compressedFile.size / (1024 * 1024)).toFixed(2);
+                    console.log(`Profilbild komprimiert: ${originalSizeMB}MB → ${compressedSizeMB}MB`);
+                });
+            } catch (error) {
+                alert('Fehler bei der Bildverarbeitung: ' + error.message);
+                event.target.value = '';
+                previewImg.src = "<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>";
             }
-            
-            // Erstelle eine Vorschau-URL für das ausgewählte Bild
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
         } else {
             // Wenn keine Datei ausgewählt, zurück zum ursprünglichen Bild
             previewImg.src = "<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>";

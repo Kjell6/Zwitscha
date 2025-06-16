@@ -126,6 +126,7 @@ if ($showFollowedOnly) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/index.css">
+    <script src="js/image-compression.js"></script>
 </head>
 <body>
 <?php include 'headerDesktop.php'; ?>
@@ -267,7 +268,7 @@ if ($showFollowedOnly) {
     const previewImg = document.getElementById('preview-img');
     const removeImageButton = document.getElementById('remove-image');
 
-    imageInput.addEventListener('change', (event) => {
+    imageInput.addEventListener('change', async (event) => {
         const file = event.target.files[0];
         if (file) {
             // Prüfe, ob es ein gültiges Bildformat ist - Safari iOS kompatibel
@@ -285,21 +286,19 @@ if ($showFollowedOnly) {
                 return;
             }
             
-            // Dateigröße prüfen (max 50 MB)
-            const maxFileSize = 50 * 1024 * 1024; // 50 MB
-            if (file.size > maxFileSize) {
-                alert('Das Bild ist zu groß. Maximal 50 MB sind erlaubt.');
-                imageInput.value = ''; // Input zurücksetzen
-                return;
-            }
-            
-            // Erstelle eine Vorschau-URL für das ausgewählte Bild
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
+            try {
+                // Automatische Bildkomprimierung vor Upload
                 imagePreview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
+                await window.imageCompressor.handleFileInput(imageInput, previewImg, (compressedFile) => {
+                    const originalSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                    const compressedSizeMB = (compressedFile.size / (1024 * 1024)).toFixed(2);
+                    console.log(`Komprimierung: ${originalSizeMB}MB → ${compressedSizeMB}MB`);
+                });
+            } catch (error) {
+                alert('Fehler bei der Bildverarbeitung: ' + error.message);
+                imageInput.value = '';
+                imagePreview.style.display = 'none';
+            }
         }
     });
 
