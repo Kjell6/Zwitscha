@@ -41,7 +41,7 @@ $currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
             <?php if ($currentPage === 'Profil.php'): ?>
                 <!-- Auf Profilseite: Abmelden -->
                 <form method="post" style="display:inline;">
-                    <button type="submit" name="logout">Abmelden</button>
+                    <button type="submit" name="logout" class="logout-button">Abmelden</button>
                 </form>
             <?php else: ?>
                 <!-- Auf anderen Seiten: Link zum Profil -->

@@ -159,18 +159,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" enctype="multipart/form-data" class="card">
             <fieldset>
                 <legend>Profilbild ändern</legend>
-                <div class="form-row compact-avatar-row">
-                    <div class="image-upload">
-                        <label for="avatar" class="image-upload-label">
-                            <i class="bi bi-image"></i> Neues Profilbild
+                <div class="avatar-form-layout">
+                    
+                    <div class="avatar-buttons">
+                        <label for="avatar" class="button button-secondary">
+                            <i class="bi bi-image"></i> Datei auswählen
                         </label>
-                        <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" capture="environment" style="display: none;"/>
+                        <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" style="display: none;"/>
+                        <button type="submit" name="change-avatar" class="button">Bild aktualisieren</button>
                     </div>
+
                     <div class="avatar-preview">
-                        <img id="avatar-preview-img" src="<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>" alt="Aktuelles Profilbild" />
+                        <img id="avatar-preview-img" src="<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>" alt="Vorschau" />
                     </div>
+
                 </div>
-                <button type="submit" name="change-avatar" class="button">Bild aktualisieren</button>
             </fieldset>
         </form>
 
@@ -272,3 +275,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </body>
 </html>
+

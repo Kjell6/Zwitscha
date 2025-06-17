@@ -203,7 +203,7 @@ if ($profile) {
                     <i class="bi bi-gear-fill"></i>
                 </a>
                 <a href="logout.php" class="logout-link mobile-only" onclick="return confirm('Möchtest du dich wirklich abmelden?')">
-                    <i class="bi bi-box-arrow-right"></i>
+                    <img src="assets/custom_icons/LogOut.svg" alt="Logout Icon" class="custom-logout-icon">
                 </a>
             <?php endif; ?>
         </div>
@@ -212,7 +212,9 @@ if ($profile) {
               8) Feed-Sektion: Posts dieses Nutzers
              ============================ -->
         <section class="feed">
-            <h2>Posts von <?php echo htmlspecialchars($profile['nutzerName']); ?></h2>
+            <div class="feed-title-container">
+                <span class="feed-title">Posts</span>
+            </div>
 
             <?php
             // Die Switch-Logik bleibt erhalten für den Fall, dass man Ladezustände testen will

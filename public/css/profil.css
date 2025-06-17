@@ -241,16 +241,6 @@ div.profil-header.pb-name-untereinander {
     background-color: rgba(229, 57, 53, 0.1);
 }
 
-.logout-link i {
-    font-size: var(--font-size-xl);
-    color: var(--danger-color);
-    transition: color var(--transition-fast);
-}
-
-.logout-link:hover i {
-    color: var(--danger-hover);
-}
-
 /* Mobile Anpassungen */
 @media (max-width: 768px) {
     .posts {
@@ -313,4 +303,40 @@ div.profil-header.pb-name-untereinander {
         right: var(--spacing-sm);
         padding: var(--spacing-xs);
     }
+}
+
+.custom-logout-icon {
+    height: 24px;
+    width: 24px;
+}
+
+/* Titel für den Feed-Bereich */
+.feed-title-container {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: var(--spacing-lg) 0;
+    color: var(--text-secondary);
+}
+
+.feed-title-container::before,
+.feed-title-container::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.feed-title-container::before {
+    margin-right: var(--spacing-sm);
+}
+
+.feed-title-container::after {
+    margin-left: var(--spacing-sm);
+}
+
+.feed-title {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
