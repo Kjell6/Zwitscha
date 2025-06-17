@@ -248,6 +248,11 @@
         padding: var(--spacing-xxs) var(--spacing-xs) 0;
     }
 
+    .post-actions .post-reactions {
+        justify-content: center;
+        width: 100%;
+    }
+
     .post-actions .comment-link {
         width: 100%;
     }

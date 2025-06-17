@@ -140,26 +140,29 @@ if ($showFollowedOnly) {
     <?php endif; ?>
 
     <!-- Post Erstellung Form -->
-    <form method="POST" enctype="multipart/form-data" class="post-input-group">
+    <form method="POST" enctype="multipart/form-data" class="create-post-form">
         <input type="hidden" name="action" value="create_post">
-        <div class="user-profile">
-            <img src="<?php echo htmlspecialchars($currentUser['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" alt="Profilbild">
+        
+        <div class="form-header">
+            <img class="user-avatar" src="<?php echo htmlspecialchars($currentUser['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" alt="Dein Profilbild">
+            <textarea name="post_text" id="post-input" placeholder="Was gibt's Neues, <?php echo htmlspecialchars($currentUser['benutzername']); ?>?" maxlength="300" required></textarea>
         </div>
-        <div class="post-input-group-inputs">
-            <textarea name="post_text" id="post-input" placeholder="Verfasse einen Post..." maxlength="300" required></textarea>
-            <div class="image-upload">
-                <label for="image-input" class="image-upload-label">
-                    <i class="bi bi-image"></i> Bild hinzufügen
+
+        <div class="image-preview" id="image-preview" style="display: none;">
+            <img id="preview-img" src="#" alt="Bildvorschau">
+            <button id="remove-image" type="button" aria-label="Bild entfernen"><i class="bi bi-x-lg"></i></button>
+        </div>
+
+        <div class="form-footer">
+            <div class="form-actions">
+                <label for="image-input" class="action-button" aria-label="Bild hinzufügen">
+                    <i class="bi bi-image"></i>
                 </label>
                 <input type="file" name="post_image" id="image-input" accept="image/*" style="display: none;">
             </div>
-            <div class="image-preview" id="image-preview">
-                <img id="preview-img" src="#" alt="Bildvorschau">
-                <button id="remove-image" type="button"> <i class="bi bi-trash-fill"> </i></button>
-            </div>
-            <div class="post-input-bottom">
+            <div class="form-submit-area">
                 <p class="character-count">0/300</p>
-                <button id="post-button" type="submit">Veröffentlichen</button>
+                <button id="post-button" type="submit">Posten</button>
             </div>
         </div>
     </form>
