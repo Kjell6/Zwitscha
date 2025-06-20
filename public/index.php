@@ -145,7 +145,7 @@ if ($showFollowedOnly) {
         
         <div class="form-header">
             <img class="user-avatar" src="<?php echo htmlspecialchars($currentUser['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" alt="Dein Profilbild">
-            <textarea name="post_text" id="post-input" placeholder="Was gibt's Neues, <?php echo htmlspecialchars($currentUser['benutzername']); ?>?" maxlength="300" required></textarea>
+            <textarea name="post_text" id="post-input" placeholder="Was gibt's Neues?" maxlength="300" required></textarea>
         </div>
 
         <div class="image-preview" id="image-preview" style="display: none;">
