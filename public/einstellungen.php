@@ -213,44 +213,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script>
     // Live-Vorschau für Profilbild-Upload
-    document.getElementById('avatar').addEventListener('change', async function(event) {
+    document.getElementById('avatar').addEventListener('change', function(event) {
         const file = event.target.files[0];
         const previewImg = document.getElementById('avatar-preview-img');
         
         if (file) {
-            // Prüfe, ob es ein gültiges Bildformat ist - Safari iOS kompatibel
+            // Prüfe, ob es ein gültiges Bildformat ist
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-            const fileType = file.type.toLowerCase();
-            const isValidType = allowedTypes.some(type => 
-                fileType === type || 
-                (type === 'image/jpeg' && fileType === 'image/jpg') ||
-                (type === 'image/jpg' && fileType === 'image/jpeg')
-            );
-            
-            if (!isValidType) {
+            if (!allowedTypes.includes(file.type)) {
                 alert('Bitte wählen Sie ein gültiges Bildformat (JPG, PNG, GIF, WebP).');
                 previewImg.src = "getImage.php?type=user&id=<?php echo $currentUserId; ?>&t=<?php echo time(); ?>";
                 event.target.value = ''; // Eingabe zurücksetzen
                 return;
             }
 
-            try {
-                const compressedFile = await imageCompression(file, {
-                    maxSizeMB: 1,
-                    maxWidthOrHeight: 1024,
-                    useWebWorker: true
-                });
-                
-                const originalSizeMB = (file.size / 1024 / 1024).toFixed(2);
-                const compressedSizeMB = (compressedFile.size / 1024 / 1024).toFixed(2);
-                console.log(`Profilbild komprimiert: ${originalSizeMB}MB → ${compressedSizeMB}MB`);
-
-                previewImg.src = URL.createObjectURL(compressedFile);
-            } catch (error) {
-                console.error('Fehler bei der Bildkomprimierung:', error);
-                previewImg.src = "getImage.php?type=user&id=<?php echo $currentUserId; ?>&t=<?php echo time(); ?>";
+            // FileReader verwenden, um eine lokale Vorschau zu erstellen
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+            };
+            reader.onerror = function() {
                 alert('Vorschau konnte nicht geladen werden.');
-            }
+                previewImg.src = "getImage.php?type=user&id=<?php echo $currentUserId; ?>&t=<?php echo time(); ?>";
+            };
+            reader.readAsDataURL(file);
         }
     });
 </script>
