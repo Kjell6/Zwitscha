@@ -33,7 +33,18 @@ if (!function_exists('time_ago')) {
 
         foreach ($string as $k => &$v) {
             if ($values[$k]) {
-                $v = $values[$k] . ' ' . $v . ($values[$k] > 1 ? 'n' : '');
+                $plural = match ($k) {
+                    'y' => 'e',       // Jahre
+                    'm' => 'e',       // Monate
+                    'w' => 'n',       // Wochen
+                    'd' => 'e',       // Tage
+                    'h' => 'n',       // Stunden
+                    'i' => 'n',       // Minuten
+                    's' => 'n',       // Sekunden
+                    default => '',
+                };
+
+                $v = $values[$k] . ' ' . $v . ($values[$k] > 1 ? $plural : '');
             } else {
                 unset($string[$k]);
             }
