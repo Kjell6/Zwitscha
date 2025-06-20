@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $nutzerVerwaltung->registerUser($benutzername, $passwort);
         
         if ($result['success']) {
-            $message = $result['message'] . ' Du wirst in 3 Sekunden weitergeleitet.';
-            $redirect = true;
-            header("Refresh: 3; url=Login.php");
+            $successMessage = urlencode('Registrierung erfolgreich! Du kannst dich jetzt anmelden.');
+            header("Location: Login.php?message=" . $successMessage);
+            exit(); 
         } else {
             $error = $result['message'];
         }

@@ -3,6 +3,12 @@ session_start();
 require_once __DIR__ . '/php/NutzerVerwaltung.php';
 
 $error = '';
+$successMessage = '';
+
+// Prüfen, ob eine Erfolgsnachricht von der Registrierung übergeben wurde
+if (isset($_GET['message'])) {
+    $successMessage = htmlspecialchars($_GET['message']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $benutzername = isset($_POST['benutzername']) ? trim($_POST['benutzername']) : '';
@@ -60,7 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p>Melde dich mit deinem Account an</p>
                 </div>
 
-                <?php if (!empty($error)): ?>
+                <?php if (!empty($successMessage)): ?>
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span><?= $successMessage ?></span>
+                    </div>
+                <?php elseif (!empty($error)): ?>
                     <div class="alert alert-error">
                         <i class="bi bi-exclamation-triangle-fill"></i>
                         <span><?= htmlspecialchars($error) ?></span>

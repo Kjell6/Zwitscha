@@ -207,7 +207,8 @@ class NutzerVerwaltung {
 
         if (!$user) return false;
 
-        return $currentPassword === $user['passwort'];
+        // Passwort-Hash mit dem eingegebenen Passwort vergleichen
+        return password_verify($currentPassword, $user['passwort']);
     }
 
     /**
@@ -218,12 +219,13 @@ class NutzerVerwaltung {
      * @return bool True bei Erfolg.
      */
     public function updatePassword(int $userId, string $newPassword): bool {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $sql = "UPDATE nutzer SET passwort = ? WHERE id = ?";
         
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return false;
 
-        $stmt->bind_param("si", $newPassword, $userId);
+        $stmt->bind_param("si", $hashedPassword, $userId);
         $success = $stmt->execute();
         $stmt->close();
 
@@ -316,6 +318,9 @@ class NutzerVerwaltung {
             return ['success' => false, 'message' => 'Benutzername ist bereits vergeben.'];
         }
 
+        // Passwort sicher hashen
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
         $sql = "INSERT INTO nutzer (nutzerName, passwort, istAdministrator) VALUES (?, ?, ?)";
         
         $stmt = $this->db->prepare($sql);
@@ -324,7 +329,7 @@ class NutzerVerwaltung {
         }
 
         $isAdmin = 0;
-        $stmt->bind_param("ssi", $username, $password, $isAdmin);
+        $stmt->bind_param("ssi", $username, $hashedPassword, $isAdmin);
 
         if ($stmt->execute()) {
             $newUserId = $this->db->insert_id;
@@ -380,8 +385,10 @@ class NutzerVerwaltung {
         
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
-            // Direkter Passwortvergleich (unsicher, nur für dieses Beispiel)
-            if ($password === $user['passwort']) {
+            // Vergleiche das eingegebene Passwort mit dem Hash in der Datenbank
+            if (password_verify($password, $user['passwort'])) {
+                // Passwort aus den zurückgegebenen Daten entfernen, bevor es zurückgegeben wird
+                unset($user['passwort']);
                 return $user;
             }
         }

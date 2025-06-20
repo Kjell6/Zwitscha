@@ -61,13 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 
         // Post nur erstellen, wenn kein Fehler beim Bild-Upload aufgetreten ist
         if ($feedbackType !== 'error') {
-            $success = $postRepository->createPost($currentUserId, $postText, $imageData);
+            $newPostId = $postRepository->createPost($currentUserId, $postText, $imageData);
 
-            if ($success) {
+            if ($newPostId) {
                 $feedbackMessage = 'Post erfolgreich angelegt.';
                 $feedbackType    = 'success';
                 // Leere die Post-Variable, um doppeltes Senden zu verhindern (Post/Redirect/Get Pattern)
-                header("Location: " . $_SERVER['PHP_SELF']);
+                header("Location: " . $_SERVER['PHP_SELF'] . '#post-' . $newPostId);
                 exit();
             } else {
                 $feedbackMessage = 'Fehler beim Speichern des Posts in der Datenbank.';

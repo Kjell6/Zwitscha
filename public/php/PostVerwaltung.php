@@ -117,9 +117,9 @@ class PostVerwaltung {
      * @param int $userId Die ID des Nutzers, der den Post erstellt.
      * @param string $text Der Inhalt des Posts.
      * @param string|null $imageData Die binären Daten des hochgeladenen Bildes (optional).
-     * @return bool True bei Erfolg, false bei einem Fehler.
+     * @return int|false Die ID des neuen Posts bei Erfolg, sonst false.
      */
-    public function createPost(int $userId, string $text, ?string $imageData): bool {
+    public function createPost(int $userId, string $text, ?string $imageData): int|false {
         $sql = "INSERT INTO post (nutzer_id, text, bildDaten) VALUES (?, ?, ?)";
         
         $stmt = $this->db->prepare($sql);
@@ -131,10 +131,14 @@ class PostVerwaltung {
         // 'iss' steht für integer, string, string
         $stmt->bind_param("iss", $userId, $text, $imageData);
         
-        $success = $stmt->execute();
-        $stmt->close();
+        if ($stmt->execute()) {
+            $newPostId = $this->db->insert_id;
+            $stmt->close();
+            return $newPostId;
+        }
 
-        return $success;
+        $stmt->close();
+        return false;
     }
 
     /**
