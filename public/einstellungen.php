@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <!-- Profilbild ändern -->
-        <form method="POST" enctype="multipart/form-data" class="card">
+        <form id="avatar-form" method="POST" enctype="multipart/form-data" class="card">
             <fieldset>
                 <legend>Profilbild ändern</legend>
                 <div class="avatar-form-layout">
@@ -212,33 +212,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include 'footerMobile.php'; ?>
 
 <script>
-    // Live-Vorschau für Profilbild-Upload
-    document.getElementById('avatar').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const previewImg = document.getElementById('avatar-preview-img');
-        
-        if (file) {
-            // Prüfe, ob es ein gültiges Bildformat ist
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-            if (!allowedTypes.includes(file.type)) {
-                alert('Bitte wählen Sie ein gültiges Bildformat (JPG, PNG, GIF, WebP).');
-                previewImg.src = "getImage.php?type=user&id=<?php echo $currentUserId; ?>&t=<?php echo time(); ?>";
-                event.target.value = ''; // Eingabe zurücksetzen
-                return;
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarInput = document.getElementById('avatar');
+    const previewImg = document.getElementById('avatar-preview-img');
 
-            // FileReader verwenden, um eine lokale Vorschau zu erstellen
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-            };
-            reader.onerror = function() {
-                alert('Vorschau konnte nicht geladen werden.');
-                previewImg.src = "getImage.php?type=user&id=<?php echo $currentUserId; ?>&t=<?php echo time(); ?>";
-            };
-            reader.readAsDataURL(file);
+    avatarInput.addEventListener('change', async function() {
+        if (avatarInput.files.length === 0) {
+            return;
+        }
+
+        try {
+            // Die vorhandene, benutzerdefinierte Kompressor-Klasse verwenden
+            await window.imageCompressor.handleFileInput(avatarInput, previewImg, (compressedFile) => {
+                console.log('Bild erfolgreich komprimiert und Vorschau aktualisiert.');
+                // Die komprimierte Datei wird von der Bibliothek automatisch in das
+                // file-Input-Feld geschrieben, sodass das normale Formular-Submit funktioniert.
+            });
+        } catch (error) {
+            alert(error.message); // Zeige die Fehlermeldung aus der Bibliothek an
+            avatarInput.value = ''; // Setze das Input-Feld zurück
         }
     });
+});
 </script>
 
 </body>
