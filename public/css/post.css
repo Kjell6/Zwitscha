@@ -1,5 +1,6 @@
 /* Grundlegendes Styling für den einzelnen Post Container */
 .post {
+    cursor: pointer;
     border-bottom: var(--border-width) solid var(--border-color);
     padding: var(--spacing-sm) 0;
     margin-bottom: var(--spacing-sm);

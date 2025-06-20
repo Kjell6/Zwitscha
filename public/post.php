@@ -94,7 +94,7 @@ $reactionEmojiMap = [
 ];
 ?>
 
-<article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>">
+<article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>" onclick="navigateToPost(event, <?php echo $post['id']; ?>)">
     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
         <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image">
     </a>
@@ -127,7 +127,7 @@ $reactionEmojiMap = [
                 <div class="post-image-container">
                     <img src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
                          alt="Post-Bild"
-                         class="post-image"
+                         class="post-image no-post-details"
                          onclick="openLightbox('getImage.php?type=post&id=<?php echo $post['id']; ?>')"
                          style="cursor: pointer;">
                 </div>
@@ -160,3 +160,23 @@ $reactionEmojiMap = [
         </div>
     </main>
 </article>
+
+<?php
+// Das Script wird nur einmal pro Seitenaufruf deklariert, auch wenn mehrere Posts included werden.
+if (!function_exists('render_post_script')) {
+    function render_post_script() {
+        return '
+        <script>
+            function navigateToPost(event, postId) {
+                // Verhindere Navigation, wenn auf ein interaktives Element geklickt wurde.
+                if (event.target.closest(".no-post-details")) {
+                    return;
+                }
+                window.location.href = "postDetails.php?id=" + postId;
+            }
+        </script>
+        ';
+    }
+    echo render_post_script();
+}
+?>
