@@ -244,17 +244,24 @@
         flex-direction: column;
         align-items: flex-start;
         gap: var(--spacing-sm);
-
         padding: var(--spacing-xxs) var(--spacing-xs) 0;
     }
 
     .post-actions .post-reactions {
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-xs);
+        justify-content: start;
         width: 100%;
+    }
+
+    .reaction-form {
+        display: contents; /* Erlaubt dem Grid, die Buttons direkt zu steuern */
     }
 
     .post-actions .comment-link {
         width: 100%;
+        text-align: right;
     }
 
     .post-actions .comment-button {
