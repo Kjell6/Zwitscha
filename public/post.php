@@ -37,7 +37,7 @@ if (!function_exists('time_ago')) {
                     'y' => 'e',       // Jahre
                     'm' => 'e',       // Monate
                     'w' => 'n',       // Wochen
-                    'd' => 'e',       // Tage
+                    'd' => 'en',       // Tage
                     'h' => 'n',       // Stunden
                     'i' => 'n',       // Minuten
                     's' => 'n',       // Sekunden
