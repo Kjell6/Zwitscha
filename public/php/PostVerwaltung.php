@@ -20,8 +20,8 @@ class PostVerwaltung {
     public function getAllPosts(int $currentUserId): array {
         $sql = "
             SELECT 
-                p.id, p.text, p.bildPfad, p.datumZeit,
-                n.nutzerName AS autor, n.profilBild, n.id as userId,
+                p.id, p.text, p.bildDaten, p.datumZeit,
+                n.nutzerName AS autor, n.profilbild, n.id as userId,
                 (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
                 (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
                 (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,
@@ -49,8 +49,8 @@ class PostVerwaltung {
         // INNER JOIN auf die 'folge'-Tabelle, um nur relevante Posts zu filtern.
         $sql = "
             SELECT 
-                p.id, p.text, p.bildPfad, p.datumZeit,
-                n.nutzerName AS autor, n.profilBild, n.id as userId,
+                p.id, p.text, p.bildDaten, p.datumZeit,
+                n.nutzerName AS autor, n.profilbild, n.id as userId,
                 (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
                 (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
                 (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,
@@ -116,11 +116,11 @@ class PostVerwaltung {
      *
      * @param int $userId Die ID des Nutzers, der den Post erstellt.
      * @param string $text Der Inhalt des Posts.
-     * @param string|null $imagePath Der Pfad zum hochgeladenen Bild (optional).
+     * @param string|null $imageData Die binären Daten des hochgeladenen Bildes (optional).
      * @return bool True bei Erfolg, false bei einem Fehler.
      */
-    public function createPost(int $userId, string $text, ?string $imagePath): bool {
-        $sql = "INSERT INTO post (nutzer_id, text, bildPfad) VALUES (?, ?, ?)";
+    public function createPost(int $userId, string $text, ?string $imageData): bool {
+        $sql = "INSERT INTO post (nutzer_id, text, bildDaten) VALUES (?, ?, ?)";
         
         $stmt = $this->db->prepare($sql);
         if (!$stmt) {
@@ -129,7 +129,7 @@ class PostVerwaltung {
         }
 
         // 'iss' steht für integer, string, string
-        $stmt->bind_param("iss", $userId, $text, $imagePath);
+        $stmt->bind_param("iss", $userId, $text, $imageData);
         
         $success = $stmt->execute();
         $stmt->close();
@@ -193,8 +193,8 @@ class PostVerwaltung {
     public function getPostById(int $postId, int $currentUserId): ?array {
         $sql = "
             SELECT 
-                p.id, p.text, p.bildPfad, p.datumZeit,
-                n.nutzerName AS autor, n.profilBild, n.id as userId,
+                p.id, p.text, p.bildDaten, p.datumZeit,
+                n.nutzerName AS autor, n.profilbild, n.id as userId,
                 (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
                 (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
                 (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,
@@ -262,7 +262,7 @@ class PostVerwaltung {
             SELECT 
                 k.id, k.text, k.datumZeit,
                 n.nutzerName AS autor,
-                IF(n.profilBild = '', 'assets/placeholder-profilbild.jpg', n.profilBild) as profilBild,
+                n.profilbild,
                 n.id as userId
             FROM kommentar k
             JOIN nutzer n ON k.nutzer_id = n.id
@@ -352,8 +352,8 @@ class PostVerwaltung {
     public function getPostsByUserId(int $userId, int $currentUserId): array {
         $sql = "
             SELECT 
-                p.id, p.text, p.bildPfad, p.datumZeit,
-                n.nutzerName AS autor, n.profilBild, n.id as userId,
+                p.id, p.text, p.bildDaten, p.datumZeit,
+                n.nutzerName AS autor, n.profilbild, n.id as userId,
                 (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
                 (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
                 (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,

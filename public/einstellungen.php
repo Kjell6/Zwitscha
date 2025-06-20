@@ -84,39 +84,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($_FILES['avatar']['size'] > 50 * 1024 * 1024) { // 50 MB Limit
                 $error = "Das Bild ist zu groß. Maximal 50 MB sind erlaubt.";
             } else {
-                // Upload-Verzeichnis erstellen falls es nicht existiert
-                $uploadDir = __DIR__ . '/assets/uploads/profile/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
-                
-                // Sicherer Dateiname generieren
-                $fileExtension = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
-                $fileName = 'profile_' . $currentUserId . '_' . uniqid() . '.' . $fileExtension;
-                $targetPath = $uploadDir . $fileName;
-                $relativePath = 'assets/uploads/profile/' . $fileName;
-                
-                if (move_uploaded_file($_FILES['avatar']['tmp_name'], $targetPath)) {
-                    // Altes Profilbild löschen (falls es kein Placeholder ist)
-                    $oldImage = $currentUser['profilBild'];
-                    if ($oldImage && strpos($oldImage, 'placeholder') === false && file_exists(__DIR__ . '/' . $oldImage)) {
-                        unlink(__DIR__ . '/' . $oldImage);
-                    }
-                    
-                    $success = $nutzerVerwaltung->updateProfileImage($currentUserId, $relativePath);
+                $imageData = file_get_contents($_FILES['avatar']['tmp_name']);
+                if ($imageData === false) {
+                    $error = "Fehler beim Lesen der Bilddatei.";
+                } else {
+                    $success = $nutzerVerwaltung->updateProfileImage($currentUserId, $imageData);
                     if ($success) {
                         $message = "Profilbild wurde erfolgreich aktualisiert.";
-                        // Aktuelle Nutzerdaten neu laden
+                        // Aktuelle Nutzerdaten neu laden, damit das neue Bild angezeigt wird
                         $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
                     } else {
                         $error = "Fehler beim Speichern des Profilbilds in der Datenbank.";
-                        // Hochgeladene Datei wieder löschen
-                        if (file_exists($targetPath)) {
-                            unlink($targetPath);
-                        }
                     }
-                } else {
-                    $error = "Fehler beim Hochladen der Datei.";
                 }
             }
         } else {
@@ -170,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="avatar-preview">
-                        <img id="avatar-preview-img" src="<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>" alt="Vorschau" />
+                        <img id="avatar-preview-img" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>&t=<?php echo time(); ?>" alt="Vorschau" />
                     </div>
 
                 </div>
@@ -248,27 +227,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 (type === 'image/jpg' && fileType === 'image/jpeg')
             );
             
-            if (!isValidType && file.size > 0) {
-                alert('Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.');
-                event.target.value = ''; // Input zurücksetzen
+            if (!isValidType) {
+                alert('Bitte wählen Sie ein gültiges Bildformat (JPG, PNG, GIF, WebP).');
+                previewImg.src = "getImage.php?type=user&id=<?php echo $currentUserId; ?>&t=<?php echo time(); ?>";
+                event.target.value = ''; // Eingabe zurücksetzen
                 return;
             }
-            
+
             try {
-                // Automatische Bildkomprimierung vor Upload
-                await window.imageCompressor.handleFileInput(event.target, previewImg, (compressedFile) => {
-                    const originalSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                    const compressedSizeMB = (compressedFile.size / (1024 * 1024)).toFixed(2);
-                    console.log(`Profilbild komprimiert: ${originalSizeMB}MB → ${compressedSizeMB}MB`);
+                const compressedFile = await imageCompression(file, {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 1024,
+                    useWebWorker: true
                 });
+                
+                const originalSizeMB = (file.size / 1024 / 1024).toFixed(2);
+                const compressedSizeMB = (compressedFile.size / 1024 / 1024).toFixed(2);
+                console.log(`Profilbild komprimiert: ${originalSizeMB}MB → ${compressedSizeMB}MB`);
+
+                previewImg.src = URL.createObjectURL(compressedFile);
             } catch (error) {
-                alert('Fehler bei der Bildverarbeitung: ' + error.message);
-                event.target.value = '';
-                previewImg.src = "<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>";
+                console.error('Fehler bei der Bildkomprimierung:', error);
+                previewImg.src = "getImage.php?type=user&id=<?php echo $currentUserId; ?>&t=<?php echo time(); ?>";
+                alert('Vorschau konnte nicht geladen werden.');
             }
-        } else {
-            // Wenn keine Datei ausgewählt, zurück zum ursprünglichen Bild
-            previewImg.src = "<?php echo htmlspecialchars($currentUser['profilBild'] ?: 'assets/placeholder-profilbild-2.png'); ?>";
         }
     });
 </script>

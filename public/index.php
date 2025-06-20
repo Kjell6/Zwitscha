@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
         $feedbackType    = 'error';
 
     } else {
-        $imagePath = null;
+        $imageData = null;
         // Prüfen, ob ein Bild hochgeladen wurde und fehlerfrei ist
         if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
             // Datei-Validierung
@@ -48,22 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
                 $feedbackMessage = 'Das Bild ist zu groß. Maximal 50 MB sind erlaubt.';
                 $feedbackType = 'error';
             } else {
-                // Upload-Verzeichnis erstellen falls es nicht existiert
-                $uploadDir = __DIR__ . '/assets/uploads/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
-                
-                // Sicherer Dateiname generieren
-                $fileExtension = pathinfo($_FILES['post_image']['name'], PATHINFO_EXTENSION);
-                $fileName = 'post_' . $currentUserId . '_' . uniqid() . '.' . $fileExtension;
-                $targetPath = $uploadDir . $fileName;
-                $relativePath = 'assets/uploads/' . $fileName;
-                
-                if (move_uploaded_file($_FILES['post_image']['tmp_name'], $targetPath)) {
-                    $imagePath = $relativePath;
-                } else {
-                    $feedbackMessage = 'Fehler beim Hochladen der Datei.';
+                $imageData = file_get_contents($_FILES['post_image']['tmp_name']);
+                if ($imageData === false) {
+                    $feedbackMessage = 'Fehler beim Lesen der Bilddatei.';
                     $feedbackType = 'error';
                 }
             }
@@ -74,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 
         // Post nur erstellen, wenn kein Fehler beim Bild-Upload aufgetreten ist
         if ($feedbackType !== 'error') {
-            $success = $postRepository->createPost($currentUserId, $postText, $imagePath);
+            $success = $postRepository->createPost($currentUserId, $postText, $imageData);
 
             if ($success) {
                 $feedbackMessage = 'Post erfolgreich angelegt.';
@@ -144,8 +131,8 @@ if ($showFollowedOnly) {
         <input type="hidden" name="action" value="create_post">
 
         <div class="form-header">
-            <img class="user-avatar" src="<?php echo htmlspecialchars($currentUser['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" alt="Dein Profilbild">
-            <textarea name="post_text" id="post-input" placeholder="Was gibt's Neues, <?php echo htmlspecialchars($currentUser['benutzername']); ?>?" maxlength="300" required></textarea>
+            <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" alt="Dein Profilbild">
+            <textarea name="post_text" id="post-input" placeholder="Was gibt's Neues?" maxlength="300" required></textarea>
         </div>
 
         <div class="image-preview" id="image-preview" style="display: none;">

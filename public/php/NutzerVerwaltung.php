@@ -20,7 +20,7 @@ class NutzerVerwaltung {
             SELECT 
                 n.id,
                 n.nutzerName,
-                IF(n.profilBild = '' OR n.profilBild IS NULL, 'assets/placeholder-profilbild.jpg', n.profilBild) as profilBild,
+                n.profilbild,
                 n.erstellungsDatum AS registrierungsDatum,
                 (SELECT COUNT(*) FROM folge WHERE gefolgter_id = n.id) AS followerCount,
                 (SELECT COUNT(*) FROM folge WHERE folgender_id = n.id) AS followingCount,
@@ -103,7 +103,7 @@ class NutzerVerwaltung {
             SELECT 
                 n.id,
                 n.nutzerName,
-                IF(n.profilBild = '' OR n.profilBild IS NULL, 'assets/placeholder-profilbild.jpg', n.profilBild) as profilBild,
+                n.profilbild,
                 (SELECT COUNT(*) FROM folge WHERE gefolgter_id = n.id) AS followerCount
             FROM nutzer n
             WHERE n.nutzerName LIKE ?
@@ -131,7 +131,7 @@ class NutzerVerwaltung {
      * @return array|null Die Benutzerdaten oder null, wenn nicht gefunden.
      */
     public function getUserById(int $userId): ?array {
-        $sql = "SELECT id, nutzerName, profilBild, istAdministrator, erstellungsDatum FROM nutzer WHERE id = ?";
+        $sql = "SELECT id, nutzerName, profilbild, istAdministrator, erstellungsDatum FROM nutzer WHERE id = ?";
         
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return null;
@@ -234,16 +234,16 @@ class NutzerVerwaltung {
      * Aktualisiert das Profilbild eines Nutzers.
      *
      * @param int $userId Die ID des Nutzers.
-     * @param string $imagePath Der Pfad zum neuen Profilbild.
+     * @param string $imageData Die binären Daten des neuen Profilbilds.
      * @return bool True bei Erfolg.
      */
-    public function updateProfileImage(int $userId, string $imagePath): bool {
-        $sql = "UPDATE nutzer SET profilBild = ? WHERE id = ?";
+    public function updateProfileImage(int $userId, string $imageData): bool {
+        $sql = "UPDATE nutzer SET profilbild = ? WHERE id = ?";
         
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return false;
 
-        $stmt->bind_param("si", $imagePath, $userId);
+        $stmt->bind_param("si", $imageData, $userId);
         $success = $stmt->execute();
         $stmt->close();
 
@@ -312,49 +312,29 @@ class NutzerVerwaltung {
      * @return array Ergebnis mit ['success' => bool, 'message' => string, 'userId' => int|null]
      */
     public function registerUser(string $username, string $password): array {
-        // Eingabe validieren
-        $username = trim($username);
-        if (empty($username)) {
-            return ['success' => false, 'message' => 'Benutzername darf nicht leer sein.', 'userId' => null];
-        }
-        
-        if (strlen($username) < 3) {
-            return ['success' => false, 'message' => 'Benutzername muss mindestens 3 Zeichen lang sein.', 'userId' => null];
-        }
-        
-        if (strlen($username) > 15) {
-            return ['success' => false, 'message' => 'Benutzername darf maximal 15 Zeichen lang sein.', 'userId' => null];
-        }
-        
-        if (empty($password)) {
-            return ['success' => false, 'message' => 'Passwort darf nicht leer sein.', 'userId' => null];
-        }
-
-        // Prüfen ob Benutzername bereits existiert
         if ($this->usernameExists($username)) {
-            return ['success' => false, 'message' => 'Benutzername ist bereits vergeben.', 'userId' => null];
+            return ['success' => false, 'message' => 'Benutzername ist bereits vergeben.'];
         }
 
-        // Nutzer in Datenbank einfügen
-        $sql = "INSERT INTO nutzer (nutzerName, passwort, profilBild, istAdministrator) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO nutzer (nutzerName, passwort, istAdministrator) VALUES (?, ?, ?)";
+        
         $stmt = $this->db->prepare($sql);
-        
         if (!$stmt) {
-            return ['success' => false, 'message' => 'Datenbankfehler beim Erstellen des Accounts.', 'userId' => null];
+            return ['success' => false, 'message' => 'Datenbankfehler bei der Vorbereitung.'];
         }
 
-        $defaultProfileImage = 'assets/placeholder-profilbild.jpg';
-        $isAdmin = 0; // Neue Nutzer sind standardmäßig keine Admins
-        
-        $stmt->bind_param("sssi", $username, $password, $defaultProfileImage, $isAdmin);
-        
+        $isAdmin = 0;
+        $stmt->bind_param("ssi", $username, $password, $isAdmin);
+
         if ($stmt->execute()) {
-            $userId = $this->db->insert_id;
-            $stmt->close();
-            return ['success' => true, 'message' => 'Account erfolgreich erstellt!', 'userId' => $userId];
+            $newUserId = $this->db->insert_id;
+            return [
+                'success' => true, 
+                'message' => 'Registrierung erfolgreich!', 
+                'userId' => $newUserId
+            ];
         } else {
-            $stmt->close();
-            return ['success' => false, 'message' => 'Fehler beim Erstellen des Accounts.', 'userId' => null];
+            return ['success' => false, 'message' => 'Registrierung fehlgeschlagen.'];
         }
     }
 
@@ -386,23 +366,27 @@ class NutzerVerwaltung {
      * @return array|null Die Benutzerdaten bei erfolgreicher Authentifizierung oder null.
      */
     public function authenticateUser(string $username, string $password): ?array {
-        $sql = "SELECT id, nutzerName, passwort, profilBild, istAdministrator, erstellungsDatum FROM nutzer WHERE nutzerName = ? AND passwort = ?";
-        $stmt = $this->db->prepare($sql);
+        $sql = "SELECT id, nutzerName, passwort, profilbild, istAdministrator, erstellungsDatum FROM nutzer WHERE nutzerName = ?";
         
-        if (!$stmt) return null;
-
-        $stmt->bind_param("ss", $username, $password);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-        $stmt->close();
-
-        if ($user) {
-            // Passwort aus den zurückgegebenen Daten entfernen
-            unset($user['passwort']);
-            return $user;
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("DB-Fehler bei authenticateUser prepare: " . $this->db->error);
+            return null;
         }
 
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 1) {
+            $user = $result->fetch_assoc();
+            // Direkter Passwortvergleich (unsicher, nur für dieses Beispiel)
+            if ($password === $user['passwort']) {
+                return $user;
+            }
+        }
+        
+        $stmt->close();
         return null;
     }
 } 

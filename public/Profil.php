@@ -137,10 +137,10 @@ if ($profile) {
               7) Profil-Kopfbereich (dynamisch)
              ============================ -->
         <div class="profil-header">
-            <img src="<?php echo htmlspecialchars($profile['profilBild']); ?>" 
+            <img src="getImage.php?type=user&id=<?php echo $profile['id']; ?>" 
                  alt="Profilbild" 
                  class="profilbild" 
-                 onclick="openLightbox('<?php echo htmlspecialchars($profile['profilBild']); ?>')"
+                 onclick="openLightbox('getImage.php?type=user&id=<?php echo $profile['id']; ?>')"
                  style="cursor: pointer;" />
 
             <div class="profil-header pb-name-untereinander">

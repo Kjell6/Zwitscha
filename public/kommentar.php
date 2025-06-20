@@ -13,13 +13,13 @@ $canDeleteComment = $isOwner || $isAdmin;
 ?>
 
 <article class="post comment-layout"> <a href="Profil.php?userid=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="no-post-details comment-profil-link">
-        <img src="<?php echo htmlspecialchars($comment_for_template['profilBild']); ?>" class="post-user-image" alt="Profilbild von <?php echo htmlspecialchars($comment_for_template['autor']); ?>">
+        <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="post-user-image" alt="Profilbild von <?php echo htmlspecialchars($comment_for_template['autor']); ?>">
     </a>
 
     <main class="post-main-content">
         <section class="post-user-infos">
             <a href="Profil.php?userid=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="no-post-details comment-profil-link-inline">
-                <img src="<?php echo htmlspecialchars($comment_for_template['profilBild']); ?>" class="post-user-image-inline" alt="">
+                <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="post-user-image-inline" alt="">
             </a>
 
             <div class="post-user-details">

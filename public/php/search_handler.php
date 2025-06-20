@@ -30,7 +30,7 @@ try {
         $results[] = [
             'id' => (int)$user['id'],
             'name' => $user['nutzerName'],
-            'avatar' => $user['profilBild'],
+            'avatar' => 'getImage.php?type=user&id=' . $user['id'],
             'profileUrl' => 'Profil.php?userid=' . $user['id'],
         ];
     }

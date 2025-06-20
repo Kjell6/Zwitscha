@@ -96,12 +96,12 @@ $reactionEmojiMap = [
 
 <article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>">
     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-        <img src="<?php echo htmlspecialchars($post['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" class="post-user-image">
+        <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image">
     </a>
     <main class="post-main-content">
         <section class="post-user-infos">
             <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-                <img src="<?php echo htmlspecialchars($post['profilBild'] ?? 'assets/placeholder-profilbild.jpg'); ?>" class="post-user-image-inline">
+                <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image-inline">
             </a>
             <div class="post-user-details">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
@@ -123,12 +123,12 @@ $reactionEmojiMap = [
         </section>
         <div class="post-content">
             <p><?php echo nl2br(htmlspecialchars($post['text'])); ?></p>
-            <?php if (!empty($post['bildPfad'])): ?>
+            <?php if (!empty($post['bildDaten'])): ?>
                 <div class="post-image-container">
-                    <img src="<?php echo htmlspecialchars($post['bildPfad']); ?>"
+                    <img src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
                          alt="Post-Bild"
                          class="post-image"
-                         onclick="openLightbox('<?php echo htmlspecialchars($post['bildPfad']); ?>')"
+                         onclick="openLightbox('getImage.php?type=post&id=<?php echo $post['id']; ?>')"
                          style="cursor: pointer;">
                 </div>
             <?php endif; ?>
