@@ -81,9 +81,7 @@ if (!function_exists('time_ago')) {
 
 <main class="container">
     <div class="page-header-container">
-        <a href="<?php echo htmlspecialchars($_SERVER['HTTP_REFERER'] ?? 'index.php'); ?>" class="back-button">
-            <button type="button">Zurück</button>
-        </a>
+        <button onclick="history.back()" class="back-button" type="button">Zurück</button>
         <h1>Post</h1>
     </div>
 

@@ -83,8 +83,7 @@ switch ($action) {
 // Das macht den Handler flexibel für index.php, Profil.php, etc.
 $redirectUrl = $_SERVER['HTTP_REFERER'] ?? '../index.php';
 
-// Umleiten mit einem Anker, um direkt zum bearbeiteten Post zu springen.
-if (isset($postId)) {
+if (isset($postId) && strpos($redirectUrl, 'postDetails.php') === false) {
     // Stelle sicher, dass der Anker korrekt an die URL angehängt wird.
     // Entferne zuerst einen eventuell vorhandenen Anker.
     $redirectUrl = strtok($redirectUrl, '#');
