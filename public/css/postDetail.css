@@ -40,7 +40,7 @@ body {
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius-md);
     padding: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     background-color: var(--light-color);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -136,6 +136,124 @@ body {
     background-color: var(--primary-hover);
 }
 
+.create-post-form {
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-sm);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid var(--border-color);
+    transition: box-shadow var(--transition-normal);
+}
+
+.create-post-form:focus-within {
+    box-shadow: 0 4px 12px rgba(34, 218, 38, 0.15);
+    border-color: rgba(34, 218, 38, 0.3);
+}
+
+.create-post-form .form-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.create-post-form .user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.create-post-form #post-input {
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
+    resize: vertical;
+    min-height: 24px;
+    font-size: 1.1rem;
+    font-family: var(--font-family-main);
+    color: var(--text-primary);
+    padding: var(--spacing-xs) 0;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+.create-post-form #post-input:focus {
+    outline: none;
+}
+
+/* Form Footer */
+.create-post-form .form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-xs);
+    margin-left: calc(48px + var(--spacing-sm)); /* Einrücken */
+    padding-top: var(--spacing-xs);
+    border-top: 1px solid var(--bg-color);
+}
+
+.create-post-form .form-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.create-post-form .action-button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: var(--spacing-xs);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.create-post-form .action-button:hover {
+    color: var(--primary-color);
+    background-color: var(--hover-color);
+}
+
+.create-post-form .form-submit-area {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.create-post-form .character-count {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.create-post-form #post-button {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    font-weight: bold;
+    border-radius: 50px; /* Pill-shape */
+    padding: 8px 20px;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.create-post-form #post-button:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.03);
+}
+
+.create-post-form #post-button:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+    transform: none;
+}
+
+
 /* Styling für die Kommentare-Sektion */
 .comments-section {
     padding: var(--spacing-md) 0;
@@ -196,4 +314,18 @@ body {
     .post-actions .post-reactions {
         max-width: 260px;
     }
+}
+
+.comment-submit-area {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.comment-submit-area .character-count {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    margin: 0;
 }

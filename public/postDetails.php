@@ -137,16 +137,26 @@ if (!$post) {
                     </form>
                 <?php endforeach; ?>
             </div>
-
-            <!-- Kommentar-Eingabeformular -->
-            <form method="POST" action="php/post_action_handler.php" class="comment-input-group">
-                <input type="hidden" name="action" value="create_comment">
-                <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                <textarea name="comment_text" id="comment-input" placeholder="Schreibe einen Kommentar..." maxlength="500" required></textarea>
-                <button id="comment-button" type="submit">Kommentieren</button>
-            </form>
         </section>
     </article>
+
+    <form method="POST" action="php/post_action_handler.php" class="create-post-form">
+        <input type="hidden" name="action" value="create_comment">
+        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+
+        <div class="form-header">
+            <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" alt="Dein Profilbild">
+            <textarea name="comment_text" id="post-input" placeholder="Schreibe einen Kommentar..." maxlength="300" required></textarea>
+        </div>
+
+        <div class="form-footer">
+            <div class="form-actions"></div>
+            <div class="form-submit-area">
+                <p class="character-count">0/300</p>
+                <button id="post-button" type="submit">Kommentieren</button>
+            </div>
+        </div>
+    </form>
 
     <!-- Kommentare Sektion -->
     <section class="comments-section">
@@ -181,10 +191,21 @@ if (!$post) {
 </footer>
 
 <script>
-    const commentInput = document.getElementById('comment-input');
+    const commentInput = document.getElementById('post-input');
+    const charCount = document.querySelector('.form-submit-area .character-count');
+
     commentInput.addEventListener('input', () => {
+        // Automatische Höhenanpassung
         commentInput.style.height = 'auto';
         commentInput.style.height = commentInput.scrollHeight + 'px';
+
+        // Zeichenzähler aktualisieren
+        const count = commentInput.value.length;
+        const maxLength = commentInput.maxLength;
+        charCount.textContent = count + '/' + maxLength;
+        
+        // Farbe ändern, wenn das Limit fast erreicht ist
+        charCount.style.color = count > (maxLength - 20) ? '#dc3545' : '#6c757d';
     });
 </script>
 
