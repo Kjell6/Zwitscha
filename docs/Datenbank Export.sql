@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 10.50.1.18:3308
--- Erstellungszeit: 20. Jun 2025 um 13:35
+-- Erstellungszeit: 20. Jun 2025 um 23:39
 -- Server-Version: 10.9.2-MariaDB-1:10.9.2+maria~ubu2204
 -- PHP-Version: 8.2.28
 
@@ -37,13 +37,13 @@ CREATE TABLE `folge` (
 --
 
 INSERT INTO `folge` (`folgender_id`, `gefolgter_id`) VALUES
-(1, 2),
 (5, 3),
 (3, 5),
 (4, 3),
 (5, 4),
 (4, 5),
-(11, 10);
+(3, 10),
+(3, 8);
 
 -- --------------------------------------------------------
 
@@ -64,8 +64,6 @@ CREATE TABLE `kommentar` (
 --
 
 INSERT INTO `kommentar` (`id`, `nutzer_id`, `post_id`, `text`, `datumZeit`) VALUES
-(3, 1, 2, 'Da hast du wohl recht. Es ist wirklich wunderschön in der Natur spazieren zu gehen.', '2025-06-12 11:48:14'),
-(5, 1, 19, 'xdgysg', '2025-06-13 10:29:47'),
 (6, 5, 21, 'Heyho, icke auch :O', '2025-06-16 13:56:20'),
 (10, 5, 23, 'Zwa zwi Zwitscher', '2025-06-16 13:59:03'),
 (11, 4, 21, 'na sicha', '2025-06-16 13:59:10'),
@@ -75,7 +73,10 @@ INSERT INTO `kommentar` (`id`, `nutzer_id`, `post_id`, `text`, `datumZeit`) VALU
 (15, 6, 28, 'Hi ich auch', '2025-06-16 14:17:29'),
 (16, 6, 26, 'L', '2025-06-16 14:18:11'),
 (17, 3, 36, '🛐', '2025-06-20 12:44:33'),
-(18, 3, 37, 'Heiliger Bimbam', '2025-06-20 12:48:52');
+(19, 10, 41, 'Jesus braucht diese Kissen!', '2025-06-20 22:31:54'),
+(20, 3, 33, 'Oh, guten Abend zurück 👋', '2025-06-20 22:46:52'),
+(21, 3, 23, 'Du sagst es', '2025-06-20 22:58:10'),
+(22, 3, 40, 'Wie lang hast du geschlafen?', '2025-06-20 23:22:24');
 
 -- --------------------------------------------------------
 
@@ -92,25 +93,7 @@ CREATE TABLE `nutzer` (
   `profilbild` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Daten für Tabelle `nutzer`
---
 
-INSERT INTO `nutzer` (`id`, `nutzerName`, `passwort`, `istAdministrator`, `erstellungsDatum`, `profilbild`) VALUES
-(1, 'beispielNutzer', 'passwort123', 1, '2025-05-06 13:00:16', NULL),
-(2, 'nutzer2', '1', 0, '2025-06-12 10:01:28', NULL),
-(3, 'Kjell', '060304', 1, '2025-06-16 13:55:31', NULL),
-(4, 'ferdi', '1234', 0, '2025-06-16 13:55:42', NULL),
-(5, 'Julian', 'Fortnite', 1, '2025-06-16 13:55:49', NULL),
-(6, 'StandartSkill', 'Skybase', 0, '2025-06-16 14:02:59', NULL),
-(7, 'DolceCrusto', 'DolceCrusto', 0, '2025-06-16 14:04:58', NULL),
-(8, 'Sondag', 'sondag', 0, '2025-06-16 14:05:19', NULL),
-(9, 'Max', 'Max', 0, '2025-06-20 12:35:11', NULL),
-(10, 'Jesus', 'Jesus', 0, '2025-06-20 12:42:50', NULL),
-(11, 'Jens2', 'Jens', 0, '2025-06-20 13:01:00', NULL),
-(12, 'Hallo', 'Hallo', 0, '2025-06-20 13:33:09', 0x6173736574732f706c616365686f6c6465722d70726f66696c62696c642e6a7067);
-
--- --------------------------------------------------------
 
 --
 -- Tabellenstruktur für Tabelle `post`
@@ -124,28 +107,7 @@ CREATE TABLE `post` (
   `bildDaten` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Daten für Tabelle `post`
---
 
-INSERT INTO `post` (`id`, `nutzer_id`, `text`, `datumZeit`, `bildDaten`) VALUES
-(2, 2, 'Gerade einen tollen Spaziergang gemacht. Die Natur ist wunderschön! 🌳', '2025-05-10 12:30:00', NULL),
-(8, 1, 'Leute, das ist der erste richtige Post, der auf Zwitscha gepostet wird!!!', '2025-06-11 20:16:20', NULL),
-(19, 1, 'hj', '2025-06-12 14:45:08', NULL),
-(21, 3, 'Hey Leute, benutzt noch wer anders Zwitscha?', '2025-06-16 13:56:04', NULL),
-(23, 5, 'Zwi zwa zwitscher', '2025-06-16 13:58:21', NULL),
-(24, 4, 'wacht auf!!1elf', '2025-06-16 14:03:02', NULL),
-(25, 7, 'Hallo liebe Pizzafreunde!', '2025-06-16 14:06:23', NULL),
-(26, 8, 'Bei uns gibt es frische und leckere Lachs Avocado Bagels!!!', '2025-06-16 14:07:44', NULL),
-(28, 6, 'Hey Loite bin neu hier', '2025-06-16 14:17:00', NULL),
-(30, 6, ':(', '2025-06-16 14:17:17', NULL),
-(33, 5, 'Guten Abend liebe Zwitscha Community', '2025-06-19 19:30:57', NULL),
-(35, 3, 'Jo Heute ist Freitag, ist das nicht cool?', '2025-06-20 12:30:14', NULL),
-(36, 10, 'Welt seid mir gegrüßt!', '2025-06-20 12:43:34', NULL),
-(37, 10, 'Just woke up like this', '2025-06-20 12:47:37', NULL),
-(38, 8, 'Bei uns gibt es leckere Zimtschnecken', '2025-06-20 12:53:39', NULL);
-
--- --------------------------------------------------------
 
 --
 -- Tabellenstruktur für Tabelle `Reaktion`
@@ -162,13 +124,10 @@ CREATE TABLE `Reaktion` (
 --
 
 INSERT INTO `Reaktion` (`nutzer_id`, `post_id`, `reaktionsTyp`) VALUES
-(1, 2, 'Ausrufezeichen'),
 (1, 8, 'Ausrufezeichen'),
 (1, 8, 'Daumen Hoch'),
-(1, 2, 'Lachen'),
 (1, 8, 'Herz'),
 (1, 8, 'Lachen'),
-(1, 2, 'Daumen Runter'),
 (4, 21, 'Lachen'),
 (3, 21, 'Daumen Hoch'),
 (4, 21, 'Herz'),
@@ -184,7 +143,11 @@ INSERT INTO `Reaktion` (`nutzer_id`, `post_id`, `reaktionsTyp`) VALUES
 (3, 30, 'Daumen Runter'),
 (3, 28, 'Herz'),
 (3, 36, 'Herz'),
-(11, 38, 'Daumen Hoch');
+(3, 36, 'Daumen Hoch'),
+(3, 33, 'Herz'),
+(3, 24, 'Ausrufezeichen'),
+(3, 40, 'Daumen Hoch'),
+(3, 40, 'Herz');
 
 --
 -- Indizes der exportierten Tabellen
@@ -234,19 +197,19 @@ ALTER TABLE `Reaktion`
 -- AUTO_INCREMENT für Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT für Tabelle `nutzer`
 --
 ALTER TABLE `nutzer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT für Tabelle `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- Constraints der exportierten Tabellen

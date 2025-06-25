@@ -91,8 +91,6 @@ $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
-$loadingState = $_GET['state'] ?? 'data'; // data, empty, error (für Testing)
-
 // Posts aus der Datenbank laden
 if ($showFollowedOnly) {
     $posts = $postRepository->getFollowedPosts($currentUserId);
@@ -170,56 +168,29 @@ if ($showFollowedOnly) {
     <!-- Dynamischer Feed -->
     <section class="feed">
         <?php
-        // Logik zur Anzeige der dynamischen Zustände
-        switch ($loadingState) {
-            case 'empty':
+        if (empty($posts)) {
+            if ($showFollowedOnly) {
+                ?>
+                <div class="empty-state">
+                    <i class="bi bi-people" style="font-size: 48px; margin-bottom: 20px;"></i>
+                    <h3>Keine Posts von gefolgten Nutzern</h3>
+                    <p>Du folgst noch niemandem oder deine gefolgten Nutzer haben noch keine Posts veröffentlicht.</p>
+                    <a href="index.php" class="btn btn-primary">Alle Posts anzeigen</a>
+                </div>
+                <?php
+            } else {
                 ?>
                 <div class="empty-state">
                     <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
                     <h3>Noch keine Posts vorhanden</h3>
-                    <p>Verfasse den ersten Post oder folge anderen Nutzern, um deren Posts zu sehen.</p>
+                    <p>Verfasse den ersten Post, um die Community zu starten!</p>
                 </div>
                 <?php
-                break;
-
-            case 'error':
-                ?>
-                <div class="error-state">
-                    <i class="bi bi-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-                    <h3>Fehler beim Laden der Posts</h3>
-                    <p>Die Posts konnten nicht geladen werden. Bitte versuchen Sie es später erneut.</p>
-                    <button onclick="window.location.reload()" class="btn btn-primary">Neu laden</button>
-                </div>
-                <?php
-                break;
-
-            case 'data':
-            default:
-                if (empty($posts)) {
-                    if ($showFollowedOnly) {
-                        ?>
-                        <div class="empty-state">
-                            <i class="bi bi-people" style="font-size: 48px; margin-bottom: 20px;"></i>
-                            <h3>Keine Posts von gefolgten Nutzern</h3>
-                            <p>Du folgst noch niemandem oder deine gefolgten Nutzer haben noch keine Posts veröffentlicht.</p>
-                            <a href="index.php" class="btn btn-primary">Alle Posts anzeigen</a>
-                        </div>
-                        <?php
-                    } else {
-                        ?>
-                        <div class="empty-state">
-                            <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
-                            <h3>Noch keine Posts vorhanden</h3>
-                            <p>Verfasse den ersten Post, um die Community zu starten!</p>
-                        </div>
-                        <?php
-                    }
-                } else {
-                    foreach ($posts as $post) {
-                        include 'post.php';
-                    }
-                }
-                break;
+            }
+        } else {
+            foreach ($posts as $post) {
+                include 'post.php';
+            }
         }
         ?>
     </section>

@@ -79,9 +79,6 @@ if ($profile) {
     $joinDateLabel = $month . ' ' . $year;
 }
 
-    // Ladezustand der Posts steuern
-    $loadingState = isset($_GET['state']) ? $_GET['state'] : 'data';
-
 } catch (Exception $e) {
     // Fehlerbehandlung: Zeige eine Fehlermeldung statt HTTP 500
     echo '<h1>Fehler beim Laden der Profilseite</h1>';
@@ -115,6 +112,7 @@ if ($profile) {
     <link rel="stylesheet" href="css/post.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="js/header_search.js" defer></script>
 </head>
 <body>
 
@@ -217,47 +215,18 @@ if ($profile) {
             </div>
 
             <?php
-            // Die Switch-Logik bleibt erhalten für den Fall, dass man Ladezustände testen will
-            switch ($loadingState) {
-                case 'empty':
-                    // Explizit leerer Zustand via ?state=empty
-                    ?>
-                    <div class="empty-state">
-                        <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
-                        <h3>Noch keine Posts vorhanden</h3>
-                        <p>Der Nutzer hat noch keine Posts erstellt.</p>
-                    </div>
-                    <?php
-                    break;
-
-                case 'error':
-                    // Explizit Fehlerzustand via ?state=error
-                    ?>
-                    <div class="error-state">
-                        <i class="bi bi-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-                        <h3>Fehler beim Laden der Posts</h3>
-                        <p>Die Beiträge konnten nicht geladen werden. Bitte versuche es später erneut.</p>
-                        <button onclick="window.location.reload()" class="btn btn-primary">Neu laden</button>
-                    </div>
-                    <?php
-                    break;
-
-                case 'data':
-                default:
-                    if (empty($posts)) {
-                        ?>
-                        <div class="empty-state">
-                            <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
-                            <h3>Noch keine Posts vorhanden</h3>
-                            <p><?php echo htmlspecialchars($profile['nutzerName']); ?> hat noch keine Posts erstellt.</p>
-                        </div>
-                        <?php
-                    } else {
-                        foreach ($posts as $post) {
-                            include 'post.php';
-                        }
-                    }
-                    break;
+            if (empty($posts)) {
+                ?>
+                <div class="empty-state">
+                    <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
+                    <h3>Noch keine Posts</h3>
+                    <p>Dieser Nutzer hat noch keine Posts verfasst.</p>
+                </div>
+                <?php
+            } else {
+                foreach ($posts as $post) {
+                    include 'post.php';
+                }
             }
             ?>
         </section>
