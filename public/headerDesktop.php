@@ -38,13 +38,15 @@ $currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
         </a>
 
         <?php if ($eingeloggt): ?>
-            <?php if ($currentPage === 'Profil.php'): ?>
-                <!-- Auf Profilseite: Abmelden -->
+            <?php
+            $isOwnProfile = ($currentPage === 'Profil.php' && isset($_GET['userid']) && (int)$_GET['userid'] === $currentUserId);
+            ?>
+            <?php if ($isOwnProfile): ?>
+                <!-- Auf dem EIGENEN Profil: Abmelden -->
                 <form method="post" style="display:inline;">
                     <button type="submit" name="logout" class="logout-button">Abmelden</button>
                 </form>
             <?php else: ?>
-                <!-- Auf anderen Seiten: Link zum Profil -->
                 <a href="Profil.php?userid=<?php echo $currentUserId; ?>" class="profile-link" title="<?php echo htmlspecialchars($currentUsername); ?>">
                     <i class="bi bi-person-fill"></i>
                 </a>
