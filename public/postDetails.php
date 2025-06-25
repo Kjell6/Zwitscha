@@ -61,8 +61,6 @@ if (!$post) {
     </div>
 
     <?php
-    // Post anzeigen
-    // Die Darstellung eines einzelnen Posts wird jetzt durch post.php gehandhabt
     ?>
     <article class="detail-post">
         <section class="post-user-infos-detail">

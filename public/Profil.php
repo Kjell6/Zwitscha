@@ -190,8 +190,12 @@ if ($profile) {
 
                 <!-- Dynamische Zähler: Follower, Folge ich, Posts -->
                 <div class="folgen-container">
-                    <p class="folge-info"><strong><?php echo $profile['followerCount']; ?></strong> <span>Follower</span></p>
-                    <p class="folge-info"><strong><?php echo $profile['followingCount']; ?></strong> <span>Folge ich</span></p>
+                    <a href="followerList.php?userid=<?php echo $profile['id']; ?>&type=followers" class="folge-info-link">
+                        <p class="folge-info"><strong><?php echo $profile['followerCount']; ?></strong> <span>Follower</span></p>
+                    </a>
+                    <a href="followerList.php?userid=<?php echo $profile['id']; ?>&type=following" class="folge-info-link">
+                        <p class="folge-info"><strong><?php echo $profile['followingCount']; ?></strong> <span>Folge ich</span></p>
+                    </a>
                     <p class="folge-info"><strong><?php echo $profile['postCount']; ?></strong> <span>Posts</span></p>
                 </div>
             </div>

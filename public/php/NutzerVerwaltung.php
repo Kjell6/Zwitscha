@@ -396,4 +396,64 @@ class NutzerVerwaltung {
         $stmt->close();
         return null;
     }
+
+    /**
+     * Holt alle Follower eines bestimmten Nutzers.
+     *
+     * @param int $userId Die ID des Nutzers, dessen Follower geholt werden sollen.
+     * @return array Eine Liste von Nutzern, die dem gegebenen Nutzer folgen.
+     */
+    public function getFollowers(int $userId): array {
+        $sql = "
+            SELECT 
+                n.id,
+                n.nutzerName,
+                n.profilbild
+            FROM nutzer n
+            JOIN folge f ON n.id = f.folgender_id
+            WHERE f.gefolgter_id = ?
+            ORDER BY n.nutzerName ASC
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $followers = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $followers;
+    }
+
+    /**
+     * Holt alle Nutzer, denen ein bestimmter Nutzer folgt.
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @return array Eine Liste von Nutzern, denen der gegebene Nutzer folgt.
+     */
+    public function getFollowing(int $userId): array {
+        $sql = "
+            SELECT 
+                n.id,
+                n.nutzerName,
+                n.profilbild
+            FROM nutzer n
+            JOIN folge f ON n.id = f.gefolgter_id
+            WHERE f.folgender_id = ?
+            ORDER BY n.nutzerName ASC
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $following = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $following;
+    }
 } 
