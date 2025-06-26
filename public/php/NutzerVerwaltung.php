@@ -314,6 +314,20 @@ class NutzerVerwaltung {
      * @return array Ergebnis mit ['success' => bool, 'message' => string, 'userId' => int|null]
      */
     public function registerUser(string $username, string $password): array {
+        // Validierung der Eingaben
+        if (strlen($username) < 3) {
+            return ['success' => false, 'message' => 'Benutzername muss mindestens 3 Zeichen lang sein.'];
+        }
+        if (strlen($username) > 20) {
+            return ['success' => false, 'message' => 'Benutzername darf maximal 20 Zeichen lang sein.'];
+        }
+        if (strlen($password) < 6) {
+            return ['success' => false, 'message' => 'Passwort muss mindestens 6 Zeichen lang sein.'];
+        }
+        if (strlen($password) > 100) {
+            return ['success' => false, 'message' => 'Passwort darf maximal 100 Zeichen lang sein.'];
+        }
+        
         if ($this->usernameExists($username)) {
             return ['success' => false, 'message' => 'Benutzername ist bereits vergeben.'];
         }

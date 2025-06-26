@@ -35,10 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newName = trim($_POST['new-name'] ?? '');
         if (empty($newName)) {
             $error = "Der Name darf nicht leer sein.";
-        } elseif (strlen($newName) < 2) {
-            $error = "Der Name muss mindestens 2 Zeichen lang sein.";
-        } elseif (strlen($newName) > 50) {
-            $error = "Der Name darf maximal 50 Zeichen lang sein.";
+        } elseif (strlen($newName) < 3) {
+            $error = "Der Name muss mindestens 3 Zeichen lang sein.";
+        } elseif (strlen($newName) > 20) {
+            $error = "Der Name darf maximal 20 Zeichen lang sein.";
         } else {
             $success = $nutzerVerwaltung->updateUserName($currentUserId, $newName);
             if ($success) {
@@ -62,6 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Das neue Passwort darf nur Buchstaben und Zahlen enthalten.";
         } elseif (strlen($newPassword) < 6) {
             $error = "Das neue Passwort muss mindestens 6 Zeichen lang sein.";
+        } elseif (strlen($newPassword) > 100) {
+            $error = "Das neue Passwort darf maximal 100 Zeichen lang sein.";
         } elseif ($newPassword !== $confirmPassword) {
             $error = "Die neuen Passwörter stimmen nicht überein.";
         } else {
@@ -163,6 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="new-name">Neuer Name:</label>
                 <input type="text" id="new-name" name="new-name" 
                        value="<?php echo htmlspecialchars($currentUser['nutzerName']); ?>" 
+                       minlength="3" maxlength="20"
                        required />
                 <button type="submit" name="change-name" class="button">Speichern</button>
             </fieldset>
@@ -184,6 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         required
                         pattern="[A-Za-z0-9]+"
                         minlength="6"
+                        maxlength="100"
                         title="Nur Buchstaben und Zahlen erlaubt. Mindestens 6 Zeichen."
                 />
 

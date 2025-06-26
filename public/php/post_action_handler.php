@@ -54,7 +54,7 @@ switch ($action) {
     case 'create_comment':
         $postId = (int)($_POST['post_id'] ?? 0);
         $commentText = trim($_POST['comment_text'] ?? '');
-        if ($postId > 0 && !empty($commentText) && strlen($commentText) <= 500) {
+        if ($postId > 0 && !empty($commentText) && strlen($commentText) <= 300) {
             $postRepository->createComment($postId, $currentUserId, $commentText);
         }
         break;

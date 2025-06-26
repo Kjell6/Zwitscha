@@ -11,6 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($benutzername) || empty($passwort)) {
         $error = 'Bitte Benutzername und Passwort eingeben.';
+    } elseif (strlen($benutzername) < 3 || strlen($benutzername) > 20) {
+        $error = 'Benutzername muss zwischen 3 und 20 Zeichen lang sein.';
+    } elseif (strlen($passwort) < 6 || strlen($passwort) > 100) {
+        $error = 'Passwort muss zwischen 6 und 100 Zeichen lang sein.';
     } else {
         // NutzerVerwaltung instanziieren und Registrierung versuchen
         $nutzerVerwaltung = new NutzerVerwaltung();
@@ -69,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="input-wrapper">
                         <input type="text" name="benutzername" id="benutzername" required 
                                placeholder="Wähle einen Benutzernamen"
+                               minlength="3" maxlength="20"
                                value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
                     </div>
                 </div>
@@ -77,7 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="passwort">Passwort</label>
                     <div class="input-wrapper">
                         <input type="password" name="passwort" id="passwort" required 
-                               placeholder="Erstelle ein sicheres Passwort" />
+                               placeholder="Erstelle ein sicheres Passwort"
+                               minlength="6" maxlength="100" />
                     </div>
                 </div>
 
