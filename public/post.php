@@ -17,6 +17,12 @@ if (!isset($currentUser)) {
     $currentUser = $currentUserId ? $nutzerVerwaltung->getUserById($currentUserId) : null;
 }
 
+// Stelle sicher, dass $nutzerVerwaltung immer eine Instanz ist.
+if (!isset($nutzerVerwaltung)) {
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    $nutzerVerwaltung = new NutzerVerwaltung();
+}
+
 // Berechtigung zum Löschen prüfen: Ist der Nutzer Admin ODER der Autor des Posts?
 $isOwner = $currentUser && (int)$post['userId'] === (int)$currentUser['id'];
 $isAdmin = $currentUser && isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
@@ -57,7 +63,7 @@ $reactionEmojiMap = getReactionEmojiMap();
             <?php endif; ?>
         </section>
         <div class="post-content">
-            <p><?php echo nl2br(htmlspecialchars($post['text'])); ?></p>
+            <p><?php echo nl2br(linkify_mentions($post['text'], $nutzerVerwaltung)); ?></p>
             <?php if (!empty($post['bildDaten'])): ?>
                 <div class="post-image-container">
                     <img src="getImage.php?type=post&id=<?php echo $post['id']; ?>"

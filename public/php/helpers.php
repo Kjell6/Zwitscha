@@ -75,4 +75,35 @@ if (!function_exists('getReactionEmojiMap')) {
             'Ausrufezeichen'=> '‼️',
         ];
     }
+}
+
+if (!function_exists('linkify_mentions')) {
+    function linkify_mentions(string $text, NutzerVerwaltung $nutzerVerwaltung): string {
+        // Teile den Text anhand von @-Erwähnungen auf.
+        $parts = preg_split('/(@\w+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $resultHtml = '';
+
+        foreach ($parts as $part) {
+            // Prüft, ob der Teil eine @-Erwähnung ist
+            if (isset($part[0]) && $part[0] === '@' && preg_match('/^@(\w+)$/', $part, $matches)) {
+                $username = $matches[1];
+                $user = $nutzerVerwaltung->getUserByUsername($username);
+
+                if ($user) {
+                    // Wenn der Nutzer existiert, erstelle einen Link
+                    $url = 'Profil.php?userid=' . urlencode($user['id']);
+                    $mentionHtml = htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
+                    $resultHtml .= '<a href="' . $url . '" class="mention-link no-post-details">' . $mentionHtml . '</a>';
+                } else {
+                    // Wenn der Nutzer nicht existiert, escape den Text
+                    $resultHtml .= htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
+                }
+            } else {
+                // Für alle anderen Textteile, nur escapen
+                $resultHtml .= htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
+            }
+        }
+
+        return $resultHtml;
+    }
 } 

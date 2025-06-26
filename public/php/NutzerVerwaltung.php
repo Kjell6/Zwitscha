@@ -146,6 +146,27 @@ class NutzerVerwaltung {
     }
 
     /**
+     * Holt die vollständigen Benutzerdaten für einen Nutzer anhand des Nutzernamens.
+     *
+     * @param string $username Der Nutzername.
+     * @return array|null Die Benutzerdaten oder null, wenn nicht gefunden.
+     */
+    public function getUserByUsername(string $username): ?array {
+        $sql = "SELECT id, nutzerName, profilbild, istAdministrator, erstellungsDatum FROM nutzer WHERE nutzerName = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return null;
+
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        
+        return $user ?: null;
+    }
+
+    /**
      * Ändert den Admin-Status eines Nutzers.
      *
      * @param int $userId Die ID des Nutzers, dessen Admin-Status geändert werden soll.
