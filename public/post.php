@@ -25,15 +25,8 @@ $canDelete = ($isAdmin || $isOwner);
 // Relative Zeit berechnen
 $time_label = time_ago($post['datumZeit']);
 
-// Mapping von DB-Reaktionstypen zu Emojis
-$reactionEmojiMap = [
-    'Daumen Hoch' => '👍',
-    'Daumen Runter' => '👎',
-    'Herz' => '❤️',
-    'Lachen' => '🤣',
-    'Fragezeichen' => '❓',
-    'Ausrufezeichen' => '‼️',
-];
+// Mapping von DB-Reaktionstypen zu Emojis (zentral definiert)
+$reactionEmojiMap = getReactionEmojiMap();
 ?>
 
 <article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>" onclick="navigateToPost(event, <?php echo $post['id']; ?>)">

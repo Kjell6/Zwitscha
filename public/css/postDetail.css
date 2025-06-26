@@ -314,6 +314,15 @@ body {
     .post-actions .post-reactions {
         max-width: 260px;
     }
+
+    .create-post-form .form-footer {
+        margin-left: 0;
+    }
+
+    .create-post-form .user-avatar {
+        display: none;
+    }
+
 }
 
 .comment-submit-area {

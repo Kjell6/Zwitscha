@@ -57,4 +57,22 @@ if (!function_exists('time_ago')) {
         $time_ago = $string ? implode(', ', $string) : 'gerade jetzt';
         return sprintf($full, $time_ago);
     }
+}
+
+if (!function_exists('getReactionEmojiMap')) {
+    /**
+     * Liefert die Zuordnung von Reaktionstyp (DB-Wert) zu Emoji-Zeichen.
+     *
+     * @return array<string,string>
+     */
+    function getReactionEmojiMap(): array {
+        return [
+            'Daumen Hoch'   => '👍',
+            'Daumen Runter' => '👎',
+            'Herz'          => '❤️',
+            'Lachen'        => '🤣',
+            'Fragezeichen'  => '❓',
+            'Ausrufezeichen'=> '‼️',
+        ];
+    }
 } 

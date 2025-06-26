@@ -3,10 +3,7 @@ require_once __DIR__ . '/php/NutzerVerwaltung.php';
 require_once __DIR__ . '/php/session_helper.php';
 
 // Prüfen ob angemeldet
-if (!isLoggedIn()) {
-    header("Location: Login.php");
-    exit();
-}
+requireLogin();
 
 $nutzerVerwaltung = new NutzerVerwaltung();
 

@@ -1,20 +1,5 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zwitscha</title>
-
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Globales Styling -->
-  <link rel="stylesheet" href="css/global.css">
-
-  <!-- Mobiler Footer -->
-  <link rel="stylesheet" href="css/mobileFooter.css">
-</head>
-
-
-
+<!-- Styles speziell für den mobilen Footer -->
+<link rel="stylesheet" href="css/mobileFooter.css" />
 
 <!-- Mobiler Footer -->
 <footer class="mobile-footer">

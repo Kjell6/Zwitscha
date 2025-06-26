@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/helpers.php';
 
 class PostVerwaltung {
     private mysqli $db;
@@ -77,10 +78,8 @@ class PostVerwaltung {
      * @return bool True bei Erfolg.
      */
     public function toggleReaction(int $userId, int $postId, string $emoji): bool {
-        $reactionMap = [
-            '👍' => 'Daumen Hoch', '👎' => 'Daumen Runter', '❤️' => 'Herz',
-            '🤣' => 'Lachen', '❓' => 'Fragezeichen', '‼️' => 'Ausrufezeichen',
-        ];
+        // Invertiertes Mapping (Emoji => DB-Reaktionstyp)
+        $reactionMap = array_flip(getReactionEmojiMap());
 
         if (!isset($reactionMap[$emoji])) {
             return false;

@@ -81,10 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 
 // ---- Dynamische Inhalte: Posts laden ----
 // Prüfen ob angemeldet
-if (!isLoggedIn()) {
-    header("Location: Login.php");
-    exit();
-}
+requireLogin();
 
 $currentUserId = getCurrentUserId();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
