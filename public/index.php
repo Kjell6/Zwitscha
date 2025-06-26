@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             if (!in_array($_FILES['post_image']['type'], $allowedTypes)) {
                 $feedbackMessage = 'Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.';
                 $feedbackType = 'error';
-            } elseif ($_FILES['post_image']['size'] > 50 * 1024 * 1024) { // 50 MB Limit
-                $feedbackMessage = 'Das Bild ist zu groß. Maximal 50 MB sind erlaubt.';
+            } elseif ($_FILES['post_image']['size'] > 2 * 1024 * 1024) { // 2 MB Limit (entspricht Server-Limit)
+                $feedbackMessage = 'Das Bild ist zu groß. Maximal 2 MB sind erlaubt.';
                 $feedbackType = 'error';
             } else {
                 $imageData = file_get_contents($_FILES['post_image']['tmp_name']);

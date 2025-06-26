@@ -39,6 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Der Name muss mindestens 3 Zeichen lang sein.";
         } elseif (strlen($newName) > 20) {
             $error = "Der Name darf maximal 20 Zeichen lang sein.";
+        } elseif (!preg_match('/^[a-zA-Z0-9._-]+$/', $newName)) {
+            $error = "Der Name darf nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche enthalten.";
         } else {
             $success = $nutzerVerwaltung->updateUserName($currentUserId, $newName);
             if ($success) {
@@ -58,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$nutzerVerwaltung->verifyCurrentPassword($currentUserId, $currentPassword)) {
             $error = "Das aktuelle Passwort ist falsch.";
-        } elseif (!ctype_alnum($newPassword)) {
-            $error = "Das neue Passwort darf nur Buchstaben und Zahlen enthalten.";
+        } elseif (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $newPassword)) {
+            $error = "Das neue Passwort enthält unerlaubte Zeichen.";
         } elseif (strlen($newPassword) < 6) {
             $error = "Das neue Passwort muss mindestens 6 Zeichen lang sein.";
         } elseif (strlen($newPassword) > 100) {
@@ -83,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if (!in_array($_FILES['avatar']['type'], $allowedTypes)) {
                 $error = "Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.";
-            } elseif ($_FILES['avatar']['size'] > 50 * 1024 * 1024) { // 50 MB Limit
-                $error = "Das Bild ist zu groß. Maximal 50 MB sind erlaubt.";
+            } elseif ($_FILES['avatar']['size'] > 2 * 1024 * 1024) { // 2 MB Limit (entspricht Server-Limit)
+                $error = "Das Bild ist zu groß. Maximal 2 MB sind erlaubt.";
             } else {
                 $imageData = file_get_contents($_FILES['avatar']['tmp_name']);
                 if ($imageData === false) {
@@ -165,7 +167,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="new-name">Neuer Name:</label>
                 <input type="text" id="new-name" name="new-name" 
                        value="<?php echo htmlspecialchars($currentUser['nutzerName']); ?>" 
+                       pattern="[a-zA-Z0-9._-]+"
                        minlength="3" maxlength="20"
+                       title="Nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche erlaubt"
                        required />
                 <button type="submit" name="change-name" class="button">Speichern</button>
             </fieldset>
@@ -185,10 +189,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         id="new-password"
                         name="new-password"
                         required
-                        pattern="[A-Za-z0-9]+"
+                        pattern="[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?~`]+"
                         minlength="6"
                         maxlength="100"
-                        title="Nur Buchstaben und Zahlen erlaubt. Mindestens 6 Zeichen."
+                        title="Buchstaben, Zahlen und Sonderzeichen erlaubt. Mindestens 6 Zeichen."
                 />
 
                 <label for="confirm-password">Neues Passwort bestätigen:</label>

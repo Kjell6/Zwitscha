@@ -321,6 +321,9 @@ class NutzerVerwaltung {
         if (strlen($username) > 20) {
             return ['success' => false, 'message' => 'Benutzername darf maximal 20 Zeichen lang sein.'];
         }
+        if (!preg_match('/^[a-zA-Z0-9._-]+$/', $username)) {
+            return ['success' => false, 'message' => 'Benutzername darf nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche enthalten.'];
+        }
         if (strlen($password) < 6) {
             return ['success' => false, 'message' => 'Passwort muss mindestens 6 Zeichen lang sein.'];
         }
@@ -339,7 +342,8 @@ class NutzerVerwaltung {
         
         $stmt = $this->db->prepare($sql);
         if (!$stmt) {
-            return ['success' => false, 'message' => 'Datenbankfehler bei der Vorbereitung.'];
+            error_log("DB-Fehler bei registerUser prepare: " . $this->db->error);
+            return ['success' => false, 'message' => 'Registrierung fehlgeschlagen. Bitte versuchen Sie es später erneut.'];
         }
 
         $isAdmin = 0;
@@ -347,13 +351,16 @@ class NutzerVerwaltung {
 
         if ($stmt->execute()) {
             $newUserId = $this->db->insert_id;
+            $stmt->close();
             return [
                 'success' => true, 
                 'message' => 'Registrierung erfolgreich!', 
                 'userId' => $newUserId
             ];
         } else {
-            return ['success' => false, 'message' => 'Registrierung fehlgeschlagen.'];
+            error_log("DB-Fehler bei registerUser execute: " . $stmt->error);
+            $stmt->close();
+            return ['success' => false, 'message' => 'Registrierung fehlgeschlagen. Bitte versuchen Sie es später erneut.'];
         }
     }
 

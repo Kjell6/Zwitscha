@@ -37,7 +37,8 @@ class db {
 
             // Verbindung prüfen
             if (self::$instance->connect_error) {
-                die("Verbindung zur Datenbank fehlgeschlagen: " . self::$instance->connect_error);
+                error_log("Datenbankverbindung fehlgeschlagen: " . self::$instance->connect_error);
+                die("Datenbankfehler. Bitte versuchen Sie es später erneut.");
             }
 
             // Zeichensatz auf utf8mb4 setzen für volle Unicode-Unterstützung

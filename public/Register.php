@@ -13,6 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Bitte Benutzername und Passwort eingeben.';
     } elseif (strlen($benutzername) < 3 || strlen($benutzername) > 20) {
         $error = 'Benutzername muss zwischen 3 und 20 Zeichen lang sein.';
+    } elseif (!preg_match('/^[a-zA-Z0-9._-]+$/', $benutzername)) {
+        $error = 'Benutzername darf nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche enthalten.';
     } elseif (strlen($passwort) < 6 || strlen($passwort) > 100) {
         $error = 'Passwort muss zwischen 6 und 100 Zeichen lang sein.';
     } else {
@@ -73,7 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="input-wrapper">
                         <input type="text" name="benutzername" id="benutzername" required 
                                placeholder="Wähle einen Benutzernamen"
+                               pattern="[a-zA-Z0-9._-]+"
                                minlength="3" maxlength="20"
+                               title="Nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche erlaubt"
                                value="<?php echo isset($_POST['benutzername']) ? htmlspecialchars($_POST['benutzername']) : ''; ?>" />
                     </div>
                 </div>
