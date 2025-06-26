@@ -90,13 +90,13 @@
 }
 
 
-.link {
+link {
     color: var(--primary-color);
     font-weight: 600;
     text-decoration: none;
 }
 
-.link:hover {
+link:hover {
     text-decoration: underline;
 }
 

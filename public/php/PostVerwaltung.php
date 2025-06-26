@@ -91,14 +91,14 @@ class PostVerwaltung {
                 (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
             FROM post p
             JOIN nutzer n ON p.nutzer_id = n.id
-            WHERE p.text LIKE ? OR p.text LIKE ?
+            WHERE p.text REGEXP ?
             ORDER BY p.datumZeit DESC
         ";
         
-        $hashtagPattern = '%#' . $this->db->real_escape_string($hashtag) . '%';
-        $hashtagPatternWithSpace = '%#' . $this->db->real_escape_string($hashtag) . ' %';
+        $escapedHashtag = $this->db->real_escape_string($hashtag);
+        $regexp = '(^|[[:space:]])#' . $escapedHashtag . '[[:>:]]';
 
-        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $hashtagPattern, $hashtagPatternWithSpace], 'iss');
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $regexp], 'is');
     }
 
     /**

@@ -86,7 +86,8 @@ if (!function_exists('linkify_content')) {
      * @return string Der Text mit umgewandelten Links als sicherem HTML.
      */
     function linkify_content(string $text, NutzerVerwaltung $nutzerVerwaltung): string {
-        $parts = preg_split('/([@#]\w+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+        // Regex, um nach @-Erwähnungen und #-Hashtags zu trennen
+        $parts = preg_split('/([@]\w+|[#][\wÄÖÜäöüß]+)/u', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $resultHtml = '';
 
         foreach ($parts as $part) {
@@ -107,7 +108,7 @@ if (!function_exists('linkify_content')) {
                 }
             }
             // Prüft auf #-Hashtag
-            elseif ($part[0] === '#' && preg_match('/^#(\w+)$/', $part, $matches)) {
+            elseif ($part[0] === '#' && preg_match('/^#([\wÄÖÜäöüß]+)$/u', $part, $matches)) {
                 $hashtag = $matches[1];
                 $url = 'hashtag.php?tag=' . urlencode($hashtag);
                 $linkHtml = htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
