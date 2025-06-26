@@ -63,7 +63,7 @@ $reactionEmojiMap = getReactionEmojiMap();
             <?php endif; ?>
         </section>
         <div class="post-content">
-            <p><?php echo nl2br(linkify_mentions($post['text'], $nutzerVerwaltung)); ?></p>
+            <p><?php echo linkify_content($post['text'], $nutzerVerwaltung); ?></p>
             <?php if (!empty($post['bildDaten'])): ?>
                 <div class="post-image-container">
                     <img src="getImage.php?type=post&id=<?php echo $post['id']; ?>"

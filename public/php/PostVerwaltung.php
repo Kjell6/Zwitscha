@@ -70,6 +70,38 @@ class PostVerwaltung {
     }
     
     /**
+     * Holt alle Posts, die einen bestimmten Hashtag enthalten.
+     *
+     * @param string $hashtag Der Hashtag, nach dem gesucht werden soll (ohne #).
+     * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers.
+     * @return array Ein Array von Posts.
+     */
+    public function getPostsByHashtag(string $hashtag, int $currentUserId): array {
+        $sql = "
+            SELECT 
+                p.id, p.text, p.bildDaten, p.datumZeit,
+                n.nutzerName AS autor, n.profilbild, n.id as userId,
+                (SELECT COUNT(*) FROM kommentar WHERE post_id = p.id) AS comments,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Hoch') AS count_like,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Daumen Runter') AS count_dislike,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Herz') AS count_heart,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Lachen') AS count_laugh,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Fragezeichen') AS count_question,
+                (SELECT COUNT(*) FROM Reaktion WHERE post_id = p.id AND reaktionsTyp = 'Ausrufezeichen') AS count_exclamation,
+                (SELECT GROUP_CONCAT(reaktionsTyp) FROM Reaktion WHERE post_id = p.id AND nutzer_id = ?) AS currentUserReactions
+            FROM post p
+            JOIN nutzer n ON p.nutzer_id = n.id
+            WHERE p.text LIKE ? OR p.text LIKE ?
+            ORDER BY p.datumZeit DESC
+        ";
+        
+        $hashtagPattern = '%#' . $this->db->real_escape_string($hashtag) . '%';
+        $hashtagPatternWithSpace = '%#' . $this->db->real_escape_string($hashtag) . ' %';
+
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $hashtagPattern, $hashtagPatternWithSpace], 'iss');
+    }
+
+    /**
      * Schaltet eine spezifische Reaktion für einen Post an oder aus.
      *
      * @param int $userId Die ID des Nutzers.

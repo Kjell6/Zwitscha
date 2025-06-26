@@ -77,33 +77,49 @@ if (!function_exists('getReactionEmojiMap')) {
     }
 }
 
-if (!function_exists('linkify_mentions')) {
-    function linkify_mentions(string $text, NutzerVerwaltung $nutzerVerwaltung): string {
-        // Teile den Text anhand von @-Erwähnungen auf.
-        $parts = preg_split('/(@\w+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+if (!function_exists('linkify_content')) {
+    /**
+     * Wandelt @-Erwähnungen und #-Hashtags in einem Text in Links um.
+     *
+     * @param string $text Der zu durchsuchende Text.
+     * @param NutzerVerwaltung $nutzerVerwaltung Eine Instanz der NutzerVerwaltung.
+     * @return string Der Text mit umgewandelten Links als sicherem HTML.
+     */
+    function linkify_content(string $text, NutzerVerwaltung $nutzerVerwaltung): string {
+        $parts = preg_split('/([@#]\w+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $resultHtml = '';
 
         foreach ($parts as $part) {
-            // Prüft, ob der Teil eine @-Erwähnung ist
-            if (isset($part[0]) && $part[0] === '@' && preg_match('/^@(\w+)$/', $part, $matches)) {
+            if (empty($part)) {
+                continue;
+            }
+
+            // Prüft auf @-Erwähnung
+            if ($part[0] === '@' && preg_match('/^@(\w+)$/', $part, $matches)) {
                 $username = $matches[1];
                 $user = $nutzerVerwaltung->getUserByUsername($username);
-
                 if ($user) {
-                    // Wenn der Nutzer existiert, erstelle einen Link
                     $url = 'Profil.php?userid=' . urlencode($user['id']);
-                    $mentionHtml = htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
-                    $resultHtml .= '<a href="' . $url . '" class="mention-link no-post-details">' . $mentionHtml . '</a>';
+                    $linkHtml = htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
+                    $resultHtml .= '<a href="' . $url . '" class="link no-post-details">' . $linkHtml . '</a>';
                 } else {
-                    // Wenn der Nutzer nicht existiert, escape den Text
                     $resultHtml .= htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
                 }
-            } else {
-                // Für alle anderen Textteile, nur escapen
+            }
+            // Prüft auf #-Hashtag
+            elseif ($part[0] === '#' && preg_match('/^#(\w+)$/', $part, $matches)) {
+                $hashtag = $matches[1];
+                $url = 'hashtag.php?tag=' . urlencode($hashtag);
+                $linkHtml = htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
+                $resultHtml .= '<a href="' . $url . '" class="link no-post-details">' . $linkHtml . '</a>';
+            }
+            // Normaler Text
+            else {
                 $resultHtml .= htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
             }
         }
 
-        return $resultHtml;
+        // Zeilenumbrüche anwenden
+        return nl2br($resultHtml, false);
     }
 } 
