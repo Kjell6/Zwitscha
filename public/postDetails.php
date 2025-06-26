@@ -98,7 +98,7 @@ $reactionEmojiMap = getReactionEmojiMap();
         </section>
 
         <div class="post-content-detail">
-            <p><?php echo nl2br(htmlspecialchars($post['text'])); ?></p>
+            <p><?php echo linkify_content($post['text'], $nutzerVerwaltung); ?></p>
 
             <?php if (!empty($post['bildDaten'])): ?>
                 <div class="post-image-container">

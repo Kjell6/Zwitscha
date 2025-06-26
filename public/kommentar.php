@@ -43,7 +43,7 @@ $canDeleteComment = $isOwner || $isAdmin;
         </section>
 
         <div class="post-content">
-            <p><?php echo nl2br(htmlspecialchars($comment_for_template['text'])); ?></p>
+            <p><?php echo linkify_content($comment_for_template['text'], $nutzerVerwaltung); ?></p>
         </div>
     </main>
 </article>
