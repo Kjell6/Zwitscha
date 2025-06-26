@@ -265,14 +265,6 @@ if ($showFollowedOnly) {
         previewImg.src = '#';
         imagePreview.style.display = 'none';
     });
-
-    // Reaktions-Forms per AJAX (optional für bessere UX)
-    document.querySelectorAll('.reaction-form').forEach(form => {
-        form.addEventListener('submit', (e) => {
-            // Hier könnte AJAX implementiert werden für nahtlose Reaktionen
-            // e.preventDefault();
-        });
-    });
 </script>
 </body>
 </html>
