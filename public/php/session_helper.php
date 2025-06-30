@@ -10,6 +10,31 @@ function ensureSessionStarted(): void {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
+
+    // Prüfen auf "Angemeldet bleiben"-Cookie, wenn nicht bereits eingeloggt
+    if (!isset($_SESSION['angemeldet']) && isset($_COOKIE['rememberme'])) {
+        $parts = explode(':', $_COOKIE['rememberme']);
+        if (count($parts) === 2) {
+            $selector = $parts[0];
+            $validator = $parts[1];
+
+            require_once __DIR__ . '/NutzerVerwaltung.php';
+            $nutzerVerwaltung = new NutzerVerwaltung();
+            $user = $nutzerVerwaltung->consumeRememberToken($selector, $validator);
+
+            if ($user) {
+                // Nutzer erfolgreich via Cookie authentifiziert, Session setzen
+                $_SESSION['angemeldet'] = true;
+                $_SESSION['eingeloggt'] = true;
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['nutzerName'];
+                $_SESSION['ist_admin'] = $user['istAdministrator'];
+            } else {
+                // Ungültiges Token, Cookie löschen
+                setcookie('rememberme', '', time() - 3600, '/');
+            }
+        }
+    }
 }
 
 /**
@@ -73,6 +98,19 @@ function requireLogin(string $redirectAfterLogin = ''): void {
  */
 function logout(): void {
     ensureSessionStarted();
+
+    // "Angemeldet bleiben"-Token löschen, falls vorhanden
+    if (isset($_COOKIE['rememberme'])) {
+        $parts = explode(':', $_COOKIE['rememberme']);
+        if (count($parts) === 2) {
+            $selector = $parts[0];
+            require_once __DIR__ . '/NutzerVerwaltung.php';
+            $nutzerVerwaltung = new NutzerVerwaltung();
+            $nutzerVerwaltung->deleteRememberToken($selector);
+        }
+        setcookie('rememberme', '', time() - 3600, '/');
+    }
+
     session_destroy();
     header("Location: Login.php");
     exit();

@@ -28,6 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['nutzerName'];
             $_SESSION['ist_admin'] = $user['istAdministrator'];
+
+            if (isset($_POST['remember_me'])) {
+                $nutzerVerwaltung->createRememberToken($user['id']);
+            }
             
             // Redirect zur ursprünglich gewünschten Seite oder zur Startseite
             $redirectUrl = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php';
@@ -93,6 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="password" name="passwort" id="passwort" required 
                                placeholder="Gib dein Passwort ein" />
                     </div>
+                </div>
+
+                <div class="form-group remember-me">
+                    <input type="checkbox" id="remember_me" name="remember_me" value="1">
+                    <label for="remember_me">Angemeldet bleiben</label>
                 </div>
 
                 <button type="submit" class="auth-button">

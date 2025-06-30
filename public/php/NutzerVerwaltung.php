@@ -498,4 +498,83 @@ class NutzerVerwaltung {
 
         return $following;
     }
+
+    /**
+     * Erstellt ein neues "Angemeldet bleiben"-Token für einen Nutzer.
+     *
+     * @param int $userId Die ID des Nutzers.
+     */
+    public function createRememberToken(int $userId): void {
+        $selektor = bin2hex(random_bytes(6));
+        $validator = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $validator);
+        $gueltigBis = (new DateTime('+30 days'))->format('Y-m-d H:i:s');
+
+        $sql = "INSERT INTO login_tokens (nutzer_id, selektor, tokenHash, gueltigBis) VALUES (?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("isss", $userId, $selektor, $tokenHash, $gueltigBis);
+        $stmt->execute();
+        $stmt->close();
+
+        setcookie(
+            'rememberme',
+            $selektor . ':' . $validator,
+            [
+                'expires' => strtotime($gueltigBis),
+                'path' => '/',
+                'secure' => true, // Nur über HTTPS senden
+                'httponly' => true, // Für JavaScript nicht zugänglich
+                'samesite' => 'Lax' // Schutz gegen CSRF
+            ]
+        );
+    }
+
+    /**
+     * Überprüft ein "Angemeldet bleiben"-Token und loggt den Nutzer bei Erfolg ein.
+     *
+     * @param string $selektor Der Selector-Teil des Tokens.
+     * @param string $validator Der Validator-Teil des Tokens.
+     * @return array|null Die Nutzerdaten bei Erfolg, sonst null.
+     */
+    public function consumeRememberToken(string $selektor, string $validator): ?array {
+        $sql = "SELECT nutzer_id, tokenHash, gueltigBis FROM login_tokens WHERE selektor = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("s", $selektor);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $token_data = $result->fetch_assoc();
+        $stmt->close();
+
+        if (!$token_data) {
+            return null;
+        }
+
+        if (new DateTime() > new DateTime($token_data['gueltigBis'])) {
+            $this->deleteRememberToken($selektor); // Abgelaufenes Token löschen
+            return null;
+        }
+
+        if (hash_equals($token_data['tokenHash'], hash('sha256', $validator))) {
+            // Token ist gültig. Optional: Token rotieren für mehr Sicherheit
+            $this->deleteRememberToken($selektor);
+            $this->createRememberToken($token_data['nutzer_id']);
+
+            return $this->getUserById($token_data['nutzer_id']);
+        }
+
+        return null;
+    }
+
+    /**
+     * Löscht ein "Angemeldet bleiben"-Token aus der Datenbank.
+     *
+     * @param string $selektor Der Selector des zu löschenden Tokens.
+     */
+    public function deleteRememberToken(string $selektor): void {
+        $sql = "DELETE FROM login_tokens WHERE selektor = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("s", $selektor);
+        $stmt->execute();
+        $stmt->close();
+    }
 } 
