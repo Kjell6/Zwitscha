@@ -73,9 +73,9 @@ $reactionEmojiMap = getReactionEmojiMap();
                     </a>
                     <time datetime="<?php echo $post['datumZeit']; ?>" class="post-timestamp">
                         <?php
-                        // Zeit-Label direkt hier berechnen
-                        $time_label = time_ago($post['datumZeit']);
-                        echo htmlspecialchars($time_label);
+                        // Datum und Uhrzeit im Format 'd.m.y, H:i' ausgeben
+                        $date = new DateTime($post['datumZeit']);
+                        echo $date->format('d.m.y, H:i');
                         ?>
                     </time>
                 </div>
@@ -168,7 +168,9 @@ $reactionEmojiMap = getReactionEmojiMap();
                     <?php
                     // Bereite die Daten für das Template vor
                     $comment_for_template = $comment;
-                    $comment_for_template['time_label'] = time_ago($comment['datumZeit']);
+                    // Datum und Uhrzeit für Kommentare ebenfalls anpassen
+                    $commentDate = new DateTime($comment['datumZeit']);
+                    $comment_for_template['time_label'] = $commentDate->format('d.m.y, H:i');
 
                     // Die Darstellung eines einzelnen Kommentars wird durch kommentar.php gehandhabt
                     include 'kommentar.php';
