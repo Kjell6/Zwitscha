@@ -43,6 +43,9 @@ class db {
 
             // Zeichensatz auf utf8mb4 setzen für volle Unicode-Unterstützung
             self::$instance->set_charset("utf8mb4");
+
+            // Zeitzone der Datenbankverbindung auf die lokale Zeitzone setzen
+            self::$instance->query("SET time_zone = 'Europe/Berlin'");
         }
         return self::$instance;
     }
