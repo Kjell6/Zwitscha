@@ -1,0 +1,43 @@
+# Bericht Sprint 3
+
+## Kjell
+
+### 1. Erzielte Ergebnisse
+- Bilder werden in Datenbank statt im Verzeichnis gespeichert
+- Passwörter werden gehasht
+- Funktion hinzugefügt, dass man bei Profilen eine Liste mit Folgenden und Gefolgten sehen kann
+- Eingabelängen und weitere Bedingungen werden bei Texteingaben überprüft (Benutzername, Passwort, Post-Text)
+- Funktion hinzugefügt, dass man Hashtags verwenden kann 
+- Funktion hinzugefügt, um Personen mit @ zu verlinken
+- Funktion hinzugefügt, dass man "angemeldet bleiben kann" mit Cookies und Datenbank Tabelle
+- Kleine Deisgn anpassungen
+
+
+### 2. Hürden
+- nicht viele, die meisten implementationen haben sich technisch nicht von vorheriger Arbeit unterschieden
+- Außer Cookies, dort musste mich das erst nochmal durchlesen, um es zu verstehen
+
+### 3. Überraschungen oder unerwartete Schwierigkeiten
+- keine
+
+## Ferdi
+
+### 1. Erzielte Ergebnisse
+
+
+### 2. Hürden
+
+
+### 3. Überraschungen oder unerwartete Schwierigkeiten
+
+
+## Julian
+
+### 1. Erzielte Ergebnisse
+
+### 2. Hürden
+
+
+### 3. Überraschungen oder unerwartete Schwierigkeiten
+
+
