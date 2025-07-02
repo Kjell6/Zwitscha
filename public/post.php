@@ -37,12 +37,12 @@ $reactionEmojiMap = getReactionEmojiMap();
 
 <article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>" onclick="navigateToPost(event, <?php echo $post['id']; ?>)">
     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-        <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image"  alt="Profil-Bild">
+        <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image">
     </a>
     <main class="post-main-content">
         <section class="post-user-infos">
             <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-                <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image-inline"  alt="Profil-Bild">
+                <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image-inline">
             </a>
             <div class="post-user-details">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
@@ -101,22 +101,3 @@ $reactionEmojiMap = getReactionEmojiMap();
         </div>
     </main>
 </article>
-
-<?php
-if (!function_exists('render_post_script')) {
-    function render_post_script() {
-        return '
-        <script>
-            function navigateToPost(event, postId) {
-                // Verhindere Navigation, wenn auf ein interaktives Element geklickt wurde.
-                if (event.target.closest(".no-post-details")) {
-                    return;
-                }
-                window.location.href = "postDetails.php?id=" + postId;
-            }
-        </script>
-        ';
-    }
-    echo render_post_script();
-}
-?>
