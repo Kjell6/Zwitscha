@@ -29,7 +29,7 @@
 
     .lightbox-close {
         position: absolute;
-        right: 0px;
+        right: 0;
         background: rgba(0, 0, 0, 0.5);
         border: none;
         color: white;

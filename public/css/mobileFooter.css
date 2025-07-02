@@ -33,10 +33,6 @@
         display: block;
     }
 
-    .desktop-header {
-        padding-bottom: calc(80px + var(--spacing-sm)); /* Platz für den Footer schaffen */
-    }
-
     /* Platz für den Footer schaffen, damit kein Content vom Footer überdeckt wird */
     body::after {
         content: "";

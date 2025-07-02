@@ -22,8 +22,6 @@
 
   /* Typografie */
   --font-family-main: 'Roboto', sans-serif;
-  --font-family-heading: 'Roboto Slab', sans-serif;
-  --font-family-mono: monospace;
 
   /* Schriftgrößen */
   --font-size-xs: 0.9rem;         /* Footer-Größe */
@@ -135,14 +133,6 @@ button, .button {
 
 button:hover, .button:hover {
   background-color: var(--button-hover);
-}
-
-.button-primary {
-  background-color: var(--primary-color);
-}
-
-.button-primary:hover {
-  background-color: var(--primary-hover);
 }
 
 /* Container und Layout */
