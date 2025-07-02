@@ -141,6 +141,13 @@ link:hover {
 }
 
 /* Aktiver Zustand für die ausgewählte Reaktion */
+.post-actions .reaction-button.active {
+    color: var(--primary-color);
+    background-color: var(--hover-color);
+    border-color: var(--primary-color);
+    font-weight: bold;
+}
+
 
 /* Styling für den Zähler (Span) innerhalb des Reaktionsbuttons */
 .post-actions .reaction-button .reaction-counter {

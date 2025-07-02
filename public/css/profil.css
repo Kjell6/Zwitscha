@@ -136,6 +136,15 @@ div.profil-header.pb-name-untereinander {
     visibility: visible;
 }
 
+.admin-button.admin-active {
+    background-color: var(--primary-color);
+}
+
+.admin-button.admin-active:hover {
+    background-color: var(--primary-hover);
+}
+
+
 .folgen-button {
     flex-shrink: 0;
 }
