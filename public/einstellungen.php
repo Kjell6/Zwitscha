@@ -189,11 +189,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         id="new-password"
                         name="new-password"
                         required
-                        pattern="[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?~`]+"
+                        pattern="[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':\\\|,.<>\/?~`]+"
                         minlength="6"
                         maxlength="100"
-                        title="Buchstaben, Zahlen und Sonderzeichen erlaubt. Mindestens 6 Zeichen."
-                />
+                        title="Das Passwort muss mindestens 6 Zeichen lang sein und darf Buchstaben, Zahlen und gängige Sonderzeichen enthalten."
 
                 <label for="confirm-password">Neues Passwort bestätigen:</label>
                 <input type="password" id="confirm-password" name="confirm-password" required />
