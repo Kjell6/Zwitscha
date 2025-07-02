@@ -54,15 +54,10 @@ switch ($action) {
     case 'create_comment':
         $postId = (int)($_POST['post_id'] ?? 0);
         $commentText = trim($_POST['comment_text'] ?? '');
-        // Parent ID optional (null, wenn keine Antwort)
-        $parentId = isset($_POST['parent_id']) && is_numeric($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
-
         if ($postId > 0 && !empty($commentText) && strlen($commentText) <= 300) {
-            // Hier die createComment Funktion entsprechend anpassen, um parent_id zu speichern
-            $postRepository->createComment($postId, $currentUserId, $commentText, $parentId);
+            $postRepository->createComment($postId, $currentUserId, $commentText);
         }
         break;
-
 
     case 'delete_comment':
         $commentId = (int)($_POST['comment_id'] ?? 0);
