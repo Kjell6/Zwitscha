@@ -1,4 +1,3 @@
-
 :root {
   /* Farbpalette */
   --primary-color: #22DA26;       /* Hauptfarbe */
@@ -22,8 +21,6 @@
 
   /* Typografie */
   --font-family-main: 'Roboto', sans-serif;
-  --font-family-heading: 'Roboto Slab', sans-serif;
-  --font-family-mono: monospace;
 
   /* Schriftgrößen */
   --font-size-xs: 0.9rem;         /* Footer-Größe */
@@ -131,18 +128,11 @@ button, .button {
   border-radius: var(--border-radius-md);
   cursor: pointer;
   transition: background-color var(--transition-fast);
+  font-family: var(--font-family-main);
 }
 
 button:hover, .button:hover {
   background-color: var(--button-hover);
-}
-
-.button-primary {
-  background-color: var(--primary-color);
-}
-
-.button-primary:hover {
-  background-color: var(--primary-hover);
 }
 
 /* Container und Layout */
@@ -170,6 +160,7 @@ select {
   font-size: var(--font-size-md);
   margin-bottom: var(--spacing-sm);
   transition: border-color var(--transition-fast);
+  font-family: var(--font-family-main);
 }
 
 input:focus, textarea:focus, select:focus {
@@ -296,6 +287,8 @@ footer {
   textarea::placeholder {
     color: #888;
     opacity: 1;
+    font-family: var(--font-family-main);
+    font-style: normal;
   }
 
   input:focus,

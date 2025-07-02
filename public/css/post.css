@@ -148,6 +148,7 @@ link:hover {
     font-weight: bold;
 }
 
+
 /* Styling für den Zähler (Span) innerhalb des Reaktionsbuttons */
 .post-actions .reaction-button .reaction-counter {
     font-size: var(--font-size-xs);
@@ -218,8 +219,7 @@ link:hover {
         gap: var(--spacing-xs);
     }
     .post-main-content{
-        padding: 0;
-        padding-right: var(--spacing-sm);
+        padding: 0 var(--spacing-sm) 0 0;
     }
 
 

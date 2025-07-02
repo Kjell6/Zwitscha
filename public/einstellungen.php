@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             // Die vorhandene, benutzerdefinierte Kompressor-Klasse verwenden
-            await window.imageCompressor.handleFileInput(avatarInput, previewImg, (compressedFile) => {
+            await window.imageCompressor.handleFileInput(avatarInput, previewImg, () => {
                 console.log('Bild erfolgreich komprimiert und Vorschau aktualisiert.');
                 // Die komprimierte Datei wird von der Bibliothek automatisch in das
                 // file-Input-Feld geschrieben, sodass das normale Formular-Submit funktioniert.

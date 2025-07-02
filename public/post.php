@@ -37,12 +37,12 @@ $reactionEmojiMap = getReactionEmojiMap();
 
 <article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>" onclick="navigateToPost(event, <?php echo $post['id']; ?>)">
     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-        <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image">
+        <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image"  alt="Profil-Bild">
     </a>
     <main class="post-main-content">
         <section class="post-user-infos">
             <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-                <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image-inline">
+                <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image-inline"  alt="Profil-Bild">
             </a>
             <div class="post-user-details">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">

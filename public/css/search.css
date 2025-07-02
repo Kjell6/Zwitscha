@@ -1,12 +1,9 @@
 /* Grundlegendes Layout für die Suchseite */
 body {
-    padding-top: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
     max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-sm);
 }
 
 .main-content {
@@ -23,28 +20,7 @@ h2 {
     margin-bottom: var(--spacing-md);
 }
 
-.header-search-results-dropdown {
-    padding: var(--spacing-xs);
-    border-bottom: var(--border-width) solid var(--border-color);
-    background-color: var(--bg-color);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
 /* Styling für jedes einzelne Suchergebnis Item */
-.search-result-item {
-    background-color: var(--light-color);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius-md);
-    margin-bottom: var(--spacing-sm);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: box-shadow var(--transition-fast);
-}
-
-.search-result-item:hover {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-}
 
 /* Styling für den Link im Suchergebnis */
 .search-result-item a {
@@ -87,10 +63,6 @@ h2 {
     .search-bar {
         align-items: stretch;
         gap: var(--spacing-sm);
-    }
-
-    .search-result-item {
-        padding: var(--spacing-xs);
     }
 
     .search-result-item img {

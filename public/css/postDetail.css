@@ -1,12 +1,9 @@
 /* Nutzt den body als Container */
 body {
-    padding-top: var(--spacing-sm);
-    padding-bottom: var(--spacing-md);
     max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
 }
 
 /* Container für Zurück-Button und Überschrift */
@@ -107,34 +104,10 @@ body {
 }
 
 /* Gruppierung für Input und Kommentar-Button */
-.post-actions.detail-actions .comment-input-group {
-    display: flex;
-    flex-grow: 1;
-    gap: var(--spacing-xs);
-    align-items: center;
-    width: 100%;
-
-    padding: 0 var(--spacing-xs);
-}
 
 /* Styling für das Kommentar-Eingabefeld */
-.post-actions.detail-actions #comment-input {
-    flex-grow: 1;
-    margin-bottom: 0;
-    font-family: var(--font-family-main);
-}
 
 /* Styling für den Kommentar-Button */
-.post-actions.detail-actions #comment-button {
-    background-color: var(--primary-color);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    color: var(--light-color);
-    flex-shrink: 0;
-}
-
-.post-actions.detail-actions #comment-button:hover {
-    background-color: var(--primary-hover);
-}
 
 .create-post-form {
     background-color: var(--light-color);
@@ -172,7 +145,7 @@ body {
     resize: vertical;
     min-height: 24px;
     font-size: 1.1rem;
-    font-family: var(--font-family-main);
+
     color: var(--text-primary);
     padding: var(--spacing-xs) 0;
     line-height: 1.5;
@@ -198,27 +171,6 @@ body {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-}
-
-.create-post-form .action-button {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    padding: var(--spacing-xs);
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
-.create-post-form .action-button:hover {
-    color: var(--primary-color);
-    background-color: var(--hover-color);
 }
 
 .create-post-form .form-submit-area {
@@ -269,11 +221,6 @@ body {
 }
 
 /* Styling für die Kommentare-Liste */
-#comments-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
 
 /* Responsive Anpassungen */
 @media (max-width: 480px) {
@@ -296,19 +243,7 @@ body {
     }
 
     /* Anpassung der Kommentar-Input-Gruppe auf kleinen Bildschirmen */
-    .post-actions.detail-actions .comment-input-group {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-        width: 100%;
-    }
 
-    .post-actions.detail-actions #comment-input {
-        width: 100%;
-    }
-
-    .post-actions.detail-actions #comment-button {
-        width: 100%;
-    }
 }
 
 @media (max-width: 390px) {
@@ -326,16 +261,8 @@ body {
 
 }
 
-.comment-submit-area {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 0.5rem;
-}
-
 .comment-submit-area .character-count {
-    color: var(--text-color-secondary);
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin: 0;
 }

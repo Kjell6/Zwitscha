@@ -49,7 +49,6 @@ body {
     resize: vertical;
     min-height: 56px;
     font-size: 1.1rem;
-    font-family: var(--font-family-main);
     color: var(--text-primary);
     padding: var(--spacing-xs) 0;
     line-height: 1.5;
@@ -232,9 +231,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    .post-input-group .user-profile {
-        display: none;
-    }
     .main-content {
         width: 100%;
         margin: 0;

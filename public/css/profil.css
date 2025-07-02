@@ -29,10 +29,6 @@ body {
     margin-bottom: var(--spacing-md);
 }
 
-.einstellungen-pb-name {
-    position: relative;
-}
-
 .mobile-only {
     display: none;
 }
@@ -44,7 +40,7 @@ body {
     object-fit: cover;
 }
 
-.folgen-button {
+.folgen-button, .admin-button {
     cursor: pointer;
     background-color: var(--primary-color);
     color: var(--light-color);
@@ -58,52 +54,18 @@ body {
     align-items: center;
     gap: var(--spacing-xxs);
 }
-.folgen-button.gefolgt {
-    background-color: var(--button-color)
-}
+
 .folgen-button:hover {
     background-color: var(--primary-hover);
 }
-.folgen-button.gefolgt:hover {
-    background-color: var(--danger-color);
-}
 
-.folgen-button.gefolgt:hover .follow-text {
-    display: none;
-}
-
-.folgen-button.gefolgt:hover::after {
-    content: "Entfolgen";
-}
-
-/* Admin-Button Styles */
 .admin-button {
-    cursor: pointer;
     background-color: var(--danger-color);
-    color: var(--light-color);
-    border: none;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    transition: background-color var(--transition-fast);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xxs);
 }
 
 .admin-button:hover {
     background-color: var(--danger-hover);
 }
-
-.admin-button.admin-active {
-    background-color: var(--primary-color);
-}
-
-.admin-button.admin-active:hover {
-    background-color: var(--primary-hover);
-}
-
 
 
 /* Container für den gesamten Textinhalt - stellt sicher, dass die Kinder stapeln */
@@ -173,6 +135,15 @@ div.profil-header.pb-name-untereinander {
     opacity: 1;
     visibility: visible;
 }
+
+.admin-button.admin-active {
+    background-color: var(--primary-color);
+}
+
+.admin-button.admin-active:hover {
+    background-color: var(--primary-hover);
+}
+
 
 .folgen-button {
     flex-shrink: 0;
