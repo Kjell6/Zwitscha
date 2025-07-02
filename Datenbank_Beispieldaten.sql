@@ -3,7 +3,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- -----------------------------
--- Nutzer
+-- Nutzer, das admin Passwort ist admin123
 -- -----------------------------
 INSERT INTO nutzer (id, nutzerName, passwort, istAdministrator, erstellungsDatum, profilbild) VALUES
   (1, 'admin', '$2y$10$KvqS8f4UE35JArzs.ZNPOOBb0gs4SaJWi/2mQZ5Cl3drEY36l9Dh6', 1, '2025-07-01 08:00:00', NULL),
