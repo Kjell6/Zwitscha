@@ -294,16 +294,17 @@ class PostVerwaltung {
      */
     public function getCommentsByPostId(int $postId): array {
         $sql = "
-            SELECT 
-                k.id, k.text, k.datumZeit,
-                n.nutzerName AS autor,
-                n.profilbild,
-                n.id as userId
-            FROM kommentar k
-            JOIN nutzer n ON k.nutzer_id = n.id
-            WHERE k.post_id = ?
-            ORDER BY k.datumZeit ASC
-        ";
+        SELECT 
+            k.id, k.text, k.datumZeit,
+            k.parent_id,
+            n.nutzerName AS autor,
+            n.profilbild,
+            n.id AS userId
+        FROM kommentar k
+        JOIN nutzer n ON k.nutzer_id = n.id
+        WHERE k.post_id = ?
+        ORDER BY k.datumZeit ASC
+    ";
 
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return [];
@@ -311,10 +312,34 @@ class PostVerwaltung {
         $stmt->bind_param("i", $postId);
         $stmt->execute();
         $result = $stmt->get_result();
-        $comments = $result->fetch_all(MYSQLI_ASSOC);
+        $allComments = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
-        return $comments;
+
+        // Alle Kommentare nach parent_id gruppieren
+        $grouped = [];
+        foreach ($allComments as $comment) {
+            $parent = $comment['parent_id'] ?? null;
+            $grouped[$parent][] = $comment;
+        }
+
+        return $this->buildCommentTree($grouped, null);
     }
+
+    private function buildCommentTree(array $grouped, $parentId = null): array {
+        $tree = [];
+
+        if (!isset($grouped[$parentId])) return [];
+
+        foreach ($grouped[$parentId] as $comment) {
+            $children = $this->buildCommentTree($grouped, $comment['id']);
+            $comment['children'] = $children;
+            $tree[] = $comment;
+        }
+
+        return $tree;
+    }
+
+
 
     /**
      * Erstellt einen neuen Kommentar.
@@ -324,18 +349,40 @@ class PostVerwaltung {
      * @param string $text Der Kommentartext.
      * @return bool True bei Erfolg.
      */
-    public function createComment(int $postId, int $userId, string $text): bool {
-        $sql = "INSERT INTO kommentar (post_id, nutzer_id, text) VALUES (?, ?, ?)";
-        
+    public function createComment(int $postId, int $userId, string $text, ?int $parentId = null): bool {
+        $sql = "INSERT INTO kommentar (post_id, nutzer_id, text, datumZeit, parent_id) VALUES (?, ?, ?, NOW(), ?)";
+
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return false;
 
-        $stmt->bind_param("iis", $postId, $userId, $text);
+        // Falls $parentId null ist, wird NULL in DB geschrieben, sonst die parent_id
+        if ($parentId === null) {
+            $stmt->bind_param("iisi", $postId, $userId, $text, $parentId);
+            // Achtung: bind_param "iisi" => der letzte Parameter erwartet int,
+            // aber parent_id kann NULL sein -> workaround:
+            // Man muss hier ein Trick machen oder die Query anpassen:
+            // besser mit MySQLi::send_long_data oder Query anpassen
+
+            // Einfachere Variante:
+            $sql = "INSERT INTO kommentar (post_id, nutzer_id, text, datumZeit, parent_id) VALUES (?, ?, ?, NOW(), ?)";
+            $stmt = $this->db->prepare($sql);
+            if (!$stmt) return false;
+            if ($parentId === null) {
+                $null = null;
+                $stmt->bind_param("iisi", $postId, $userId, $text, $null);
+            } else {
+                $stmt->bind_param("iisi", $postId, $userId, $text, $parentId);
+            }
+        } else {
+            $stmt->bind_param("iisi", $postId, $userId, $text, $parentId);
+        }
+
         $success = $stmt->execute();
         $stmt->close();
 
         return $success;
     }
+
 
     /**
      * Findet einen einzelnen Kommentar anhand seiner ID.
