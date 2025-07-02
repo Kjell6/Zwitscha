@@ -25,15 +25,6 @@
     margin-bottom: var(--spacing-sm);
 }
 
-.logo-link {
-    display: block;
-    transition: transform var(--transition-normal);
-}
-
-.logo-link:hover {
-    transform: scale(1.05);
-}
-
 .logo-image {
     height: 80px;
     width: auto;

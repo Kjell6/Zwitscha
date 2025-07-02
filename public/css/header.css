@@ -78,21 +78,6 @@
 }
 
 /* Einzelnes Suchergebnis im Dropdown */
-.header-search-results-dropdown .search-result-item {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-bottom: var(--border-width) solid var(--border-color);
-    margin-bottom: 0;
-    transition: background-color var(--transition-fast);
-}
-
-.header-search-results-dropdown .search-result-item:last-child {
-    border-bottom: none;
-}
-
-.header-search-results-dropdown .search-result-item:hover {
-    background-color: var(--bg-color);
-    cursor: pointer;
-}
 
 /* Link im Suchergebnis */
 .header-search-results-dropdown .search-result-item a {
