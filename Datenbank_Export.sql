@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 10.50.1.18:3308
--- Erstellungszeit: 20. Jun 2025 um 23:39
+-- Erstellungszeit: 02. Jul 2025 um 17:43
 -- Server-Version: 10.9.2-MariaDB-1:10.9.2+maria~ubu2204
 -- PHP-Version: 8.2.28
 
@@ -32,19 +32,6 @@ CREATE TABLE `folge` (
   `gefolgter_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Daten für Tabelle `folge`
---
-
-INSERT INTO `folge` (`folgender_id`, `gefolgter_id`) VALUES
-(5, 3),
-(3, 5),
-(4, 3),
-(5, 4),
-(4, 5),
-(3, 10),
-(3, 8);
-
 -- --------------------------------------------------------
 
 --
@@ -56,27 +43,24 @@ CREATE TABLE `kommentar` (
   `nutzer_id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
   `text` text NOT NULL,
-  `datumZeit` datetime NOT NULL DEFAULT current_timestamp()
+  `datumZeit` datetime NOT NULL DEFAULT current_timestamp(),
+  `parentId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Daten für Tabelle `kommentar`
+-- Tabellenstruktur für Tabelle `login_tokens`
 --
 
-INSERT INTO `kommentar` (`id`, `nutzer_id`, `post_id`, `text`, `datumZeit`) VALUES
-(6, 5, 21, 'Heyho, icke auch :O', '2025-06-16 13:56:20'),
-(10, 5, 23, 'Zwa zwi Zwitscher', '2025-06-16 13:59:03'),
-(11, 4, 21, 'na sicha', '2025-06-16 13:59:10'),
-(12, 5, 25, 'Ich liebe eure krustig, saftigen, leckere, flispigen Pizzen', '2025-06-16 14:07:36'),
-(13, 8, 25, 'Wann collab?', '2025-06-16 14:07:55'),
-(14, 3, 26, 'Vfbf', '2025-06-16 14:08:23'),
-(15, 6, 28, 'Hi ich auch', '2025-06-16 14:17:29'),
-(16, 6, 26, 'L', '2025-06-16 14:18:11'),
-(17, 3, 36, '🛐', '2025-06-20 12:44:33'),
-(19, 10, 41, 'Jesus braucht diese Kissen!', '2025-06-20 22:31:54'),
-(20, 3, 33, 'Oh, guten Abend zurück 👋', '2025-06-20 22:46:52'),
-(21, 3, 23, 'Du sagst es', '2025-06-20 22:58:10'),
-(22, 3, 40, 'Wie lang hast du geschlafen?', '2025-06-20 23:22:24');
+CREATE TABLE `login_tokens` (
+  `id` int(11) NOT NULL,
+  `nutzer_id` int(11) NOT NULL,
+  `selektor` char(12) NOT NULL,
+  `tokenHash` char(64) NOT NULL,
+  `gueltigBis` datetime NOT NULL,
+  `erstelltAm` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -93,7 +77,7 @@ CREATE TABLE `nutzer` (
   `profilbild` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
+-- --------------------------------------------------------
 
 --
 -- Tabellenstruktur für Tabelle `post`
@@ -107,7 +91,7 @@ CREATE TABLE `post` (
   `bildDaten` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
+-- --------------------------------------------------------
 
 --
 -- Tabellenstruktur für Tabelle `Reaktion`
@@ -118,36 +102,6 @@ CREATE TABLE `Reaktion` (
   `post_id` int(11) NOT NULL,
   `reaktionsTyp` enum('Daumen Hoch','Daumen Runter','Herz','Lachen','Fragezeichen','Ausrufezeichen') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Daten für Tabelle `Reaktion`
---
-
-INSERT INTO `Reaktion` (`nutzer_id`, `post_id`, `reaktionsTyp`) VALUES
-(1, 8, 'Ausrufezeichen'),
-(1, 8, 'Daumen Hoch'),
-(1, 8, 'Herz'),
-(1, 8, 'Lachen'),
-(4, 21, 'Lachen'),
-(3, 21, 'Daumen Hoch'),
-(4, 21, 'Herz'),
-(3, 23, 'Ausrufezeichen'),
-(4, 21, 'Daumen Hoch'),
-(5, 21, 'Daumen Hoch'),
-(3, 23, 'Daumen Runter'),
-(4, 23, 'Fragezeichen'),
-(4, 26, 'Herz'),
-(8, 21, 'Daumen Hoch'),
-(8, 28, 'Herz'),
-(8, 30, 'Herz'),
-(3, 30, 'Daumen Runter'),
-(3, 28, 'Herz'),
-(3, 36, 'Herz'),
-(3, 36, 'Daumen Hoch'),
-(3, 33, 'Herz'),
-(3, 24, 'Ausrufezeichen'),
-(3, 40, 'Daumen Hoch'),
-(3, 40, 'Herz');
 
 --
 -- Indizes der exportierten Tabellen
@@ -166,7 +120,16 @@ ALTER TABLE `folge`
 ALTER TABLE `kommentar`
   ADD PRIMARY KEY (`id`),
   ADD KEY `foreignKey Nutzer` (`nutzer_id`),
-  ADD KEY `foreignKey Post` (`post_id`);
+  ADD KEY `foreignKey Post` (`post_id`),
+  ADD KEY `parentId` (`parentId`);
+
+--
+-- Indizes für die Tabelle `login_tokens`
+--
+ALTER TABLE `login_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `selektor` (`selektor`),
+  ADD KEY `nutzer_id_idx` (`nutzer_id`);
 
 --
 -- Indizes für die Tabelle `nutzer`
@@ -197,19 +160,25 @@ ALTER TABLE `Reaktion`
 -- AUTO_INCREMENT für Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `login_tokens`
+--
+ALTER TABLE `login_tokens`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `nutzer`
 --
 ALTER TABLE `nutzer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints der exportierten Tabellen
@@ -227,7 +196,14 @@ ALTER TABLE `folge`
 --
 ALTER TABLE `kommentar`
   ADD CONSTRAINT `foreignKey Nutzer` FOREIGN KEY (`nutzer_id`) REFERENCES `nutzer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `foreignKey Post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `foreignKey Post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `kommentar_ibfk_1` FOREIGN KEY (`parentId`) REFERENCES `kommentar` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints der Tabelle `login_tokens`
+--
+ALTER TABLE `login_tokens`
+  ADD CONSTRAINT `login_tokens_ibfk_1` FOREIGN KEY (`nutzer_id`) REFERENCES `nutzer` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `post`
