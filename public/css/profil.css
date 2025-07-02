@@ -40,7 +40,7 @@ body {
     object-fit: cover;
 }
 
-.folgen-button {
+.folgen-button, .admin-button {
     cursor: pointer;
     background-color: var(--primary-color);
     color: var(--light-color);
@@ -59,20 +59,8 @@ body {
     background-color: var(--primary-hover);
 }
 
-/* Admin-Button Styles */
 .admin-button {
-    cursor: pointer;
     background-color: var(--danger-color);
-    color: var(--light-color);
-    border: none;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    transition: background-color var(--transition-fast);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xxs);
 }
 
 .admin-button:hover {

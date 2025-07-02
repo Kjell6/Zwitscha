@@ -1,4 +1,3 @@
-
 :root {
   /* Farbpalette */
   --primary-color: #22DA26;       /* Hauptfarbe */
@@ -129,6 +128,7 @@ button, .button {
   border-radius: var(--border-radius-md);
   cursor: pointer;
   transition: background-color var(--transition-fast);
+  font-family: var(--font-family-main);
 }
 
 button:hover, .button:hover {
@@ -160,6 +160,7 @@ select {
   font-size: var(--font-size-md);
   margin-bottom: var(--spacing-sm);
   transition: border-color var(--transition-fast);
+  font-family: var(--font-family-main);
 }
 
 input:focus, textarea:focus, select:focus {
@@ -286,6 +287,8 @@ footer {
   textarea::placeholder {
     color: #888;
     opacity: 1;
+    font-family: var(--font-family-main);
+    font-style: normal;
   }
 
   input:focus,
