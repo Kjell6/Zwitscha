@@ -45,5 +45,17 @@ $canDeleteComment = $isOwner || $isAdmin;
         <div class="post-content">
             <p><?php echo linkify_content($comment_for_template['text'], $nutzerVerwaltung); ?></p>
         </div>
+        <div class="form-submit-area mt">
+            <div class="comment-actions">
+                <button type="button" class="reply-button">Antworten</button>
+            </div>
+
+
+        </div>
+
+
+
+
+
     </main>
 </article>

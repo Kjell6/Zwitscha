@@ -266,3 +266,30 @@ body {
     font-size: 0.9rem;
     margin: 0;
 }
+
+.reply-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1rem;
+    padding: 0;
+    margin-top: var(--spacing-xs);
+    cursor: pointer;
+    font-weight: 500;
+    text-align: left;
+    display: inline-block;
+}
+
+.reply-button:hover {
+    color: var(--primary-hover); /* Dunkleres Grün für den Text beim Hover */
+    background-color: transparent; /* Hintergrund bleibt transparent */
+    text-decoration: underline; /* Optional: Unterstreichung beim Hover */
+}
+
+
+.comment-actions {
+    padding: var(--spacing-md) 0;
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+}
+
