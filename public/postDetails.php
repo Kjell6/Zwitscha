@@ -65,7 +65,7 @@ $reactionEmojiMap = getReactionEmojiMap();
         <section class="post-user-infos-detail">
             <div class="post-user-info-left">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-                    <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" alt="Profilbild">
+                    <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" loading="lazy" alt="Profilbild">
                 </a>
                 <div class="post-user-details-detail">
                     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
@@ -102,7 +102,7 @@ $reactionEmojiMap = getReactionEmojiMap();
 
             <?php if (!empty($post['bildDaten'])): ?>
                 <div class="post-image-container">
-                    <img src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
+                    <img loading="lazy" src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
                          alt="Post-Bild"
                          class="post-image"
                          onclick="openLightbox('getImage.php?type=post&id=<?php echo $post['id']; ?>')"
@@ -140,7 +140,7 @@ $reactionEmojiMap = getReactionEmojiMap();
         <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
 
         <div class="form-header">
-            <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" alt="Dein Profilbild">
+            <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" loading="lazy" alt="Dein Profilbild">
             <textarea name="comment_text" id="post-input" placeholder="Schreibe einen Kommentar..." maxlength="300" required></textarea>
         </div>
 

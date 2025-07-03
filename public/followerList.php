@@ -62,7 +62,7 @@ if ($type === 'following') {
         <?php else: ?>
             <?php foreach ($userList as $user): ?>
                 <a href="Profil.php?userid=<?php echo $user['id']; ?>" class="user-list-item">
-                    <img src="getImage.php?type=user&id=<?php echo $user['id']; ?>" alt="Profilbild" class="user-avatar">
+                    <img src="getImage.php?type=user&id=<?php echo $user['id']; ?>" loading="lazy" alt="Profilbild" class="user-avatar">
                     <span class="user-name"><?php echo htmlspecialchars($user['nutzerName']); ?></span>
                 </a>
             <?php endforeach; ?>

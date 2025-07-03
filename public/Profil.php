@@ -131,7 +131,7 @@ if ($profile) {
               7) Profil-Kopfbereich (dynamisch)
              ============================ -->
         <div class="profil-header">
-            <img src="getImage.php?type=user&id=<?php echo $profile['id']; ?>" 
+            <img src="getImage.php?type=user&id=<?php echo $profile['id']; ?>" loading="lazy" 
                  alt="Profilbild" 
                  class="profilbild" 
                  onclick="openLightbox('getImage.php?type=user&id=<?php echo $profile['id']; ?>')"
