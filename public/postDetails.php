@@ -23,7 +23,7 @@ $repository = new PostVerwaltung();
 
 // ---- Daten für die Detailansicht laden ----
 $post = $repository->getPostById($postId, $currentUserId);
-$comments = $repository->getCommentsByPostId($postId);
+$comments = $repository->getMainCommentsByPostId($postId);
 
 // Wenn der Post nicht gefunden wurde, zur Startseite umleiten.
 if (!$post) {
@@ -168,14 +168,23 @@ $reactionEmojiMap = getReactionEmojiMap();
                     <?php
                     // Bereite die Daten für das Template vor
                     $comment_for_template = $comment;
-                    // Datum und Uhrzeit für Kommentare ebenfalls anpassen
+
+                    // Datum und Uhrzeit fürs Kommentar-Template formatieren
                     $commentDate = new DateTime($comment['datumZeit']);
                     $comment_for_template['time_label'] = $commentDate->format('d.m.y, H:i');
+
+                    // Jetzt holst du die Antworten zu diesem Kommentar aus der DB
+                    // Beispiel: $repository ist deine Kommentar/Post-Verwaltungsklasse
+                    $antworten = $repository->getRepliesByParentCommentId($comment['id']);
+
+                    // Übergib die Antworten an das Template
+                    $comment_for_template['antworten'] = $antworten;
 
                     // Die Darstellung eines einzelnen Kommentars wird durch kommentar.php gehandhabt
                     include 'kommentar.php';
                     ?>
                 <?php endforeach; ?>
+
             </div>
         <?php endif; ?>
     </section>
@@ -204,6 +213,36 @@ $reactionEmojiMap = getReactionEmojiMap();
         // Farbe ändern, wenn das Limit fast erreicht ist
         charCount.style.color = count > (maxLength - 20) ? '#dc3545' : '#6c757d';
     });
+
+
+    function toggleReplyForm(commentId) {
+        const form = document.getElementById('reply-form-' + commentId);
+        if (form) {
+            form.classList.toggle('hidden');
+        }
+    }
+
+    document.querySelectorAll('textarea').forEach(textarea => {
+        const counter = textarea.closest('form').querySelector('.character-count');
+
+        textarea.addEventListener('input', () => {
+            // Höhe automatisch anpassen
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+
+            // Zeichenzähler aktualisieren, falls vorhanden
+            if (counter) {
+                const count = textarea.value.length;
+                const maxLength = textarea.maxLength;
+                counter.textContent = count + '/' + maxLength;
+
+                // Farbe ändern, wenn nah am Limit
+                counter.style.color = count > (maxLength - 20) ? '#dc3545' : '#6c757d';
+            }
+        });
+    });
+
+
 </script>
 
 <?php include 'lightbox.php'; ?>

@@ -294,16 +294,16 @@ class PostVerwaltung {
      */
     public function getCommentsByPostId(int $postId): array {
         $sql = "
-            SELECT 
-                k.id, k.text, k.datumZeit,
-                n.nutzerName AS autor,
-                n.profilbild,
-                n.id as userId
-            FROM kommentar k
-            JOIN nutzer n ON k.nutzer_id = n.id
-            WHERE k.post_id = ?
-            ORDER BY k.datumZeit ASC
-        ";
+        SELECT 
+            k.id, k.text, k.datumZeit, k.parent_comment_id,
+            n.nutzerName AS autor,
+            n.profilbild,
+            n.id as userId
+        FROM kommentar k
+        JOIN nutzer n ON k.nutzer_id = n.id
+        WHERE k.post_id = ?
+        ORDER BY k.datumZeit ASC
+    ";
 
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return [];
@@ -316,6 +316,59 @@ class PostVerwaltung {
         return $comments;
     }
 
+    public function getMainCommentsByPostId(int $postId): array {
+        $sql = "
+        SELECT 
+            k.id, k.text, k.datumZeit,
+            n.nutzerName AS autor,
+            n.profilbild,
+            n.id as userId
+        FROM kommentar k
+        JOIN nutzer n ON k.nutzer_id = n.id
+        WHERE k.post_id = ? AND k.parent_comment_id IS NULL
+        ORDER BY k.datumZeit ASC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        $stmt->bind_param("i", $postId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $comments = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $comments;
+    }
+
+    public function getRepliesByParentCommentId(int $parentCommentId): array {
+        $sql = "
+        SELECT 
+            k.id, k.text, k.datumZeit,
+            n.nutzerName AS autor,
+            n.profilbild,
+            n.id as userId
+        FROM kommentar k
+        JOIN nutzer n ON k.nutzer_id = n.id
+        WHERE k.parent_comment_id = ?
+        ORDER BY k.datumZeit ASC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        $stmt->bind_param("i", $parentCommentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $replies = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $replies;
+    }
+
+
+
+
+
     /**
      * Erstellt einen neuen Kommentar.
      *
@@ -324,18 +377,27 @@ class PostVerwaltung {
      * @param string $text Der Kommentartext.
      * @return bool True bei Erfolg.
      */
-    public function createComment(int $postId, int $userId, string $text): bool {
-        $sql = "INSERT INTO kommentar (post_id, nutzer_id, text) VALUES (?, ?, ?)";
+    public function createComment(int $postId, int $userId, string $text, ?int $parentCommentId = null): bool {
+        $sql = "INSERT INTO kommentar (post_id, nutzer_id, text, parent_comment_id) VALUES (?, ?, ?, ?)";
 
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return false;
 
-        $stmt->bind_param("iis", $postId, $userId, $text);
+        // Falls parentCommentId null ist, muss das als NULL gebunden werden, sonst als int
+        if ($parentCommentId === null) {
+            $null = null;
+            $stmt->bind_param("iisi", $postId, $userId, $text, $null);
+        } else {
+            $stmt->bind_param("iisi", $postId, $userId, $text, $parentCommentId);
+        }
+
         $success = $stmt->execute();
         $stmt->close();
 
         return $success;
     }
+
+
 
     /**
      * Findet einen einzelnen Kommentar anhand seiner ID.

@@ -73,8 +73,19 @@ switch ($action) {
             }
         }
         break;
-    
+
+    case 'reply_comment':
+        $postId = (int)($_POST['post_id'] ?? 0);
+        $parentCommentId = isset($_POST['parent_comment_id']) ? (int)$_POST['parent_comment_id'] : null;
+        $commentText = trim($_POST['comment_text'] ?? '');
+
+        if ($postId > 0 && $parentCommentId > 0 && !empty($commentText) && strlen($commentText) <= 300) {
+            $postRepository->createComment($postId, $currentUserId, $commentText, $parentCommentId);
+        }
+        break;
+
     // Zukünftige Aktionen könnten hier hinzugefügt werden (z.B. 'edit_post', 'edit_comment')
+
 }
 
 
