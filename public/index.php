@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
         if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
             // Datei-Validierung
             $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-            
+
             if (!in_array($_FILES['post_image']['type'], $allowedTypes)) {
                 $feedbackMessage = 'Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.';
                 $feedbackType = 'error';
@@ -163,7 +163,8 @@ if ($showFollowedOnly) {
     </div>
 
     <!-- Dynamischer Feed -->
-    <section class="feed">
+
+    <section class="feed" id="posts-container">
         <?php
         if (empty($posts)) {
             if ($showFollowedOnly) {
@@ -192,6 +193,9 @@ if ($showFollowedOnly) {
         ?>
     </section>
 </div>
+
+<!-- mehr laden Button -->
+<button id="mehr-laden-button">Mehr laden</button>
 
 <?php include 'footerMobile.php'; ?>
 <footer>
@@ -232,18 +236,18 @@ if ($showFollowedOnly) {
             // Prüfe, ob es ein gültiges Bildformat ist - Safari iOS kompatibel
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
             const fileType = file.type.toLowerCase();
-            const isValidType = allowedTypes.some(type => 
-                fileType === type || 
+            const isValidType = allowedTypes.some(type =>
+                fileType === type ||
                 (type === 'image/jpeg' && fileType === 'image/jpg') ||
                 (type === 'image/jpg' && fileType === 'image/jpeg')
             );
-            
+
             if (!isValidType && file.size > 0) {
                 alert('Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.');
                 imageInput.value = ''; // Input zurücksetzen
                 return;
             }
-            
+
             try {
                 // Automatische Bildkomprimierung vor Upload
                 imagePreview.style.display = 'block';
@@ -264,6 +268,31 @@ if ($showFollowedOnly) {
         imageInput.value = '';
         previewImg.src = '#';
         imagePreview.style.display = 'none';
+    });
+</script>
+
+<script>
+    let pageNum = 2;
+
+    document.getElementById("mehr-laden-button").addEventListener("click", () => {
+        fetch(`/get-posts.php?page=${pageNum}`)
+            .then(response => response.json())
+            .then(posts => {
+                if (posts.length === 0 || posts.length <= (15 * (pageNum - 1))) {
+                    document.getElementById("mehr-laden-button").style.display = "none";
+                    return;
+                }
+                const container = document.getElementById("posts-container");
+                container.innerHTML = '';
+
+                posts.forEach(post => {
+                    const div = document.createElement("div");
+                    div.innerHTML = `<h3>${post.autor}</h3><p>${post.text}</p><small>${post.datumZeit}</small><hr>`;
+                    container.appendChild(div);
+                });
+
+                pageNum++;
+            });
     });
 </script>
 </body>

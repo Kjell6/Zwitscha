@@ -18,7 +18,7 @@ class PostVerwaltung {
      * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers.
      * @return array Ein Array von assoziativen Arrays, die die Posts repräsentieren.
      */
-    public function getAllPosts(int $currentUserId): array {
+    public function getAllPosts(int $currentUserId, int $limit = 15, int $offset = 0): array {
         $sql = "
             SELECT 
                 p.id, p.text, p.bildDaten, p.datumZeit,
@@ -34,9 +34,10 @@ class PostVerwaltung {
             FROM post p
             JOIN nutzer n ON p.nutzer_id = n.id
             ORDER BY p.datumZeit DESC
+            LIMIT ? OFFSET ?
         ";
         
-        return $this->_fetchAndProcessPosts($sql, [$currentUserId], 'i');
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $limit, $offset], 'iii');
     }
 
     /**
@@ -67,6 +68,12 @@ class PostVerwaltung {
         ";
         
         return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId], 'ii');
+    }
+
+    public function getPostsByPage(int $currentUserId, int $pageNum): array {
+        $limit = 15 * $pageNum;
+        $offset = 0;
+        return $this->getAllPosts($currentUserId, $limit, $offset);
     }
     
     /**
