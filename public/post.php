@@ -101,3 +101,22 @@ $reactionEmojiMap = getReactionEmojiMap();
         </div>
     </main>
 </article>
+
+<?php
+if (!function_exists('render_post_script')) {
+    function render_post_script() {
+        return '
+        <script>
+            function navigateToPost(event, postId) {
+                // Verhindere Navigation, wenn auf ein interaktives Element geklickt wurde.
+                if (event.target.closest(".no-post-details")) {
+                    return;
+                }
+                window.location.href = "postDetails.php?id=" + postId;
+            }
+        </script>
+        ';
+    }
+    echo render_post_script();
+}
+?>
