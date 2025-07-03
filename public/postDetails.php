@@ -148,7 +148,7 @@ $reactionEmojiMap = getReactionEmojiMap();
             <div class="form-actions"></div>
             <div class="form-submit-area">
                 <p class="character-count">0/300</p>
-                <button id="post-button" type="submit">Kommentieren</button>
+                <button class="post-button" type="submit">Kommentieren</button>
             </div>
         </div>
     </form>
