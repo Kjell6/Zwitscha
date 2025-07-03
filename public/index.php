@@ -126,7 +126,7 @@ if ($showFollowedOnly) {
         <input type="hidden" name="action" value="create_post">
 
         <div class="form-header">
-            <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" alt="Dein Profilbild">
+            <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" loading="lazy" alt="Dein Profilbild">
             <textarea name="post_text" id="post-input" placeholder="Was gibt's Neues?" maxlength="300" required></textarea>
         </div>
 

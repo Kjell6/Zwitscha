@@ -37,12 +37,12 @@ $reactionEmojiMap = getReactionEmojiMap();
 
 <article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>" onclick="navigateToPost(event, <?php echo $post['id']; ?>)">
     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-        <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image"  alt="Profil-Bild">
+        <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image" loading="lazy"  alt="Profil-Bild">
     </a>
     <main class="post-main-content">
         <section class="post-user-infos">
             <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
-                <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image-inline"  alt="Profil-Bild">
+                <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image-inline" loading="lazy"  alt="Profil-Bild">
             </a>
             <div class="post-user-details">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
@@ -66,7 +66,7 @@ $reactionEmojiMap = getReactionEmojiMap();
             <p><?php echo linkify_content($post['text'], $nutzerVerwaltung); ?></p>
             <?php if (!empty($post['bildDaten'])): ?>
                 <div class="post-image-container">
-                    <img src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
+                    <img loading="lazy" src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
                          alt="Post-Bild"
                          class="post-image no-post-details"
                          onclick="openLightbox('getImage.php?type=post&id=<?php echo $post['id']; ?>')"
