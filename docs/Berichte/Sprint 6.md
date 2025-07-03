@@ -34,10 +34,17 @@
 ## Julian
 
 ### 1. Erzielte Ergebnisse
+- Funktion hinzugefügt, auf Kommentare antworten zu können
+- Separierung von Kommentaren und Antworten
+- Anpassung der Kommentar-Tabelle in der Datenbank, um Funktion umzusetzen
+- Erste Versuche mit Java Script, um ein Feld aufklappen zu lassen bei Drücken des Antworten-Buttons
+- Bug Fixes bei den Einstellungen
+
 
 ### 2. Hürden
-
+- Mein erser Versuch, die Antwort-Funktion zu integrieren hat nur so semi funktioniert, allerdings lief es dann im zweiten Anlauf umso besser
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
+- Mittlerweile ist es schwierig den Überblick zu behalten, aber ansonsten gab es nichts groß auffälliges
 
 
