@@ -78,6 +78,9 @@
 }
 
 /* Einzelnes Suchergebnis im Dropdown */
+.header-search-results-dropdown .search-result-item {
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
 
 /* Link im Suchergebnis */
 .header-search-results-dropdown .search-result-item a {
