@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Benutzername darf nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche enthalten.';
     } elseif (strlen($passwort) < 6 || strlen($passwort) > 100) {
         $error = 'Passwort muss zwischen 6 und 100 Zeichen lang sein.';
+    } elseif (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $passwort)) {
+        $error = 'Passwort enthält unerlaubte Zeichen.';
     } else {
         // NutzerVerwaltung instanziieren und Registrierung versuchen
         $nutzerVerwaltung = new NutzerVerwaltung();
@@ -87,7 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="input-wrapper">
                         <input type="password" name="passwort" id="passwort" required 
                                placeholder="Erstelle ein sicheres Passwort"
-                               minlength="6" maxlength="100" />
+                               minlength="6" maxlength="100"
+                               pattern="[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':\\|,.<>/?~`]+"
+                               title="Das Passwort darf Buchstaben, Zahlen und gängige Sonderzeichen enthalten." />
                     </div>
                 </div>
 

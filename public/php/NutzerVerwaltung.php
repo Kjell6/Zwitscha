@@ -351,6 +351,10 @@ class NutzerVerwaltung {
         if (strlen($password) > 100) {
             return ['success' => false, 'message' => 'Passwort darf maximal 100 Zeichen lang sein.'];
         }
+        // Zeichenvalidierung – nur Buchstaben, Ziffern und gängige Sonderzeichen erlaubt
+        if (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $password)) {
+            return ['success' => false, 'message' => 'Passwort enthält unerlaubte Zeichen.'];
+        }
         
         if ($this->usernameExists($username)) {
             return ['success' => false, 'message' => 'Benutzername ist bereits vergeben.'];
