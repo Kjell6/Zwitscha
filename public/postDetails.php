@@ -219,10 +219,38 @@ $reactionEmojiMap = getReactionEmojiMap();
 
     function toggleReplyForm(commentId) {
         const form = document.getElementById('reply-form-' + commentId);
-        if (form) {
+        if (!form) return;
+
             form.classList.toggle('hidden');
+
+        // Zustand in sessionStorage speichern
+        let openReplies = JSON.parse(sessionStorage.getItem('openReplies')) || [];
+        const isOpen = !form.classList.contains('hidden');
+
+        if (isOpen) {
+            // Zur Liste hinzufügen, wenn nicht schon vorhanden
+            if (!openReplies.includes(commentId)) {
+                openReplies.push(commentId);
         }
+        } else {
+            // Aus der Liste entfernen
+            openReplies = openReplies.filter(id => id !== commentId);
+        }
+
+        sessionStorage.setItem('openReplies', JSON.stringify(openReplies));
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Zustand aus sessionStorage wiederherstellen
+        const openReplies = JSON.parse(sessionStorage.getItem('openReplies')) || [];
+        openReplies.forEach(commentId => {
+            const form = document.getElementById('reply-form-' + commentId);
+            if (form) {
+                form.classList.remove('hidden');
+            }
+        });
+    });
+
 
     document.querySelectorAll('textarea').forEach(textarea => {
         const counter = textarea.closest('form').querySelector('.character-count');
