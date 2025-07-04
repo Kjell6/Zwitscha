@@ -70,9 +70,7 @@ class PostVerwaltung {
         return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId], 'ii');
     }
 
-    public function getPostsByPage(int $currentUserId, int $pageNum): array {
-        $limit = 15 * $pageNum;
-        $offset = 0;
+    public function getPostsWithOffset(int $currentUserId, int $offset, int $limit): array {
         return $this->getAllPosts($currentUserId, $limit, $offset);
     }
     

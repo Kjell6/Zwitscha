@@ -195,7 +195,9 @@ if ($showFollowedOnly) {
 </div>
 
 <!-- mehr laden Button -->
-<button id="mehr-laden-button">Mehr laden</button>
+<div style="display: flex; justify-content: center;">
+    <button id="mehr-laden-button">Mehr laden</button>
+</div>
 
 <?php include 'footerMobile.php'; ?>
 <footer>
@@ -272,27 +274,31 @@ if ($showFollowedOnly) {
 </script>
 
 <script>
-    let pageNum = 2;
+    document.addEventListener("DOMContentLoaded", () => {
+        const button = document.getElementById("mehr-laden-button");
+        const container = document.getElementById("posts-container");
 
-    document.getElementById("mehr-laden-button").addEventListener("click", () => {
-        fetch(`/get-posts.php?page=${pageNum}`)
-            .then(response => response.json())
-            .then(posts => {
-                if (posts.length === 0 || posts.length <= (15 * (pageNum - 1))) {
-                    document.getElementById("mehr-laden-button").style.display = "none";
-                    return;
-                }
-                const container = document.getElementById("posts-container");
-                container.innerHTML = '';
+        let offset = 15;
+        const limit = 15;
 
-                posts.forEach(post => {
-                    const div = document.createElement("div");
-                    div.innerHTML = `<h3>${post.autor}</h3><p>${post.text}</p><small>${post.datumZeit}</small><hr>`;
-                    container.appendChild(div);
-                });
-
-                pageNum++;
-            });
+        button.addEventListener("click", () => {
+            fetch(`php/get-posts.php?offset=${offset}&limit=${limit}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Fehler beim Laden der Posts');
+                    return res.text(); // HTML-String
+                })
+                .then(html => {
+                    if (!html.trim()) {
+                        // Keine Posts mehr
+                        document.getElementById('mehr-laden-button').style.display = 'none';
+                        return;
+                    }
+                    // Anhängen an Container
+                    document.getElementById('posts-container').insertAdjacentHTML('beforeend', html);
+                    offset += limit;
+                })
+                .catch(err => console.error(err));
+        });
     });
 </script>
 </body>

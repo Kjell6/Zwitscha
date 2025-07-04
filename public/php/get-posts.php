@@ -1,13 +1,17 @@
 <?php
-require_once __DIR__ . '/php/PostVerwaltung.php';
-require_once __DIR__ . '/php/session_helper.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-header('Content-Type: application/json');
+require_once __DIR__ . '/PostVerwaltung.php';
+require_once __DIR__ . '/NutzerVerwaltung.php';
+require_once __DIR__ . '/session_helper.php';
 
-// Nutzer muss eingeloggt sein
+// Ausgabe als HTML, nicht JSON
+header('Content-Type: text/html');
+
 if (!isLoggedIn()) {
     http_response_code(403);
-    echo json_encode(['error' => 'Nicht eingeloggt']);
+    echo '<p>Bitte zuerst einloggen.</p>';
     exit;
 }
 
@@ -15,13 +19,13 @@ $currentUserId = getCurrentUserId();
 $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 15;
 
-
-
 $postVerwaltung = new PostVerwaltung();
-$pageNum = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$nutzerVerwaltung = new NutzerVerwaltung();
+$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
-$posts = $postVerwaltung->getPostsByPage($currentUserId, $pageNum);
+$posts = $postVerwaltung->getPostsWithOffset($currentUserId, $offset, $limit);
 
-
-// Optional: nur bestimmte Felder zurückgeben (z. B. bei Mobile-Feed)
-echo json_encode($posts);
+foreach ($posts as $post) {
+    // WICHTIG: $post.php erwartet $post und $currentUser
+    include __DIR__ . '/../post.php';
+}
