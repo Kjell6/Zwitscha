@@ -26,23 +26,13 @@
 ## Ferdi
 
 ### 1. Erzielte Ergebnisse
-- Mehr Laden von Posts
-
-
-### 2. Hürden
-- erst lange verweis auf falsches verzeichnis bei der get-post datei
-
-### 3. Überraschungen oder unerwartete Schwierigkeiten
-- übersichtlichkeit ist schwierig teilweise
-
-### 1. Erzielte Ergebnisse
 - Es werden jetzt nichtmehr alle Posts auf einmal in den Feed geladen
     - nur die ersten 15, bei klickt auf "mehr Laden"  weitere 15 ... 
 
 
 ### 2. Hürden
+- erst lange verweis auf falsches verzeichnis bei der get-post datei
 - Das Projekt ist so groß geworden, dass man den leicht Überblick verliert
-- Erster Versuch hat nicht ganz funktioniert
 
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
