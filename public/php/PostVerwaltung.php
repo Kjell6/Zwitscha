@@ -68,7 +68,7 @@ class PostVerwaltung {
             LIMIT ? OFFSET ?
         ";
         
-        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId, $limit, $offset], 'iii');
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId, $limit, $offset], 'iiii');
     }
 
     /**
