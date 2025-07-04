@@ -55,7 +55,9 @@ $reactionEmojiMap = getReactionEmojiMap();
 
 <main class="container">
     <div class="page-header-container">
-        <button onclick="history.back()" class="back-button" type="button">Zurück</button>
+        <a href="index.php" class="logo">
+            <button class="back-button" type="button">Zurück</button>
+        </a>
         <h1>Post</h1>
     </div>
 
