@@ -11,6 +11,9 @@
 - Funktion hinzugefügt, um Personen mit @ zu verlinken
 - Funktion hinzugefügt, dass man "angemeldet bleiben kann" mit Cookies und Datenbank Tabelle
 - Kleine Deisgn anpassungen
+- Lazy Loading zu Bildern hinzugefügt
+- ungenutze CSS Methoden entfernt
+- richtige Zeitzone gesetzt
 
 
 ### 2. Hürden
