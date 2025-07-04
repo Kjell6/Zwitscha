@@ -201,7 +201,6 @@ body {
 }
 
 .create-post-form .post-button:disabled {
-    background-color: var(--primary-disabled);
     cursor: not-allowed;
     transform: none;
 }
@@ -238,6 +237,12 @@ body {
 /* Hintergrundfarbe für verschachtelte Kommentare/Antworten */
 .replies-list .post.comment-layout {
     background-color: #fbfbfb;
+}
+
+@media (prefers-color-scheme: dark) {
+    .replies-list .post.comment-layout, .reply-section .create-post-form {
+        background-color: var(--bg-color); 
+    }
 }
 
 /* Styling für die Kommentare-Sektion */
