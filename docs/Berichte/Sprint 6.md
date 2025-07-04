@@ -26,12 +26,17 @@
 ## Ferdi
 
 ### 1. Erzielte Ergebnisse
+- Es werden jetzt nichtmehr alle Posts auf einmal in den Feed geladen
+    - nur die ersten 15, bei klickt auf "mehr Laden"  weitere 15 ... 
 
 
 ### 2. Hürden
+- Das Projekt ist so groß geworden, dass man den leicht Überblick verliert
+- Erster Versuch hat nicht ganz funktioniert
 
 
 ### 3. Überraschungen oder unerwartete Schwierigkeiten
+- Aufgrund der Größe des Projekts war es schwierig sicherzustellen, dass die eigenen Änderungen im Code, den Code an einer anderen Stelle nicht kaputt macht
 
 
 ## Julian
