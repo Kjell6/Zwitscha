@@ -88,11 +88,13 @@ $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
-// Posts aus der Datenbank laden
+// Posts aus der Datenbank laden - nur die erste "Seite"
+$limit = 15;
+$offset = 0;
 if ($showFollowedOnly) {
-    $posts = $postRepository->getFollowedPosts($currentUserId);
+    $posts = $postRepository->getFollowedPosts($currentUserId, $limit, $offset);
 } else {
-    $posts = $postRepository->getAllPosts($currentUserId);
+    $posts = $postRepository->getAllPosts($currentUserId, $limit, $offset);
 }
 ?>
 
@@ -195,7 +197,7 @@ if ($showFollowedOnly) {
 </div>
 
 <!-- mehr laden Button -->
-<button id="mehr-laden-button">Mehr laden</button>
+<button id="mehr-laden-button" class="load-more-button">Mehr laden</button>
 
 <?php include 'footerMobile.php'; ?>
 <footer>
@@ -205,6 +207,55 @@ if ($showFollowedOnly) {
 <?php include 'lightbox.php'; ?>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let offset = <?php echo $limit; ?>;
+        const limit = <?php echo $limit; ?>;
+        let isLoading = false;
+        const loadMoreButton = document.getElementById('mehr-laden-button');
+        const postsContainer = document.getElementById('posts-container');
+        const filter = '<?php echo $showFollowedOnly ? "followed" : "all"; ?>';
+
+        if(<?php echo count($posts); ?> < limit) {
+            loadMoreButton.style.display = 'none';
+        }
+        
+        loadMoreButton.addEventListener('click', function() {
+            if (isLoading) return;
+
+            isLoading = true;
+            loadMoreButton.textContent = 'Lade...';
+            loadMoreButton.disabled = true;
+
+            fetch(`php/get-posts.php?limit=${limit}&offset=${offset}&filter=${filter}`)
+                .then(response => {
+                    if (response.status === 204) {
+                        // Keine weiteren Posts
+                        loadMoreButton.style.display = 'none';
+                        return null;
+                    }
+                    if (!response.ok) {
+                        throw new Error('Netzwerk-Antwort war nicht ok.');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    if (html) {
+                        postsContainer.insertAdjacentHTML('beforeend', html);
+                        offset += limit;
+                    }
+                })
+                .catch(error => {
+                    console.error('Fehler beim Nachladen der Posts:', error);
+                    loadMoreButton.textContent = 'Fehler! Erneut versuchen';
+                })
+                .finally(() => {
+                    isLoading = false;
+                    loadMoreButton.textContent = 'Mehr laden';
+                    loadMoreButton.disabled = false;
+                });
+        });
+    });
+
     // Zeichenzähler für Post-Textarea
     const postInput = document.getElementById('post-input');
     const charCount = document.querySelector('.character-count');
@@ -268,31 +319,6 @@ if ($showFollowedOnly) {
         imageInput.value = '';
         previewImg.src = '#';
         imagePreview.style.display = 'none';
-    });
-</script>
-
-<script>
-    let pageNum = 2;
-
-    document.getElementById("mehr-laden-button").addEventListener("click", () => {
-        fetch(`/get-posts.php?page=${pageNum}`)
-            .then(response => response.json())
-            .then(posts => {
-                if (posts.length === 0 || posts.length <= (15 * (pageNum - 1))) {
-                    document.getElementById("mehr-laden-button").style.display = "none";
-                    return;
-                }
-                const container = document.getElementById("posts-container");
-                container.innerHTML = '';
-
-                posts.forEach(post => {
-                    const div = document.createElement("div");
-                    div.innerHTML = `<h3>${post.autor}</h3><p>${post.text}</p><small>${post.datumZeit}</small><hr>`;
-                    container.appendChild(div);
-                });
-
-                pageNum++;
-            });
     });
 </script>
 </body>

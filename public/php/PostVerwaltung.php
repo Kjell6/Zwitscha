@@ -46,7 +46,7 @@ class PostVerwaltung {
      * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers.
      * @return array Ein Array von Posts.
      */
-    public function getFollowedPosts(int $currentUserId): array {
+    public function getFollowedPosts(int $currentUserId, int $limit = 15, int $offset = 0): array {
         // Diese Abfrage ist fast identisch mit getAllPosts, hat aber einen zusätzlichen
         // INNER JOIN auf die 'folge'-Tabelle, um nur relevante Posts zu filtern.
         $sql = "
@@ -65,17 +65,12 @@ class PostVerwaltung {
             JOIN nutzer n ON p.nutzer_id = n.id
             INNER JOIN folge f ON p.nutzer_id = f.gefolgter_id AND f.folgender_id = ?
             ORDER BY p.datumZeit DESC
+            LIMIT ? OFFSET ?
         ";
         
-        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId], 'ii');
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId, $limit, $offset], 'iii');
     }
 
-    public function getPostsByPage(int $currentUserId, int $pageNum): array {
-        $limit = 15 * $pageNum;
-        $offset = 0;
-        return $this->getAllPosts($currentUserId, $limit, $offset);
-    }
-    
     /**
      * Holt alle Posts, die einen bestimmten Hashtag enthalten.
      *

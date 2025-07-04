@@ -1,27 +1,41 @@
 <?php
-require_once __DIR__ . '/php/PostVerwaltung.php';
-require_once __DIR__ . '/php/session_helper.php';
+require_once __DIR__ . '/PostVerwaltung.php';
+require_once __DIR__ . '/session_helper.php';
+require_once __DIR__ . '/NutzerVerwaltung.php';
 
-header('Content-Type: application/json');
+header('Content-Type: text/html');
 
 // Nutzer muss eingeloggt sein
 if (!isLoggedIn()) {
     http_response_code(403);
-    echo json_encode(['error' => 'Nicht eingeloggt']);
+    echo "<p>Nicht eingeloggt</p>";
     exit;
 }
 
 $currentUserId = getCurrentUserId();
 $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 15;
-
-
+$filter = $_GET['filter'] ?? 'all';
 
 $postVerwaltung = new PostVerwaltung();
-$pageNum = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$nutzerVerwaltung = new NutzerVerwaltung();
 
-$posts = $postVerwaltung->getPostsByPage($currentUserId, $pageNum);
+if ($filter === 'followed') {
+    $posts = $postVerwaltung->getFollowedPosts($currentUserId, $limit, $offset);
+} else {
+    $posts = $postVerwaltung->getAllPosts($currentUserId, $limit, $offset);
+}
 
+// Wenn keine Posts gefunden wurden, einen leeren String zurückgeben.
+if (empty($posts)) {
+    // Ein spezieller Header oder eine leere Antwort, damit das Frontend weiß, dass es keine weiteren Posts gibt.
+    http_response_code(204); // No Content
+    exit;
+}
 
-// Optional: nur bestimmte Felder zurückgeben (z. B. bei Mobile-Feed)
-echo json_encode($posts);
+// Posts als HTML-Snippets rendern und zurückgeben
+foreach ($posts as $post) {
+    // Die 'post.php' Vorlage wiederverwenden, um Konsistenz zu gewährleisten
+    // Die Variablen müssen hier für das Template verfügbar sein
+    include __DIR__ . '/../post.php';
+}
