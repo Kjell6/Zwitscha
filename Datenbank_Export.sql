@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 10.50.1.18:3308
--- Erstellungszeit: 02. Jul 2025 um 17:43
+-- Erstellungszeit: 04. Jul 2025 um 15:11
 -- Server-Version: 10.9.2-MariaDB-1:10.9.2+maria~ubu2204
 -- PHP-Version: 8.2.28
 
@@ -42,9 +42,9 @@ CREATE TABLE `kommentar` (
   `id` int(11) NOT NULL,
   `nutzer_id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
+  `parent_comment_id` int(11) DEFAULT NULL,
   `text` text NOT NULL,
-  `datumZeit` datetime NOT NULL DEFAULT current_timestamp(),
-  `parentId` int(11) DEFAULT NULL
+  `datumZeit` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -121,7 +121,7 @@ ALTER TABLE `kommentar`
   ADD PRIMARY KEY (`id`),
   ADD KEY `foreignKey Nutzer` (`nutzer_id`),
   ADD KEY `foreignKey Post` (`post_id`),
-  ADD KEY `parentId` (`parentId`);
+  ADD KEY `fk_parent_comment` (`parent_comment_id`);
 
 --
 -- Indizes für die Tabelle `login_tokens`
@@ -195,9 +195,9 @@ ALTER TABLE `folge`
 -- Constraints der Tabelle `kommentar`
 --
 ALTER TABLE `kommentar`
+  ADD CONSTRAINT `fk_parent_comment` FOREIGN KEY (`parent_comment_id`) REFERENCES `kommentar` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `foreignKey Nutzer` FOREIGN KEY (`nutzer_id`) REFERENCES `nutzer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `foreignKey Post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `kommentar_ibfk_1` FOREIGN KEY (`parentId`) REFERENCES `kommentar` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `foreignKey Post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `login_tokens`

@@ -46,7 +46,7 @@ class PostVerwaltung {
      * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers.
      * @return array Ein Array von Posts.
      */
-    public function getFollowedPosts(int $currentUserId): array {
+    public function getFollowedPosts(int $currentUserId, int $limit = 15, int $offset = 0): array {
         // Diese Abfrage ist fast identisch mit getAllPosts, hat aber einen zusätzlichen
         // INNER JOIN auf die 'folge'-Tabelle, um nur relevante Posts zu filtern.
         $sql = "
@@ -65,9 +65,10 @@ class PostVerwaltung {
             JOIN nutzer n ON p.nutzer_id = n.id
             INNER JOIN folge f ON p.nutzer_id = f.gefolgter_id AND f.folgender_id = ?
             ORDER BY p.datumZeit DESC
+            LIMIT ? OFFSET ?
         ";
         
-        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId], 'ii');
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId, $limit, $offset], 'iiii');
     }
 
     public function getPostsWithOffset(int $currentUserId, int $offset, int $limit): array {
@@ -81,7 +82,7 @@ class PostVerwaltung {
      * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers.
      * @return array Ein Array von Posts.
      */
-    public function getPostsByHashtag(string $hashtag, int $currentUserId): array {
+    public function getPostsByHashtag(string $hashtag, int $currentUserId, int $limit = 15, int $offset = 0): array {
         $sql = "
             SELECT 
                 p.id, p.text, p.bildDaten, p.datumZeit,
@@ -98,12 +99,13 @@ class PostVerwaltung {
             JOIN nutzer n ON p.nutzer_id = n.id
             WHERE p.text REGEXP ?
             ORDER BY p.datumZeit DESC
+            LIMIT ? OFFSET ?
         ";
         
         $escapedHashtag = $this->db->real_escape_string($hashtag);
         $regexp = '(^|[[:space:]])#' . $escapedHashtag . '[[:>:]]';
 
-        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $regexp], 'is');
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $regexp, $limit, $offset], 'isii');
     }
 
     /**
@@ -451,7 +453,7 @@ class PostVerwaltung {
      * @param int $currentUserId Die ID des aktuell eingeloggten Nutzers (für Reaktions-Status).
      * @return array Ein Array von Posts.
      */
-    public function getPostsByUserId(int $userId, int $currentUserId): array {
+    public function getPostsByUserId(int $userId, int $currentUserId, int $limit = 15, int $offset = 0): array {
         $sql = "
             SELECT 
                 p.id, p.text, p.bildDaten, p.datumZeit,
@@ -468,10 +470,11 @@ class PostVerwaltung {
             JOIN nutzer n ON p.nutzer_id = n.id
             WHERE p.nutzer_id = ?
             ORDER BY p.datumZeit DESC
+            LIMIT ? OFFSET ?
         ";
         
         // Zuerst $currentUserId für die Subquery, dann $userId für die WHERE-Klausel.
-        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $userId], 'ii');
+        return $this->_fetchAndProcessPosts($sql, [$currentUserId, $userId, $limit, $offset], 'iiii');
     }
 
 

@@ -59,9 +59,11 @@ $profile = $nutzerVerwaltung->getUserProfileData($profileId);
 $profileUser = $nutzerVerwaltung->getUserById($profileId); // Für Admin-Status
 $posts = [];
 $isFollowing = false;
+$limit = 15;
 
 if ($profile) {
-    $posts = $postVerwaltung->getPostsByUserId($profileId, $currentUserId);
+    // Lade nur die erste Seite der Posts
+    $posts = $postVerwaltung->getPostsByUserId($profileId, $currentUserId, $limit, 0);
     $isFollowing = $nutzerVerwaltung->isFollowing($currentUserId, $profileId);
 
     // Konvertiere das Registrierungsdatum in ein lesbares Format
@@ -209,7 +211,7 @@ if ($profile) {
         <!-- ============================
               8) Feed-Sektion: Posts dieses Nutzers
              ============================ -->
-        <section class="feed">
+        <section class="feed" id="posts-container">
             <div class="feed-title-container">
                 <span class="feed-title">Posts</span>
             </div>
@@ -230,6 +232,14 @@ if ($profile) {
             }
             ?>
         </section>
+
+        <!-- "Mehr laden"-Button, nur anzeigen, wenn die initiale Post-Anzahl dem Limit entspricht (deutet auf mehr Posts hin) -->
+        <?php if (count($posts) === $limit): ?>
+            <div id="mehr-laden-container" style="display: flex; justify-content: center; margin: 20px 0;">
+                <button id="mehr-laden-button" class="btn">Mehr laden</button>
+            </div>
+        <?php endif; ?>
+
     <?php endif; ?>
 
 </main>
@@ -239,6 +249,55 @@ if ($profile) {
 </footer>
 
 <?php include 'lightbox.php'; ?>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("posts-container");
+    const buttonContainer = document.getElementById('mehr-laden-container');
+    
+    // Prüfen, ob der Button überhaupt auf der Seite existiert
+    if (!buttonContainer) return;
+
+    const button = document.getElementById("mehr-laden-button");
+    let offset = <?php echo $limit; ?>;
+    const limit = <?php echo $limit; ?>;
+    const profileId = <?php echo $profileId; ?>;
+
+    button.addEventListener("click", () => {
+        // Lade-Indikator anzeigen
+        button.disabled = true;
+        button.textContent = 'Lädt...';
+
+        // Daten von der neuen Lade-Schnittstelle abrufen
+        fetch(`php/get-posts.php?context=user&userId=${profileId}&offset=${offset}&limit=${limit}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Fehler beim Laden der Posts');
+                return res.text(); // HTML-String
+            })
+            .then(html => {
+                if (!html.trim()) {
+                    // Keine Posts mehr, Button ausblenden
+                    if(buttonContainer) buttonContainer.style.display = 'none';
+                } else {
+                    // HTML an den Container anhängen
+                    container.insertAdjacentHTML('beforeend', html);
+                    offset += limit; // Offset für die nächste Anfrage erhöhen
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                button.textContent = 'Fehler!'; // Feedback im Fehlerfall
+            })
+            .finally(() => {
+                // Button-Zustand zurücksetzen
+                if(buttonContainer && buttonContainer.style.display !== 'none') {
+                    button.disabled = false;
+                    button.textContent = 'Mehr laden';
+                }
+            });
+    });
+});
+</script>
 
 </body>
 </html>

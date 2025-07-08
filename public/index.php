@@ -85,14 +85,15 @@ requireLogin();
 
 $currentUserId = getCurrentUserId();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+$limit = 15;
 
 $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
 
 // Posts aus der Datenbank laden
 if ($showFollowedOnly) {
-    $posts = $postRepository->getFollowedPosts($currentUserId);
+    $posts = $postRepository->getFollowedPosts($currentUserId, $limit, 0);
 } else {
-    $posts = $postRepository->getAllPosts($currentUserId);
+    $posts = $postRepository->getAllPosts($currentUserId, $limit, 0);
 }
 ?>
 
@@ -192,12 +193,15 @@ if ($showFollowedOnly) {
         }
         ?>
     </section>
+
+    <!-- "Mehr laden"-Button -->
+    <?php if (count($posts) === $limit): ?>
+    <div id="mehr-laden-container" style="display: flex; justify-content: center; margin: 20px 0;">
+        <button id="mehr-laden-button" class="btn">Mehr laden</button>
+    </div>
+    <?php endif; ?>
 </div>
 
-<!-- mehr laden Button -->
-<div style="display: flex; justify-content: center;">
-    <button id="mehr-laden-button">Mehr laden</button>
-</div>
 
 <?php include 'footerMobile.php'; ?>
 <footer>
@@ -275,29 +279,43 @@ if ($showFollowedOnly) {
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const button = document.getElementById("mehr-laden-button");
         const container = document.getElementById("posts-container");
+        const buttonContainer = document.getElementById('mehr-laden-container');
 
-        let offset = 15;
-        const limit = 15;
+        if (!buttonContainer) return;
+
+        const button = document.getElementById("mehr-laden-button");
+        let offset = <?php echo $limit; ?>;
+        const limit = <?php echo $limit; ?>;
+        const context = "<?php echo $showFollowedOnly ? 'followed' : 'all'; ?>";
 
         button.addEventListener("click", () => {
-            fetch(`php/get-posts.php?offset=${offset}&limit=${limit}`)
+            button.disabled = true;
+            button.textContent = 'Lädt...';
+
+            fetch(`php/get-posts.php?context=${context}&offset=${offset}&limit=${limit}`)
                 .then(res => {
                     if (!res.ok) throw new Error('Fehler beim Laden der Posts');
-                    return res.text(); // HTML-String
+                    return res.text();
                 })
                 .then(html => {
                     if (!html.trim()) {
-                        // Keine Posts mehr
-                        document.getElementById('mehr-laden-button').style.display = 'none';
-                        return;
+                        if (buttonContainer) buttonContainer.style.display = 'none';
+                    } else {
+                        container.insertAdjacentHTML('beforeend', html);
+                        offset += limit;
                     }
-                    // Anhängen an Container
-                    document.getElementById('posts-container').insertAdjacentHTML('beforeend', html);
-                    offset += limit;
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    console.error(err);
+                    button.textContent = 'Fehler!';
+                })
+                .finally(() => {
+                    if (buttonContainer && buttonContainer.style.display !== 'none') {
+                        button.disabled = false;
+                        button.textContent = 'Mehr laden';
+                    }
+                });
         });
     });
 </script>
