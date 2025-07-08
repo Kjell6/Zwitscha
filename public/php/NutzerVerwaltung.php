@@ -174,6 +174,13 @@ class NutzerVerwaltung {
      * @return bool True bei Erfolg.
      */
     public function setAdminStatus(int $userId, bool $isAdmin): bool {
+        // Sicherheitsprüfung: Verhindern, dass dem Haupt-Admin der Status entzogen wird.
+        $user = $this->getUserById($userId);
+        if ($user && $user['nutzerName'] === 'admin' && !$isAdmin) {
+            // Versuch, dem Haupt-Admin den Status zu entziehen -> blockieren
+            return false;
+        }
+
         $adminValue = $isAdmin ? 1 : 0;
         $sql = "UPDATE nutzer SET istAdministrator = ? WHERE id = ?";
         
@@ -274,56 +281,63 @@ class NutzerVerwaltung {
     }
 
     /**
-     * Löscht einen Nutzer-Account komplett aus der Datenbank.
+     * Löscht einen Nutzer und all seine zugehörigen Daten endgültig.
+     * Dies kann nicht rückgängig gemacht werden.
      *
-     * @param int $userId Die ID des Nutzers.
+     * @param int $userId Die ID des zu löschenden Nutzers.
      * @return bool True bei Erfolg.
      */
     public function deleteUser(int $userId): bool {
-        // Da es möglicherweise Foreign Key Constraints gibt, müssen wir die 
-        // zugehörigen Daten in der richtigen Reihenfolge löschen
-        
-        $this->db->autocommit(false); // Transaction starten
-        
+        // Sicherheitsprüfung: Der Haupt-Admin-Account kann nicht gelöscht werden.
+        $user = $this->getUserById($userId);
+        if ($user && $user['nutzerName'] === 'admin') {
+            return false;
+        }
+
+        $this->db->begin_transaction();
+
         try {
-            // 1. Reaktionen des Nutzers löschen
-            $stmt = $this->db->prepare("DELETE FROM Reaktion WHERE nutzer_id = ?");
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $stmt->close();
-            
-            // 2. Kommentare des Nutzers löschen
-            $stmt = $this->db->prepare("DELETE FROM kommentar WHERE nutzer_id = ?");
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $stmt->close();
-            
-            // 3. Follow-Beziehungen löschen (als Follower und als Gefolgter)
-            $stmt = $this->db->prepare("DELETE FROM folge WHERE folgender_id = ? OR gefolgter_id = ?");
-            $stmt->bind_param("ii", $userId, $userId);
-            $stmt->execute();
-            $stmt->close();
-            
-            // 4. Posts des Nutzers löschen (inklusive zugehörige Reaktionen/Kommentare durch CASCADE)
+            // 1. Alle Posts des Nutzers löschen (und kaskadierend Kommentare/Reaktionen, falls FKs so eingestellt sind)
+            // Wenn nicht, müssen diese zuerst manuell gelöscht werden.
+            // Annahme: Kaskadierendes Löschen ist für Kommentare und Reaktionen eingerichtet.
             $stmt = $this->db->prepare("DELETE FROM post WHERE nutzer_id = ?");
             $stmt->bind_param("i", $userId);
             $stmt->execute();
             $stmt->close();
-            
-            // 5. Schließlich den Nutzer selbst löschen
+
+            // 2. Alle Follow-Beziehungen des Nutzers löschen
+            $stmt = $this->db->prepare("DELETE FROM folge WHERE folgender_id = ? OR gefolgter_id = ?");
+            $stmt->bind_param("ii", $userId, $userId);
+            $stmt->execute();
+            $stmt->close();
+
+            // 3. Alle Kommentare und Reaktionen des Nutzers löschen (falls nicht kaskadiert)
+            $stmt = $this->db->prepare("DELETE FROM kommentar WHERE nutzer_id = ?");
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $stmt->close();
+
+            $stmt = $this->db->prepare("DELETE FROM Reaktion WHERE nutzer_id = ?");
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $stmt->close();
+
+            // 4. Den Nutzer selbst löschen
             $stmt = $this->db->prepare("DELETE FROM nutzer WHERE id = ?");
             $stmt->bind_param("i", $userId);
             $stmt->execute();
             $stmt->close();
-            
-            $this->db->commit(); // Alles erfolgreich, Transaction bestätigen
+
+            // Wenn alles gut ging, Transaktion committen
+            $this->db->commit();
             return true;
-            
+
         } catch (Exception $e) {
-            $this->db->rollback(); // Bei Fehler alles rückgängig machen
+            // Bei einem Fehler, alles zurückrollen
+            $this->db->rollback();
+            // Optional: Fehler loggen
+            // error_log("Fehler beim Löschen des Nutzers: " . $e->getMessage());
             return false;
-        } finally {
-            $this->db->autocommit(true); // Autocommit wieder aktivieren
         }
     }
 

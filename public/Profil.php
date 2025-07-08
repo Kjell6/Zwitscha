@@ -45,14 +45,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
             if ($targetUser) {
                 // Admin-Status umschalten
                 $newAdminStatus = !$targetUser['istAdministrator'];
-                $nutzerVerwaltung->setAdminStatus($targetUserId, $newAdminStatus);
-                // Redirect, um Form-Neusendung zu verhindern
-                header("Location: " . $_SERVER['REQUEST_URI']);
+                if ($nutzerVerwaltung->setAdminStatus($targetUserId, $newAdminStatus)) {
+                    // Redirect, um Form-Neusendung zu verhindern
+                    header("Location: " . $_SERVER['REQUEST_URI']);
+                    exit();
+                }
+            }
+        }
+    }
+}
+
+// === POST-Request-Handling für Nutzer-Bann ===
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] === 'ban_user') {
+    if ($currentUser && $currentUser['istAdministrator']) {
+        $targetUserId = (int)($_POST['target_user_id'] ?? 0);
+        $userToBan = $nutzerVerwaltung->getUserById($targetUserId);
+
+        // Sicherheitsprüfungen: Man kann sich nicht selbst bannen, der Haupt-Admin kann nicht gebannt werden.
+        if ($targetUserId > 0 && $targetUserId !== $currentUserId && $userToBan && $userToBan['nutzerName'] !== 'admin') {
+            if ($nutzerVerwaltung->deleteUser($targetUserId)) {
+                // Erfolgreich gebannt, Weiterleitung zur Startseite.
+                header("Location: index.php?banned=true");
                 exit();
             }
         }
     }
 }
+
 
 // === Daten aus der Datenbank laden ===
 $profile = $nutzerVerwaltung->getUserProfileData($profileId);
@@ -166,7 +185,7 @@ if ($profile) {
                         </form>
 
                         <!-- Admin-Status-Button (nur für Admins sichtbar) -->
-                        <?php if ($currentUser && $currentUser['istAdministrator'] && $profileUser): ?>
+                        <?php if ($currentUser && $currentUser['istAdministrator'] && $profileUser && $profileUser['nutzerName'] !== 'admin'): ?>
                             <form method="post" action="" style="display: inline; margin-left: 10px;">
                                 <input type="hidden" name="action" value="toggle_admin" />
                                 <input type="hidden" name="target_user_id" value="<?php echo $profile['id']; ?>" />
@@ -178,6 +197,13 @@ if ($profile) {
                                         Zu Admin machen
                                     <?php endif; ?>
                                 </button>
+                            </form>
+                            
+                            <!-- Nutzer Bannen Button -->
+                            <form method="post" action="" style="display: inline; margin-left: 10px;" onsubmit="return confirmBan(this);">
+                                <input type="hidden" name="action" value="ban_user" />
+                                <input type="hidden" name="target_user_id" value="<?php echo $profile['id']; ?>" />
+                                <button type="submit" class="ban-button">Nutzer bannen</button>
                             </form>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -251,7 +277,22 @@ if ($profile) {
 <?php include 'lightbox.php'; ?>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+    function confirmBan(form) {
+        const userToBan = "<?php echo htmlspecialchars($profile['nutzerName'], ENT_QUOTES); ?>";
+        const message = `Um den Nutzer "${userToBan}" wirklich endgültig zu löschen, gib bitte den Nutzernamen zur Bestätigung ein.`;
+        
+        const enteredName = prompt(message);
+        
+        if (enteredName === userToBan) {
+            return true; // Formular wird gesendet
+        } else if (enteredName !== null) { // Wenn der User nicht auf "Abbrechen" klickt
+            alert("Die Eingabe war nicht korrekt. Der Vorgang wurde abgebrochen.");
+            return false;
+        }
+        return false; // Formular wird nicht gesendet
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("posts-container");
     const buttonContainer = document.getElementById('mehr-laden-container');
     

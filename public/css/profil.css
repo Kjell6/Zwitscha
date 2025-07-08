@@ -67,6 +67,23 @@ body {
     background-color: var(--danger-hover);
 }
 
+.ban-button {
+    cursor: pointer;
+    background-color: transparent;
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.ban-button:hover {
+    background-color: var(--danger-color);
+    color: var(--light-color);
+}
+
 
 /* Container für den gesamten Textinhalt - stellt sicher, dass die Kinder stapeln */
 div.profil-header.pb-name-untereinander {
