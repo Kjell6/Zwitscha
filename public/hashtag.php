@@ -21,9 +21,37 @@ $nutzerVerwaltung = new NutzerVerwaltung();
 $currentUserId = getCurrentUserId();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
-// Posts für den Hashtag laden
+// Posts und Kommentare für den Hashtag laden
 $posts = $postRepository->getPostsByHashtag($tag, $currentUserId);
-$pageTitle = 'Posts mit #' . htmlspecialchars($tag);
+$comments = $postRepository->getCommentsByHashtag($tag);
+
+// Posts und Kommentare in einem gemeinsamen Array kombinieren
+$feedItems = [];
+
+// Posts hinzufügen
+foreach ($posts as $post) {
+    $feedItems[] = [
+        'type' => 'post',
+        'data' => $post,
+        'timestamp' => $post['datumZeit']
+    ];
+}
+
+// Kommentare hinzufügen
+foreach ($comments as $comment) {
+    $feedItems[] = [
+        'type' => 'comment',
+        'data' => $comment,
+        'timestamp' => $comment['datumZeit']
+    ];
+}
+
+// Nach Datum sortieren (neueste zuerst)
+usort($feedItems, function($a, $b) {
+    return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+});
+
+$pageTitle = 'Posts und Kommentare mit #' . htmlspecialchars($tag);
 
 ?>
 
@@ -37,6 +65,7 @@ $pageTitle = 'Posts mit #' . htmlspecialchars($tag);
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/post.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/kommentarEinzeln.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
@@ -49,18 +78,26 @@ $pageTitle = 'Posts mit #' . htmlspecialchars($tag);
     <!-- Dynamischer Feed -->
     <section class="feed">
         <?php
-        if (empty($posts)) {
+        if (empty($feedItems)) {
             ?>
             <div class="empty-state">
                 <i class="bi bi-tag" style="font-size: 48px; margin-bottom: 20px;"></i>
-                <h3>Keine Posts gefunden</h3>
-                <p>Es gibt noch keine Posts mit dem Hashtag #<?php echo htmlspecialchars($tag); ?>.</p>
+                <h3>Keine Inhalte gefunden</h3>
+                <p>Es gibt noch keine Posts oder Kommentare mit dem Hashtag #<?php echo htmlspecialchars($tag); ?>.</p>
                 <a href="index.php" class="btn btn-primary">Zurück zur Startseite</a>
             </div>
             <?php
         } else {
-            foreach ($posts as $post) {
-                include 'post.php';
+            foreach ($feedItems as $item) {
+                if ($item['type'] === 'post') {
+                    // Post anzeigen
+                    $post = $item['data'];
+                    include 'post.php';
+                } else {
+                    // Kommentar anzeigen
+                    $comment = $item['data'];
+                    include 'kommentarEinzeln.php';
+                }
             }
         }
         ?>
