@@ -229,6 +229,76 @@ div.profil-header.pb-name-untereinander {
     background-color: rgba(229, 57, 53, 0.1);
 }
 
+.custom-logout-icon {
+    height: 24px;
+    width: 24px;
+}
+
+/* Profile Toggle System - Uses existing CSS variables */
+.switch-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.profile-toggle {
+    position: relative;
+    display: inline-flex;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    background-color: var(--light-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 320px;
+    height: 40px;
+}
+
+.profile-toggle input { display: none; }
+
+.profile-toggle label {
+    flex: 1;
+    text-align: center;
+    line-height: 38px;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+    user-select: none;
+}
+
+.profile-toggle .switch-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius-md);
+    transition: transform var(--transition-fast);
+}
+
+#comments-toggle:checked ~ .switch-indicator { transform: translateX(100%); }
+#posts-toggle:checked ~ .switch-indicator { transform: translateX(0%); }
+
+#posts-toggle:checked ~ label[for="posts-toggle"],
+#comments-toggle:checked ~ label[for="comments-toggle"] {
+    color: var(--light-color);
+}
+
+/* Content Animation - Reuses global variables */
+.content-container {
+    display: none;
+    animation: fadeIn var(--transition-normal) ease-in-out;
+}
+
+.content-container.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Mobile Anpassungen */
 @media (max-width: 768px) {
     .posts {
@@ -291,40 +361,15 @@ div.profil-header.pb-name-untereinander {
         right: var(--spacing-sm);
         padding: var(--spacing-xs);
     }
-}
 
-.custom-logout-icon {
-    height: 24px;
-    width: 24px;
-}
+    .profile-toggle {
+        width: 100%;
+        max-width: 280px;
+        height: 36px;
+    }
 
-/* Titel für den Feed-Bereich */
-.feed-title-container {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: var(--spacing-lg) 0;
-    color: var(--text-secondary);
-}
-
-.feed-title-container::before,
-.feed-title-container::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.feed-title-container::before {
-    margin-right: var(--spacing-sm);
-}
-
-.feed-title-container::after {
-    margin-left: var(--spacing-sm);
-}
-
-.feed-title {
-    font-size: var(--font-size-md);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    .profile-toggle label {
+        font-size: var(--font-size-xs);
+        line-height: 36px;
+    }
 }

@@ -77,12 +77,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
 $profile = $nutzerVerwaltung->getUserProfileData($profileId);
 $profileUser = $nutzerVerwaltung->getUserById($profileId); // Für Admin-Status
 $posts = [];
+$comments = [];
 $isFollowing = false;
 $limit = 15;
 
 if ($profile) {
     // Lade nur die erste Seite der Posts
     $posts = $postVerwaltung->getPostsByUserId($profileId, $currentUserId, $limit, 0);
+    // Lade auch die erste Seite der Kommentare
+    $comments = $postVerwaltung->getCommentsByUserId($profileId, $limit, 0);
     $isFollowing = $nutzerVerwaltung->isFollowing($currentUserId, $profileId);
 
     // Konvertiere das Registrierungsdatum in ein lesbares Format
@@ -128,6 +131,7 @@ if ($profile) {
     <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/profil.css" />
     <link rel="stylesheet" href="css/post.css" />
+    <link rel="stylesheet" href="css/kommentarEinzeln.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
@@ -212,7 +216,7 @@ if ($profile) {
                 <!-- Dynamisches Beitrittsdatum -->
                 <p class="beitritts-datum"><i class="bi bi-calendar2-fill"></i> Beigetreten <?php echo htmlspecialchars($joinDateLabel); ?></p>
 
-                <!-- Dynamische Zähler: Follower, Folge ich, Posts -->
+                <!-- Dynamische Zähler: Follower, Folge ich, Posts, Kommentare -->
                 <div class="folgen-container">
                     <a href="followerList.php?userid=<?php echo $profile['id']; ?>&type=followers" class="folge-info-link">
                         <p class="folge-info"><strong><?php echo $profile['followerCount']; ?></strong> <span>Follower</span></p>
@@ -221,6 +225,7 @@ if ($profile) {
                         <p class="folge-info"><strong><?php echo $profile['followingCount']; ?></strong> <span>Folge ich</span></p>
                     </a>
                     <p class="folge-info"><strong><?php echo $profile['postCount']; ?></strong> <span>Posts</span></p>
+                    <p class="folge-info"><strong><?php echo $profile['commentCount']; ?></strong><span>Kommentare</span></p>
                 </div>
             </div>
             
@@ -235,36 +240,63 @@ if ($profile) {
         </div>
 
         <!-- ============================
-              8) Feed-Sektion: Posts dieses Nutzers
+              8) Toggle-Sektion: Posts und Kommentare
              ============================ -->
-        <section class="feed" id="posts-container">
-            <div class="feed-title-container">
-                <span class="feed-title">Posts</span>
-            </div>
-
-            <?php
-            if (empty($posts)) {
-                ?>
-                <div class="empty-state">
-                    <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
-                    <h3>Noch keine Posts</h3>
-                    <p>Dieser Nutzer hat noch keine Posts verfasst.</p>
+        <section class="profile-content">
+            <!-- Content Toggle -->
+            <div class="switch-wrapper">
+                <div class="profile-toggle">
+                    <input type="radio" id="posts-toggle" name="profile-filter" checked>
+                    <label for="posts-toggle">Posts</label>
+                    <input type="radio" id="comments-toggle" name="profile-filter">
+                    <label for="comments-toggle">Kommentare</label>
+                    <span class="switch-indicator"></span>
                 </div>
-                <?php
-            } else {
-                foreach ($posts as $post) {
-                    include 'post.php';
-                }
-            }
-            ?>
-        </section>
-
-        <!-- "Mehr laden"-Button, nur anzeigen, wenn die initiale Post-Anzahl dem Limit entspricht (deutet auf mehr Posts hin) -->
-        <?php if (count($posts) === $limit): ?>
-            <div id="mehr-laden-container" style="display: flex; justify-content: center; margin: 20px 0;">
-                <button id="mehr-laden-button" class="btn">Mehr laden</button>
             </div>
-        <?php endif; ?>
+
+            <!-- Posts Container -->
+            <div class="feed content-container active" id="posts-container">
+                <?php
+                if (empty($posts)) {
+                    ?>
+                    <div class="empty-state">
+                        <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <h3>Noch keine Posts</h3>
+                        <p>Dieser Nutzer hat noch keine Posts verfasst.</p>
+                    </div>
+                    <?php
+                } else {
+                    foreach ($posts as $post) {
+                        include 'post.php';
+                    }
+                }
+                ?>
+            </div>
+
+            <!-- Comments Container -->
+            <div class="feed content-container" id="comments-container">
+                <?php
+                if (empty($comments)) {
+                    ?>
+                    <div class="empty-state">
+                        <i class="bi bi-chat-left-text" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <h3>Noch keine Kommentare</h3>
+                        <p>Dieser Nutzer hat noch keine Kommentare verfasst.</p>
+                    </div>
+                    <?php
+                } else {
+                    foreach ($comments as $comment) {
+                        include 'kommentarEinzeln.php';
+                    }
+                }
+                ?>
+            </div>
+
+            <!-- "Mehr laden"-Button -->
+            <div id="mehr-laden-container" style="display: flex; justify-content: center; margin: 20px 0;">
+                <button id="mehr-laden-button" class="btn" style="<?php echo count($posts) < $limit ? 'display: none;' : ''; ?>">Mehr laden</button>
+            </div>
+        </section>
 
     <?php endif; ?>
 
@@ -293,51 +325,129 @@ if ($profile) {
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("posts-container");
-    const buttonContainer = document.getElementById('mehr-laden-container');
-    
-    // Prüfen, ob der Button überhaupt auf der Seite existiert
-    if (!buttonContainer) return;
+        const profileId = <?php echo $profileId; ?>;
+        const limit = <?php echo $limit; ?>;
+        
+        // Toggle-Funktionalität
+        const postsToggle = document.getElementById('posts-toggle');
+        const commentsToggle = document.getElementById('comments-toggle');
+        const contentContainers = document.querySelectorAll('.content-container');
+        const buttonContainer = document.getElementById('mehr-laden-container');
+        const moreButton = document.getElementById('mehr-laden-button');
+        const commentsContainer = document.getElementById('comments-container');
+        const postsContainer = document.getElementById('posts-container');
+        
+        let currentContent = 'posts';
+        let postsOffset = <?php echo $limit; ?>;
+        let commentsOffset = <?php echo $limit; ?>;
+        let commentsLoaded = true;
 
-    const button = document.getElementById("mehr-laden-button");
-    let offset = <?php echo $limit; ?>;
-    const limit = <?php echo $limit; ?>;
-    const profileId = <?php echo $profileId; ?>;
+        // Toggle zwischen Posts und Kommentaren
+        postsToggle.addEventListener('change', function() {
+            if (this.checked) {
+                currentContent = 'posts';
+                showContent('posts');
+                updateMoreButtonVisibility();
+            }
+        });
 
-    button.addEventListener("click", () => {
-        // Lade-Indikator anzeigen
-        button.disabled = true;
-        button.textContent = 'Lädt...';
+        commentsToggle.addEventListener('change', function() {
+            if (this.checked) {
+                currentContent = 'comments';
+                showContent('comments');
+                updateMoreButtonVisibility();
+            }
+        });
 
-        // Daten von der neuen Lade-Schnittstelle abrufen
-        fetch(`php/get-posts.php?context=user&userId=${profileId}&offset=${offset}&limit=${limit}`)
-            .then(res => {
-                if (!res.ok) throw new Error('Fehler beim Laden der Posts');
-                return res.text(); // HTML-String
-            })
-            .then(html => {
-                if (!html.trim()) {
-                    // Keine Posts mehr, Button ausblenden
-                    if(buttonContainer) buttonContainer.style.display = 'none';
+        function showContent(contentType) {
+            // Container-Zustand aktualisieren
+            contentContainers.forEach(container => container.classList.remove('active'));
+            document.getElementById(contentType + '-container').classList.add('active');
+        }
+
+        // Flags für "Mehr laden"-Button
+        let hasMorePosts = <?php echo count($posts) >= $limit ? 'true' : 'false'; ?>;
+        let hasMoreComments = <?php echo count($comments) >= $limit ? 'true' : 'false'; ?>;
+
+        // Funktion zum Aktualisieren der "Mehr laden"-Button-Sichtbarkeit
+        function updateMoreButtonVisibility() {
+            if (currentContent === 'posts') {
+                buttonContainer.style.display = hasMorePosts ? 'flex' : 'none';
+            } else {
+                buttonContainer.style.display = hasMoreComments ? 'flex' : 'none';
+            }
+        }
+
+        // "Mehr laden"-Button Funktionalität
+        if (moreButton) {
+            moreButton.addEventListener('click', () => {
+                moreButton.disabled = true;
+                moreButton.textContent = 'Lädt...';
+                
+                let fetchUrl, targetContainer, offset;
+                
+                if (currentContent === 'posts') {
+                    fetchUrl = `php/get-posts.php?context=user&userId=${profileId}&offset=${postsOffset}&limit=${limit}`;
+                    targetContainer = postsContainer;
+                    offset = postsOffset;
                 } else {
-                    // HTML an den Container anhängen
-                    container.insertAdjacentHTML('beforeend', html);
-                    offset += limit; // Offset für die nächste Anfrage erhöhen
+                    fetchUrl = `php/get-posts.php?context=user_comments&userId=${profileId}&offset=${commentsOffset}&limit=${limit}`;
+                    targetContainer = commentsContainer;
+                    offset = commentsOffset;
                 }
-            })
-            .catch(err => {
-                console.error(err);
-                button.textContent = 'Fehler!'; // Feedback im Fehlerfall
-            })
-            .finally(() => {
-                // Button-Zustand zurücksetzen
-                if(buttonContainer && buttonContainer.style.display !== 'none') {
-                    button.disabled = false;
-                    button.textContent = 'Mehr laden';
-                }
+                
+                fetch(fetchUrl)
+                    .then(res => {
+                        if (!res.ok) throw new Error('Fehler beim Laden');
+                        return res.text();
+                    })
+                    .then(html => {
+                        if (!html.trim()) {
+                            // Keine weiteren Inhalte verfügbar
+                            if (currentContent === 'posts') {
+                                hasMorePosts = false;
+                            } else {
+                                hasMoreComments = false;
+                            }
+                            buttonContainer.style.display = 'none';
+                        } else {
+                            targetContainer.insertAdjacentHTML('beforeend', html);
+                            
+                            if (currentContent === 'posts') {
+                                postsOffset += limit;
+                            } else {
+                                commentsOffset += limit;
+                            }
+                            
+                            // Prüfe, ob die Anzahl der geladenen Inhalte kleiner als das Limit ist
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            const loadedItems = tempDiv.querySelectorAll('.post, .comment-item').length;
+                            
+                            if (loadedItems < limit) {
+                                // Weniger als erwartet geladen - keine weiteren vorhanden
+                                if (currentContent === 'posts') {
+                                    hasMorePosts = false;
+                                } else {
+                                    hasMoreComments = false;
+                                }
+                                buttonContainer.style.display = 'none';
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        moreButton.textContent = 'Fehler!';
+                    })
+                    .finally(() => {
+                        if (buttonContainer.style.display !== 'none') {
+                            moreButton.disabled = false;
+                            moreButton.textContent = 'Mehr laden';
+                        }
+                    });
             });
+        }
     });
-});
 </script>
 
 </body>

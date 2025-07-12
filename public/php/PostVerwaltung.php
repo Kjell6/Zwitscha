@@ -477,5 +477,45 @@ class PostVerwaltung {
         return $this->_fetchAndProcessPosts($sql, [$currentUserId, $userId, $limit, $offset], 'iiii');
     }
 
+    /**
+     * Holt alle Kommentare für einen bestimmten Nutzer mit zugehörigen Post-Informationen.
+     *
+     * @param int $userId Die ID des Nutzers, dessen Kommentare geholt werden sollen.
+     * @param int $limit Maximale Anzahl der Kommentare (Standard: 15).
+     * @param int $offset Anzahl der zu überspringenden Kommentare (Standard: 0).
+     * @return array Ein Array von Kommentaren mit Post-Informationen.
+     */
+    public function getCommentsByUserId(int $userId, int $limit = 15, int $offset = 0): array {
+        $sql = "
+            SELECT 
+                k.id, k.text, k.datumZeit, k.parent_comment_id, k.post_id,
+                n.nutzerName AS autor,
+                n.profilbild,
+                n.id as userId,
+                p.text AS postText,
+                p.datumZeit AS postDatum,
+                pn.nutzerName AS postAutor,
+                pn.id AS postAutorId
+            FROM kommentar k
+            JOIN nutzer n ON k.nutzer_id = n.id
+            JOIN post p ON k.post_id = p.id
+            JOIN nutzer pn ON p.nutzer_id = pn.id
+            WHERE k.nutzer_id = ?
+            ORDER BY k.datumZeit DESC
+            LIMIT ? OFFSET ?
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        $stmt->bind_param("iii", $userId, $limit, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $comments = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $comments;
+    }
+
 
 } 

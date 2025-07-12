@@ -26,6 +26,8 @@ $nutzerVerwaltung = new NutzerVerwaltung();
 $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 $posts = [];
+$comments = [];
+$isCommentContext = false;
 
 // --- Je nach Kontext die passende Methode aufrufen ---
 switch ($context) {
@@ -37,6 +39,14 @@ switch ($context) {
         $userId = isset($_GET['userId']) ? (int)$_GET['userId'] : 0;
         if ($userId > 0) {
             $posts = $postVerwaltung->getPostsByUserId($userId, $currentUserId, $limit, $offset);
+        }
+        break;
+
+    case 'user_comments':
+        $userId = isset($_GET['userId']) ? (int)$_GET['userId'] : 0;
+        if ($userId > 0) {
+            $comments = $postVerwaltung->getCommentsByUserId($userId, $limit, $offset);
+            $isCommentContext = true;
         }
         break;
 
@@ -53,15 +63,31 @@ switch ($context) {
         break;
 }
 
-// --- Posts als HTML ausgeben ---
-if (empty($posts)) {
-    // Wenn keine Posts geladen wurden, einen leeren Response senden,
-    // damit das Frontend weiß, dass das Ende erreicht ist.
-    http_response_code(200); 
-    exit;
-}
+// --- Posts oder Kommentare als HTML ausgeben ---
+if ($isCommentContext) {
+    // Kommentare ausgeben
+    if (empty($comments)) {
+        // Wenn keine Kommentare geladen wurden, einen leeren Response senden,
+        // damit das Frontend weiß, dass das Ende erreicht ist.
+        http_response_code(200); 
+        exit;
+    }
+    
+    foreach ($comments as $comment) {
+        // WICHTIG: Das kommentarEinzeln.php Skript erwartet die Variablen $comment, $currentUser und $nutzerVerwaltung
+        include __DIR__ . '/../kommentarEinzeln.php';
+    }
+} else {
+    // Posts ausgeben
+    if (empty($posts)) {
+        // Wenn keine Posts geladen wurden, einen leeren Response senden,
+        // damit das Frontend weiß, dass das Ende erreicht ist.
+        http_response_code(200); 
+        exit;
+    }
 
-foreach ($posts as $post) {
-    // WICHTIG: Das post.php Skript erwartet die Variablen $post und $currentUser
-    include __DIR__ . '/../post.php';
+    foreach ($posts as $post) {
+        // WICHTIG: Das post.php Skript erwartet die Variablen $post und $currentUser
+        include __DIR__ . '/../post.php';
+    }
 } 

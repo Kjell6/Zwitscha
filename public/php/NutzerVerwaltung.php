@@ -24,7 +24,8 @@ class NutzerVerwaltung {
                 n.erstellungsDatum AS registrierungsDatum,
                 (SELECT COUNT(*) FROM folge WHERE gefolgter_id = n.id) AS followerCount,
                 (SELECT COUNT(*) FROM folge WHERE folgender_id = n.id) AS followingCount,
-                (SELECT COUNT(*) FROM post WHERE nutzer_id = n.id) AS postCount
+                (SELECT COUNT(*) FROM post WHERE nutzer_id = n.id) AS postCount,
+                (SELECT COUNT(*) FROM kommentar WHERE nutzer_id = n.id) AS commentCount
             FROM nutzer n
             WHERE n.id = ?
         ";
