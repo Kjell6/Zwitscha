@@ -81,11 +81,17 @@ $comments = [];
 $isFollowing = false;
 $limit = 15;
 
+// Check which content to show: posts or comments
+$showComments = isset($_GET['view']) && $_GET['view'] === 'comments';
+
 if ($profile) {
-    // Lade nur die erste Seite der Posts
-    $posts = $postVerwaltung->getPostsByUserId($profileId, $currentUserId, $limit, 0);
-    // Lade auch die erste Seite der Kommentare
-    $comments = $postVerwaltung->getCommentsByUserId($profileId, $limit, 0);
+    if ($showComments) {
+        // Lade nur Kommentare
+        $comments = $postVerwaltung->getCommentsByUserId($profileId, $limit, 0);
+    } else {
+        // Lade nur Posts (default)
+        $posts = $postVerwaltung->getPostsByUserId($profileId, $currentUserId, $limit, 0);
+    }
     $isFollowing = $nutzerVerwaltung->isFollowing($currentUserId, $profileId);
 
     // Konvertiere das Registrierungsdatum in ein lesbares Format
@@ -246,56 +252,64 @@ if ($profile) {
             <!-- Content Toggle -->
             <div class="switch-wrapper">
                 <div class="profile-toggle">
-                    <input type="radio" id="posts-toggle" name="profile-filter" checked>
+                    <input type="radio" id="posts-toggle" name="profile-filter" <?php echo !$showComments ? 'checked' : ''; ?>
+                           onchange="window.location.href='Profil.php?userid=<?php echo $profileId; ?>'">
                     <label for="posts-toggle">Posts</label>
-                    <input type="radio" id="comments-toggle" name="profile-filter">
+                    <input type="radio" id="comments-toggle" name="profile-filter" <?php echo $showComments ? 'checked' : ''; ?>
+                           onchange="window.location.href='Profil.php?userid=<?php echo $profileId; ?>&view=comments'">
                     <label for="comments-toggle">Kommentare</label>
                     <span class="switch-indicator"></span>
                 </div>
             </div>
 
-            <!-- Posts Container -->
-            <div class="feed content-container active" id="posts-container">
-                <?php
-                if (empty($posts)) {
-                    ?>
-                    <div class="empty-state">
-                        <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
-                        <h3>Noch keine Posts</h3>
-                        <p>Dieser Nutzer hat noch keine Posts verfasst.</p>
-                    </div>
+            <!-- Dynamic Content -->
+            <div class="feed" id="content-container">
+                <?php if ($showComments): ?>
+                    <!-- Comments View -->
                     <?php
-                } else {
-                    foreach ($posts as $post) {
-                        include 'post.php';
+                    if (empty($comments)) {
+                        ?>
+                        <div class="empty-state">
+                            <i class="bi bi-chat-left-text" style="font-size: 48px; margin-bottom: 20px;"></i>
+                            <h3>Noch keine Kommentare</h3>
+                            <p>Dieser Nutzer hat noch keine Kommentare verfasst.</p>
+                        </div>
+                        <?php
+                    } else {
+                        foreach ($comments as $comment) {
+                            include 'kommentarEinzeln.php';
+                        }
                     }
-                }
-                ?>
-            </div>
-
-            <!-- Comments Container -->
-            <div class="feed content-container" id="comments-container">
-                <?php
-                if (empty($comments)) {
                     ?>
-                    <div class="empty-state">
-                        <i class="bi bi-chat-left-text" style="font-size: 48px; margin-bottom: 20px;"></i>
-                        <h3>Noch keine Kommentare</h3>
-                        <p>Dieser Nutzer hat noch keine Kommentare verfasst.</p>
-                    </div>
+                <?php else: ?>
+                    <!-- Posts View -->
                     <?php
-                } else {
-                    foreach ($comments as $comment) {
-                        include 'kommentarEinzeln.php';
+                    if (empty($posts)) {
+                        ?>
+                        <div class="empty-state">
+                            <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
+                            <h3>Noch keine Posts</h3>
+                            <p>Dieser Nutzer hat noch keine Posts verfasst.</p>
+                        </div>
+                        <?php
+                    } else {
+                        foreach ($posts as $post) {
+                            include 'post.php';
+                        }
                     }
-                }
-                ?>
+                    ?>
+                <?php endif; ?>
             </div>
 
             <!-- "Mehr laden"-Button -->
+            <?php 
+            $currentCount = $showComments ? count($comments) : count($posts);
+            if ($currentCount === $limit): 
+            ?>
             <div id="mehr-laden-container" style="display: flex; justify-content: center; margin: 20px 0;">
-                <button id="mehr-laden-button" class="btn" style="<?php echo count($posts) < $limit ? 'display: none;' : ''; ?>">Mehr laden</button>
+                <button id="mehr-laden-button" class="btn">Mehr laden</button>
             </div>
+            <?php endif; ?>
         </section>
 
     <?php endif; ?>
@@ -327,73 +341,23 @@ if ($profile) {
     document.addEventListener("DOMContentLoaded", () => {
         const profileId = <?php echo $profileId; ?>;
         const limit = <?php echo $limit; ?>;
+        const isCommentsView = <?php echo $showComments ? 'true' : 'false'; ?>;
         
-        // Toggle-Funktionalität
-        const postsToggle = document.getElementById('posts-toggle');
-        const commentsToggle = document.getElementById('comments-toggle');
-        const contentContainers = document.querySelectorAll('.content-container');
-        const buttonContainer = document.getElementById('mehr-laden-container');
+        let offset = <?php echo $limit; ?>;
         const moreButton = document.getElementById('mehr-laden-button');
-        const commentsContainer = document.getElementById('comments-container');
-        const postsContainer = document.getElementById('posts-container');
+        const contentContainer = document.getElementById('content-container');
         
-        let currentContent = 'posts';
-        let postsOffset = <?php echo $limit; ?>;
-        let commentsOffset = <?php echo $limit; ?>;
-        let commentsLoaded = true;
-
-        // Toggle zwischen Posts und Kommentaren
-        postsToggle.addEventListener('change', function() {
-            if (this.checked) {
-                currentContent = 'posts';
-                showContent('posts');
-                updateMoreButtonVisibility();
-            }
-        });
-
-        commentsToggle.addEventListener('change', function() {
-            if (this.checked) {
-                currentContent = 'comments';
-                showContent('comments');
-                updateMoreButtonVisibility();
-            }
-        });
-
-        function showContent(contentType) {
-            // Container-Zustand aktualisieren
-            contentContainers.forEach(container => container.classList.remove('active'));
-            document.getElementById(contentType + '-container').classList.add('active');
-        }
-
-        // Flags für "Mehr laden"-Button
-        let hasMorePosts = <?php echo count($posts) >= $limit ? 'true' : 'false'; ?>;
-        let hasMoreComments = <?php echo count($comments) >= $limit ? 'true' : 'false'; ?>;
-
-        // Funktion zum Aktualisieren der "Mehr laden"-Button-Sichtbarkeit
-        function updateMoreButtonVisibility() {
-            if (currentContent === 'posts') {
-                buttonContainer.style.display = hasMorePosts ? 'flex' : 'none';
-            } else {
-                buttonContainer.style.display = hasMoreComments ? 'flex' : 'none';
-            }
-        }
-
         // "Mehr laden"-Button Funktionalität
         if (moreButton) {
             moreButton.addEventListener('click', () => {
                 moreButton.disabled = true;
                 moreButton.textContent = 'Lädt...';
                 
-                let fetchUrl, targetContainer, offset;
-                
-                if (currentContent === 'posts') {
-                    fetchUrl = `php/get-posts.php?context=user&userId=${profileId}&offset=${postsOffset}&limit=${limit}`;
-                    targetContainer = postsContainer;
-                    offset = postsOffset;
+                let fetchUrl;
+                if (isCommentsView) {
+                    fetchUrl = `php/get-posts.php?context=user_comments&userId=${profileId}&offset=${offset}&limit=${limit}`;
                 } else {
-                    fetchUrl = `php/get-posts.php?context=user_comments&userId=${profileId}&offset=${commentsOffset}&limit=${limit}`;
-                    targetContainer = commentsContainer;
-                    offset = commentsOffset;
+                    fetchUrl = `php/get-posts.php?context=user&userId=${profileId}&offset=${offset}&limit=${limit}`;
                 }
                 
                 fetch(fetchUrl)
@@ -404,20 +368,10 @@ if ($profile) {
                     .then(html => {
                         if (!html.trim()) {
                             // Keine weiteren Inhalte verfügbar
-                            if (currentContent === 'posts') {
-                                hasMorePosts = false;
-                            } else {
-                                hasMoreComments = false;
-                            }
-                            buttonContainer.style.display = 'none';
+                            moreButton.style.display = 'none';
                         } else {
-                            targetContainer.insertAdjacentHTML('beforeend', html);
-                            
-                            if (currentContent === 'posts') {
-                                postsOffset += limit;
-                            } else {
-                                commentsOffset += limit;
-                            }
+                            contentContainer.insertAdjacentHTML('beforeend', html);
+                            offset += limit;
                             
                             // Prüfe, ob die Anzahl der geladenen Inhalte kleiner als das Limit ist
                             const tempDiv = document.createElement('div');
@@ -426,12 +380,7 @@ if ($profile) {
                             
                             if (loadedItems < limit) {
                                 // Weniger als erwartet geladen - keine weiteren vorhanden
-                                if (currentContent === 'posts') {
-                                    hasMorePosts = false;
-                                } else {
-                                    hasMoreComments = false;
-                                }
-                                buttonContainer.style.display = 'none';
+                                moreButton.style.display = 'none';
                             }
                         }
                     })
@@ -440,7 +389,7 @@ if ($profile) {
                         moreButton.textContent = 'Fehler!';
                     })
                     .finally(() => {
-                        if (buttonContainer.style.display !== 'none') {
+                        if (moreButton.style.display !== 'none') {
                             moreButton.disabled = false;
                             moreButton.textContent = 'Mehr laden';
                         }

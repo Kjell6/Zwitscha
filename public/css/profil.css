@@ -287,13 +287,6 @@ div.profil-header.pb-name-untereinander {
 }
 
 /* Content Animation - Reuses global variables */
-.content-container {
-    display: none;
-    animation: fadeIn var(--transition-normal) ease-in-out;
-}
-
-.content-container.active { display: block; }
-
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
