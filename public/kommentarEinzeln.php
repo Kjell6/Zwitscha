@@ -68,6 +68,7 @@ $canDeleteComment = $isOwner || $isAdmin;
                 <?php endif; ?>
             </div>
             <a href="postDetails.php?id=<?php echo $comment['post_id']; ?>" class="view-full-post">
+                <i class="bi bi-arrow-return-right"></i>
                 Vollständigen Post anzeigen
             </a>
         </div>
