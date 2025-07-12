@@ -493,6 +493,7 @@ class PostVerwaltung {
                 n.profilbild,
                 n.id as userId,
                 p.text AS postText,
+                p.bildDaten AS postBildDaten,
                 p.datumZeit AS postDatum,
                 pn.nutzerName AS postAutor,
                 pn.id AS postAutorId
@@ -533,6 +534,7 @@ class PostVerwaltung {
                 n.profilbild,
                 n.id as userId,
                 p.text AS postText,
+                p.bildDaten AS postBildDaten,
                 p.datumZeit AS postDatum,
                 pn.nutzerName AS postAutor,
                 pn.id AS postAutorId

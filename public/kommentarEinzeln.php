@@ -57,6 +57,15 @@ $canDeleteComment = $isOwner || $isAdmin;
             </div>
             <div class="comment-context-content">
                 <p><?php echo linkify_content(mb_substr($comment['postText'], 0, 120) . (mb_strlen($comment['postText']) > 120 ? '...' : ''), $nutzerVerwaltung); ?></p>
+                <?php if (!empty($comment['postBildDaten'])): ?>
+                    <div class="post-image-container">
+                        <img loading="lazy" src="getImage.php?type=post&id=<?php echo $comment['post_id']; ?>"
+                             alt="Bild des Original-Posts"
+                             class="post-image no-post-details"
+                             onclick="openLightbox('getImage.php?type=post&id=<?php echo $comment['post_id']; ?>')"
+                             style="cursor: pointer;">
+                    </div>
+                <?php endif; ?>
             </div>
             <a href="postDetails.php?id=<?php echo $comment['post_id']; ?>" class="view-full-post">
                 Vollständigen Post anzeigen
