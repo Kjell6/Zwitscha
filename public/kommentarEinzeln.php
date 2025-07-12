@@ -44,11 +44,11 @@ $canDeleteComment = $isOwner || $isAdmin;
         </div>
 
         <!-- Ursprünglicher Post-Kontext -->
-        <div class="comment-context">
+        <div class="comment-context" onclick="window.location.href='postDetails.php?id=<?php echo $comment['post_id']; ?>'" style="cursor: pointer;">
             <div class="comment-context-info">
                 <i class="bi bi-reply"></i>
                 <span>Antwort an</span>
-                <a href="Profil.php?userid=<?php echo htmlspecialchars($comment['postAutorId']); ?>" class="context-author">
+                <a href="Profil.php?userid=<?php echo htmlspecialchars($comment['postAutorId']); ?>" class="context-author" onclick="event.stopPropagation();">
                     <?php echo htmlspecialchars($comment['postAutor']); ?>
                 </a>
                 <time datetime="<?php echo htmlspecialchars($comment['postDatum']); ?>" class="context-timestamp">
@@ -62,15 +62,15 @@ $canDeleteComment = $isOwner || $isAdmin;
                         <img loading="lazy" src="getImage.php?type=post&id=<?php echo $comment['post_id']; ?>"
                              alt="Bild des Original-Posts"
                              class="post-image no-post-details"
-                             onclick="openLightbox('getImage.php?type=post&id=<?php echo $comment['post_id']; ?>')"
+                             onclick="event.stopPropagation(); openLightbox('getImage.php?type=post&id=<?php echo $comment['post_id']; ?>')"
                              style="cursor: pointer;">
                     </div>
                 <?php endif; ?>
             </div>
-            <a href="postDetails.php?id=<?php echo $comment['post_id']; ?>" class="view-full-post">
+            <div class="view-full-post">
                 <i class="bi bi-arrow-return-right"></i>
                 Vollständigen Post anzeigen
-            </a>
+            </div>
         </div>
     </main>
 </article> 

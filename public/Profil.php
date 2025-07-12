@@ -373,6 +373,9 @@ if ($profile) {
                             contentContainer.insertAdjacentHTML('beforeend', html);
                             offset += limit;
                             
+                            // Setup event handlers für neue Kommentare
+                            setupCommentContextHandlers();
+                            
                             // Prüfe, ob die Anzahl der geladenen Inhalte kleiner als das Limit ist
                             const tempDiv = document.createElement('div');
                             tempDiv.innerHTML = html;
@@ -396,6 +399,23 @@ if ($profile) {
                     });
             });
         }
+        
+        // Funktion für comment-context Event-Handler
+        function setupCommentContextHandlers() {
+            const commentContexts = document.querySelectorAll('.comment-context');
+            
+            commentContexts.forEach(context => {
+                const hashtagLinks = context.querySelectorAll('a.link');
+                hashtagLinks.forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.stopPropagation();
+                    });
+                });
+            });
+        }
+        
+        // Initial setup für bereits geladene Kommentare
+        setupCommentContextHandlers();
     });
 </script>
 

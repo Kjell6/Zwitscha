@@ -111,5 +111,26 @@ $pageTitle = 'Posts und Kommentare mit #' . htmlspecialchars($tag);
 
 <?php include 'lightbox.php'; ?>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Funktion für comment-context Event-Handler
+        function setupCommentContextHandlers() {
+            const commentContexts = document.querySelectorAll('.comment-context');
+            
+            commentContexts.forEach(context => {
+                const hashtagLinks = context.querySelectorAll('a.link');
+                hashtagLinks.forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.stopPropagation();
+                    });
+                });
+            });
+        }
+        
+        // Initial setup für bereits geladene Kommentare
+        setupCommentContextHandlers();
+    });
+</script>
+
 </body>
 </html> 
