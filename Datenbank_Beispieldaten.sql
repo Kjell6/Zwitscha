@@ -30,10 +30,10 @@ INSERT INTO post (id, nutzer_id, text, datumZeit, bildDaten) VALUES
 -- -----------------------------
 -- Kommentare (inkl. Antwort-Thread)
 -- -----------------------------
-INSERT INTO kommentar (id, nutzer_id, post_id, text, datumZeit, parentId) VALUES
-  (1, 2, 1, 'Glückwunsch zum ersten Post! 🎈', '2025-07-01 09:05:00', NULL),
-  (2, 3, 1, 'Ich stimme Alice zu! 👍',         '2025-07-01 09:06:00', 1),
-  (3, 1, 2, 'Danke für das Update, Alice! 😊', '2025-07-01 10:05:00', NULL);
+INSERT INTO kommentar (id, nutzer_id, post_id, parent_comment_id, text, datumZeit) VALUES
+  (1, 2, 1, NULL, 'Glückwunsch zum ersten Post! 🎈', '2025-07-01 09:05:00'),
+  (2, 3, 1, 1,    'Ich stimme Alice zu! 👍',         '2025-07-01 09:06:00'),
+  (3, 1, 2, NULL, 'Danke für das Update, Alice! 😊', '2025-07-01 10:05:00');
 
 -- -----------------------------
 -- Reaktionen
