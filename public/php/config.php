@@ -1,10 +1,8 @@
 <?php
-// public/php/config.php
-
-// Setzt die Standardzeitzone für die gesamte Anwendung auf Mitteleuropäische Zeit.
-// Dies stellt sicher, dass alle Zeitstempel korrekt umgerechnet werden.
+// Datenbankverbindung und Zeitzone konfigurieren
 date_default_timezone_set('Europe/Berlin');
 
+// Datenbankverbindungsparameter aus Umgebungsvariablen
 return [
     'host' => getenv('MYSQL_SERVER'),
     'user' => getenv('MYSQL_USER'),

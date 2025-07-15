@@ -1,6 +1,4 @@
 <?php
-// public/php/Database.php
-
 class db {
     /**
      * @var mysqli|null Die einzige Instanz der mysqli-Verbindung.
@@ -27,12 +25,12 @@ class db {
         if (self::$instance === null) {
             $config = require(__DIR__ . '/config.php');
 
-            // Prüfen, ob die Konfigurationswerte vorhanden sind
+            // Konfigurationswerte prüfen
             if (empty($config['host']) || empty($config['user']) || empty($config['database'])) {
                 die("Datenbank-Konfigurationsfehler: Nicht alle erforderlichen Werte sind gesetzt.");
             }
 
-            // mysqli-Objekt erstellen
+            // MySQLi-Verbindung erstellen
             self::$instance = new mysqli($config['host'], $config['user'], $config['password'], $config['database']);
 
             // Verbindung prüfen
@@ -41,10 +39,8 @@ class db {
                 die("Datenbankfehler. Bitte versuchen Sie es später erneut.");
             }
 
-            // Zeichensatz auf utf8mb4 setzen für volle Unicode-Unterstützung
+            // UTF8-Zeichensatz und Zeitzone setzen
             self::$instance->set_charset("utf8mb4");
-
-            // Zeitzone der Datenbankverbindung auf die lokale Zeitzone setzen
             self::$instance->query("SET time_zone = 'Europe/Berlin'");
         }
         return self::$instance;

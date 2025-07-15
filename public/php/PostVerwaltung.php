@@ -1,4 +1,5 @@
 <?php
+// Post-Verwaltung für Posts, Kommentare, Reaktionen, etc.
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
@@ -47,8 +48,6 @@ class PostVerwaltung {
      * @return array Ein Array von Posts.
      */
     public function getFollowedPosts(int $currentUserId, int $limit = 15, int $offset = 0): array {
-        // Diese Abfrage ist fast identisch mit getAllPosts, hat aber einen zusätzlichen
-        // INNER JOIN auf die 'folge'-Tabelle, um nur relevante Posts zu filtern.
         $sql = "
             SELECT 
                 p.id, p.text, p.bildDaten, p.datumZeit,
@@ -117,15 +116,25 @@ class PostVerwaltung {
      * @return bool True bei Erfolg.
      */
     public function toggleReaction(int $userId, int $postId, string $emoji): bool {
-        // Invertiertes Mapping (Emoji => DB-Reaktionstyp)
+        // Eingabe validieren
+        if ($userId <= 0 || $postId <= 0 || empty($emoji) || strlen($emoji) > 10) {
+            return false;
+        }
+        
+        // Post-Existenz prüfen
+        $postExists = $this->findPostById($postId);
+        if (!$postExists) {
+            return false;
+        }
+        
+        // Emoji zu DB-Reaktionstyp umwandeln
         $reactionMap = array_flip(getReactionEmojiMap());
-
         if (!isset($reactionMap[$emoji])) {
             return false;
         }
         $reactionType = $reactionMap[$emoji];
 
-        // 1. Prüfen, ob genau diese Reaktion bereits existiert.
+        // Prüfen ob Reaktion bereits existiert
         $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM Reaktion WHERE nutzer_id = ? AND post_id = ? AND reaktionsTyp = ?");
         $stmt->bind_param("iis", $userId, $postId, $reactionType);
         $stmt->execute();
@@ -133,13 +142,13 @@ class PostVerwaltung {
         $stmt->close();
 
         if ($result['count'] > 0) {
-            // 2. Reaktion existiert, also entfernen.
+            // Reaktion entfernen
             $stmt = $this->db->prepare("DELETE FROM Reaktion WHERE nutzer_id = ? AND post_id = ? AND reaktionsTyp = ?");
             $stmt->bind_param("iis", $userId, $postId, $reactionType);
             $stmt->execute();
             $stmt->close();
         } else {
-            // 3. Reaktion existiert nicht, also hinzufügen.
+            // Reaktion hinzufügen
             $stmt = $this->db->prepare("INSERT INTO Reaktion (nutzer_id, post_id, reaktionsTyp) VALUES (?, ?, ?)");
             $stmt->bind_param("iis", $userId, $postId, $reactionType);
             $stmt->execute();
@@ -162,11 +171,9 @@ class PostVerwaltung {
         
         $stmt = $this->db->prepare($sql);
         if (!$stmt) {
-            // Optional: error_log($this->db->error);
             return false;
         }
 
-        // 'iss' steht für integer, string, string
         $stmt->bind_param("iss", $userId, $text, $imageData);
         
         if ($stmt->execute()) {
@@ -193,7 +200,6 @@ class PostVerwaltung {
             return false;
         }
 
-        // 'i' steht für integer
         $stmt->bind_param("i", $postId);
         
         $success = $stmt->execute();
@@ -267,14 +273,14 @@ class PostVerwaltung {
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return [];
 
-        // Binden der Parameter an die Abfrage
+        // Parameter binden und Abfrage ausführen
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
         $result = $stmt->get_result();
         $posts = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
 
-        // Gleiche Nachbearbeitung für alle Post-Abfragen
+        // Reaktionen für alle Posts verarbeiten
         return array_map(function($post) {
             $post['reactions'] = [
                 '👍' => (int) $post['count_like'],
@@ -390,7 +396,6 @@ class PostVerwaltung {
         $stmt = $this->db->prepare($sql);
         if (!$stmt) return false;
 
-        // Falls parentCommentId null ist, muss das als NULL gebunden werden, sonst als int
         if ($parentCommentId === null) {
             $null = null;
             $stmt->bind_param("iisi", $postId, $userId, $text, $null);
@@ -473,7 +478,6 @@ class PostVerwaltung {
             LIMIT ? OFFSET ?
         ";
         
-        // Zuerst $currentUserId für die Subquery, dann $userId für die WHERE-Klausel.
         return $this->_fetchAndProcessPosts($sql, [$currentUserId, $userId, $limit, $offset], 'iiii');
     }
 

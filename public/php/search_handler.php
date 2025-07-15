@@ -1,13 +1,13 @@
 <?php
 require_once __DIR__ . '/NutzerVerwaltung.php';
 
-// Stelle sicher, dass nur POST-Requests verarbeitet werden
+// Nur POST-Requests verarbeiten
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     exit();
 }
 
-// Content-Type für JSON setzen
+// JSON-Response Header setzen
 header('Content-Type: application/json');
 
 try {
@@ -38,7 +38,7 @@ try {
     echo json_encode($results);
     
 } catch (Exception $e) {
-    // Im Fehlerfall leeres Array zurückgeben
+    // Bei Fehlern leeres Array zurückgeben
     http_response_code(500);
     echo json_encode([]);
 }

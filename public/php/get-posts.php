@@ -6,16 +6,16 @@ require_once __DIR__ . '/PostVerwaltung.php';
 require_once __DIR__ . '/NutzerVerwaltung.php';
 require_once __DIR__ . '/session_helper.php';
 
-// Ausgabe als HTML, nicht JSON
 header('Content-Type: text/html; charset=utf-8');
 
+// Login-Status prüfen
 if (!isLoggedIn()) {
     http_response_code(403);
     echo '<p>Bitte zuerst einloggen.</p>';
     exit;
 }
 
-// --- Parameter aus der Anfrage holen ---
+// Parameter aus Anfrage holen
 $currentUserId = getCurrentUserId();
 $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 15;
@@ -29,7 +29,7 @@ $posts = [];
 $comments = [];
 $isCommentContext = false;
 
-// --- Je nach Kontext die passende Methode aufrufen ---
+// Je nach Kontext entsprechende Daten laden
 switch ($context) {
     case 'followed':
         $posts = $postVerwaltung->getFollowedPosts($currentUserId, $limit, $offset);
@@ -63,31 +63,25 @@ switch ($context) {
         break;
 }
 
-// --- Posts oder Kommentare als HTML ausgeben ---
+// Entsprechende Templates ausgeben
 if ($isCommentContext) {
     // Kommentare ausgeben
     if (empty($comments)) {
-        // Wenn keine Kommentare geladen wurden, einen leeren Response senden,
-        // damit das Frontend weiß, dass das Ende erreicht ist.
         http_response_code(200); 
         exit;
     }
     
     foreach ($comments as $comment) {
-        // WICHTIG: Das kommentarEinzeln.php Skript erwartet die Variablen $comment, $currentUser und $nutzerVerwaltung
         include __DIR__ . '/../kommentarEinzeln.php';
     }
 } else {
     // Posts ausgeben
     if (empty($posts)) {
-        // Wenn keine Posts geladen wurden, einen leeren Response senden,
-        // damit das Frontend weiß, dass das Ende erreicht ist.
         http_response_code(200); 
         exit;
     }
 
     foreach ($posts as $post) {
-        // WICHTIG: Das post.php Skript erwartet die Variablen $post und $currentUser
         include __DIR__ . '/../post.php';
     }
 } 

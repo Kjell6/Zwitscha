@@ -1,4 +1,5 @@
 <?php
+// Nutzer-Verwaltung für Registrierung, Login, Profile, etc.
 
 require_once __DIR__ . '/db.php';
 
@@ -175,10 +176,9 @@ class NutzerVerwaltung {
      * @return bool True bei Erfolg.
      */
     public function setAdminStatus(int $userId, bool $isAdmin): bool {
-        // Sicherheitsprüfung: Verhindern, dass dem Haupt-Admin der Status entzogen wird.
+        // Haupt-Admin kann nicht deaktiviert werden
         $user = $this->getUserById($userId);
         if ($user && $user['nutzerName'] === 'admin' && !$isAdmin) {
-            // Versuch, dem Haupt-Admin den Status zu entziehen -> blockieren
             return false;
         }
 
@@ -236,7 +236,6 @@ class NutzerVerwaltung {
 
         if (!$user) return false;
 
-        // Passwort-Hash mit dem eingegebenen Passwort vergleichen
         return password_verify($currentPassword, $user['passwort']);
     }
 
@@ -289,7 +288,7 @@ class NutzerVerwaltung {
      * @return bool True bei Erfolg.
      */
     public function deleteUser(int $userId): bool {
-        // Sicherheitsprüfung: Der Haupt-Admin-Account kann nicht gelöscht werden.
+        // Haupt-Admin kann nicht gelöscht werden
         $user = $this->getUserById($userId);
         if ($user && $user['nutzerName'] === 'admin') {
             return false;
@@ -298,46 +297,23 @@ class NutzerVerwaltung {
         $this->db->begin_transaction();
 
         try {
-            // 1. Alle Posts des Nutzers löschen (und kaskadierend Kommentare/Reaktionen, falls FKs so eingestellt sind)
-            // Wenn nicht, müssen diese zuerst manuell gelöscht werden.
-            // Annahme: Kaskadierendes Löschen ist für Kommentare und Reaktionen eingerichtet.
+            // Alle Posts des Nutzers löschen (inkl. Kommentare)
             $stmt = $this->db->prepare("DELETE FROM post WHERE nutzer_id = ?");
             $stmt->bind_param("i", $userId);
             $stmt->execute();
             $stmt->close();
 
-            // 2. Alle Follow-Beziehungen des Nutzers löschen
-            $stmt = $this->db->prepare("DELETE FROM folge WHERE folgender_id = ? OR gefolgter_id = ?");
-            $stmt->bind_param("ii", $userId, $userId);
-            $stmt->execute();
-            $stmt->close();
-
-            // 3. Alle Kommentare und Reaktionen des Nutzers löschen (falls nicht kaskadiert)
-            $stmt = $this->db->prepare("DELETE FROM kommentar WHERE nutzer_id = ?");
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $stmt->close();
-
-            $stmt = $this->db->prepare("DELETE FROM Reaktion WHERE nutzer_id = ?");
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $stmt->close();
-
-            // 4. Den Nutzer selbst löschen
+            // Nutzer selbst löschen (CASCADE löscht automatisch: Folge-Beziehungen, Kommentare, Reaktionen, Tokens)
             $stmt = $this->db->prepare("DELETE FROM nutzer WHERE id = ?");
             $stmt->bind_param("i", $userId);
             $stmt->execute();
             $stmt->close();
 
-            // Wenn alles gut ging, Transaktion committen
             $this->db->commit();
             return true;
 
         } catch (Exception $e) {
-            // Bei einem Fehler, alles zurückrollen
             $this->db->rollback();
-            // Optional: Fehler loggen
-            // error_log("Fehler beim Löschen des Nutzers: " . $e->getMessage());
             return false;
         }
     }
@@ -350,7 +326,6 @@ class NutzerVerwaltung {
      * @return array Ergebnis mit ['success' => bool, 'message' => string, 'userId' => int|null]
      */
     public function registerUser(string $username, string $password): array {
-        // Validierung der Eingaben
         if (strlen($username) < 3) {
             return ['success' => false, 'message' => 'Benutzername muss mindestens 3 Zeichen lang sein.'];
         }
@@ -366,7 +341,6 @@ class NutzerVerwaltung {
         if (strlen($password) > 100) {
             return ['success' => false, 'message' => 'Passwort darf maximal 100 Zeichen lang sein.'];
         }
-        // Zeichenvalidierung – nur Buchstaben, Ziffern und gängige Sonderzeichen erlaubt
         if (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $password)) {
             return ['success' => false, 'message' => 'Passwort enthält unerlaubte Zeichen.'];
         }
@@ -375,7 +349,6 @@ class NutzerVerwaltung {
             return ['success' => false, 'message' => 'Benutzername ist bereits vergeben.'];
         }
 
-        // Passwort sicher hashen
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO nutzer (nutzerName, passwort, istAdministrator) VALUES (?, ?, ?)";
@@ -446,9 +419,7 @@ class NutzerVerwaltung {
         
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
-            // Vergleiche das eingegebene Passwort mit dem Hash in der Datenbank
             if (password_verify($password, $user['passwort'])) {
-                // Passwort aus den zurückgegebenen Daten entfernen, bevor es zurückgegeben wird
                 unset($user['passwort']);
                 return $user;
             }
@@ -541,9 +512,9 @@ class NutzerVerwaltung {
             [
                 'expires' => strtotime($gueltigBis),
                 'path' => '/',
-                'secure' => true, // Nur über HTTPS senden
-                'httponly' => true, // Für JavaScript nicht zugänglich
-                'samesite' => 'Lax' // Schutz gegen CSRF
+                'secure' => true, 
+                'httponly' => true, 
+                'samesite' => 'Lax' 
             ]
         );
     }
@@ -569,12 +540,11 @@ class NutzerVerwaltung {
         }
 
         if (new DateTime() > new DateTime($token_data['gueltigBis'])) {
-            $this->deleteRememberToken($selektor); // Abgelaufenes Token löschen
+            $this->deleteRememberToken($selektor); 
             return null;
         }
 
         if (hash_equals($token_data['tokenHash'], hash('sha256', $validator))) {
-            // Token ist gültig. Optional: Token rotieren für mehr Sicherheit
             $this->deleteRememberToken($selektor);
             $this->createRememberToken($token_data['nutzer_id']);
 

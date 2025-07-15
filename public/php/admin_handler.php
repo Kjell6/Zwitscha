@@ -1,8 +1,9 @@
 <?php
+// Admin-Handler für Administrator-Aktionen
 require_once __DIR__ . '/NutzerVerwaltung.php';
 require_once __DIR__ . '/session_helper.php';
 
-// Stelle sicher, dass nur POST-Requests verarbeitet werden
+// Nur POST-Requests verarbeiten
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     exit();
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     $nutzerVerwaltung = new NutzerVerwaltung();
     
-    // Aktueller Benutzer aus Session holen
+    // Aktuellen Benutzer aus Session holen
     $currentUserId = getCurrentUserId();
     if (!$currentUserId) {
         http_response_code(401);
@@ -19,7 +20,7 @@ try {
     }
     $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
     
-    // Prüfen ob der aktuelle Benutzer Admin ist
+    // Admin-Berechtigung prüfen
     if (!$currentUser || !$currentUser['istAdministrator']) {
         http_response_code(403);
         exit();
@@ -27,6 +28,7 @@ try {
     
     $action = $_POST['action'] ?? '';
     
+    // Admin-Status umschalten
     if ($action === 'toggle_admin') {
         $targetUserId = (int)($_POST['target_user_id'] ?? 0);
         
@@ -42,13 +44,13 @@ try {
         }
     }
     
-    // Zurück zur vorherigen Seite
+    // Zurück zur ursprünglichen Seite
     $referrer = $_SERVER['HTTP_REFERER'] ?? 'index.php';
     header("Location: " . $referrer);
     exit();
     
 } catch (Exception $e) {
-    // Fehlerbehandlung: Zurück zur vorherigen Seite
+    // Bei Fehlern zur ursprünglichen Seite zurück
     $referrer = $_SERVER['HTTP_REFERER'] ?? 'index.php';
     header("Location: " . $referrer);
     exit();

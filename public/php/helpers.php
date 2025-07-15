@@ -1,12 +1,12 @@
 <?php
 
+// Zeitangaben in benutzerfreundlichem Format anzeigen
 if (!function_exists('time_ago')) {
     function time_ago(string $datetime, string $full = 'vor %s'): string {
         $now = new DateTime;
         $ago = new DateTime($datetime);
         $diff = $now->diff($ago);
 
-        // Berechne Wochen separat ohne dynamische Eigenschaften
         $weeks = floor($diff->d / 7);
         $days = $diff->d - ($weeks * 7);
 
@@ -30,16 +30,17 @@ if (!function_exists('time_ago')) {
             's' => 'Sekunde',
         ];
 
+        // Plural-Endungen
         foreach ($string as $k => &$v) {
             if ($values[$k]) {
                 $plural = match ($k) {
-                    'y' => 'e',       // Jahre
-                    'm' => 'e',       // Monate
-                    'w' => 'n',       // Wochen
-                    'd' => 'en',      // Tage
-                    'h' => 'n',       // Stunden
-                    'i' => 'n',       // Minuten
-                    's' => 'n',       // Sekunden
+                    'y' => 'e',
+                    'm' => 'e',
+                    'w' => 'n',
+                    'd' => 'en',
+                    'h' => 'n',
+                    'i' => 'n',
+                    's' => 'n',
                     default => '',
                 };
 
@@ -49,7 +50,7 @@ if (!function_exists('time_ago')) {
             }
         }
 
-        // Nur die größte Zeiteinheit anzeigen
+        // Nur größte Zeiteinheit anzeigen
         if (!empty($string)) {
             $string = array_slice($string, 0, 1);
         }
@@ -86,7 +87,7 @@ if (!function_exists('linkify_content')) {
      * @return string Der Text mit umgewandelten Links als sicherem HTML.
      */
     function linkify_content(string $text, NutzerVerwaltung $nutzerVerwaltung): string {
-        // Regex, um nach @-Erwähnungen und #-Hashtags zu trennen
+        // Text in @-Erwähnungen und #-Hashtags aufteilen
         $parts = preg_split('/([@]\w+|[#][\wÄÖÜäöüß]+)/u', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $resultHtml = '';
 
@@ -95,7 +96,7 @@ if (!function_exists('linkify_content')) {
                 continue;
             }
 
-            // Prüft auf @-Erwähnung
+            // @-Erwähnung verarbeiten
             if ($part[0] === '@' && preg_match('/^@(\w+)$/', $part, $matches)) {
                 $username = $matches[1];
                 $user = $nutzerVerwaltung->getUserByUsername($username);
@@ -107,7 +108,7 @@ if (!function_exists('linkify_content')) {
                     $resultHtml .= htmlspecialchars($part, ENT_QUOTES, 'UTF-8');
                 }
             }
-            // Prüft auf #-Hashtag
+            // #-Hashtag verarbeiten
             elseif ($part[0] === '#' && preg_match('/^#([\wÄÖÜäöüß]+)$/u', $part, $matches)) {
                 $hashtag = $matches[1];
                 $url = 'hashtag.php?tag=' . urlencode($hashtag);
@@ -120,7 +121,6 @@ if (!function_exists('linkify_content')) {
             }
         }
 
-        // Zeilenumbrüche anwenden
         return nl2br($resultHtml, false);
     }
 } 

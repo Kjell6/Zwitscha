@@ -1,7 +1,5 @@
 <?php
-/**
- * Hilfsfunktionen für Session-Management
- */
+// Session-Management und Authentifizierung
 
 /**
  * Startet eine Session falls noch nicht gestartet.
@@ -11,7 +9,7 @@ function ensureSessionStarted(): void {
         session_start();
     }
 
-    // Prüfen auf "Angemeldet bleiben"-Cookie, wenn nicht bereits eingeloggt
+    // "Angemeldet bleiben"-Cookie prüfen
     if (!isset($_SESSION['angemeldet']) && isset($_COOKIE['rememberme'])) {
         $parts = explode(':', $_COOKIE['rememberme']);
         if (count($parts) === 2) {
@@ -23,7 +21,7 @@ function ensureSessionStarted(): void {
             $user = $nutzerVerwaltung->consumeRememberToken($selector, $validator);
 
             if ($user) {
-                // Nutzer erfolgreich via Cookie authentifiziert, Session setzen
+                // Nutzer via Cookie authentifiziert, Session setzen
                 $_SESSION['angemeldet'] = true;
                 $_SESSION['eingeloggt'] = true;
                 $_SESSION['user_id'] = $user['id'];
@@ -99,7 +97,7 @@ function requireLogin(string $redirectAfterLogin = ''): void {
 function logout(): void {
     ensureSessionStarted();
 
-    // "Angemeldet bleiben"-Token löschen, falls vorhanden
+    // "Angemeldet bleiben"-Token löschen
     if (isset($_COOKIE['rememberme'])) {
         $parts = explode(':', $_COOKIE['rememberme']);
         if (count($parts) === 2) {
