@@ -56,9 +56,7 @@
 <main class="container">
     <!-- === PAGE HEADER === -->
     <div class="page-header-container">
-        <a href="index.php" class="logo">
-            <button class="back-button" type="button">Zurück</button>
-        </a>
+        <button class="back-button" type="button" onclick="history.back()">Zurück</button>
         <h1>Post</h1>
     </div>
 
@@ -244,8 +242,10 @@
 </script>
 
 <!-- AJAX-Funktionalität -->
-<script src="js/reactions.js"></script>
-<script src="js/ajax-handler.js"></script>
+<script src="js/ajax/utils.js"></script>
+<script src="js/ajax/reactions.js"></script>
+<script src="js/ajax/posts.js"></script>
+<script src="js/ajax/comments.js"></script>
 
 <?php include 'lightbox.php'; ?>
 

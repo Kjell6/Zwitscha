@@ -276,7 +276,9 @@
 </script>
 
 <!-- AJAX-Funktionalität -->
-<script src="js/reactions.js"></script>
-<script src="js/ajax-handler.js"></script>
+<script src="js/ajax/utils.js"></script>
+<script src="js/ajax/reactions.js"></script>
+<script src="js/ajax/posts.js"></script>
+<script src="js/ajax/comments.js"></script>
 </body>
 </html>
