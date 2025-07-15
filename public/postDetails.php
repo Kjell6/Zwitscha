@@ -1,38 +1,36 @@
 <?php
-require_once __DIR__ . '/php/PostVerwaltung.php';
-require_once __DIR__ . '/php/NutzerVerwaltung.php';
-require_once __DIR__ . '/php/session_helper.php';
-require_once __DIR__ . '/php/helpers.php';
+    require_once __DIR__ . '/php/PostVerwaltung.php';
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    require_once __DIR__ . '/php/session_helper.php';
+    require_once __DIR__ . '/php/helpers.php';
 
-// Prüfen ob angemeldet
-requireLogin();
+// === Initialisierung ===
+    requireLogin();
 
-// Aktueller Benutzer aus Session holen
-$currentUserId = getCurrentUserId();
-$nutzerVerwaltung = new NutzerVerwaltung();
-$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+    $currentUserId = getCurrentUserId();
+    $nutzerVerwaltung = new NutzerVerwaltung();
+    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
-$postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if (!$postId) {
-    // Wenn keine ID vorhanden ist, kann nichts geladen werden.
-    header("Location: index.php");
-    exit();
-}
+    $postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    if (!$postId) {
+        header("Location: index.php");
+        exit();
+    }
 
-$repository = new PostVerwaltung();
+    $repository = new PostVerwaltung();
 
-// ---- Daten für die Detailansicht laden ----
-$post = $repository->getPostById($postId, $currentUserId);
-$comments = $repository->getMainCommentsByPostId($postId);
+    // === Daten für Detailansicht laden ===
+    $post = $repository->getPostById($postId, $currentUserId);
+    $comments = $repository->getMainCommentsByPostId($postId);
 
-// Wenn der Post nicht gefunden wurde, zur Startseite umleiten.
-if (!$post) {
-    header("Location: index.php");
-    exit();
-}
+    // Wenn der Post nicht gefunden wurde, zur Startseite umleiten.
+    if (!$post) {
+        header("Location: index.php");
+        exit();
+    }
 
-// Zentrales Emoji-Mapping für spätere Verwendung
-$reactionEmojiMap = getReactionEmojiMap();
+// === Template-Variablen ===
+    $reactionEmojiMap = getReactionEmojiMap();
 ?>
 
 <!DOCTYPE html>

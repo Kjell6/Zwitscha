@@ -1,16 +1,17 @@
 <?php
-require_once __DIR__ . '/php/session_helper.php';
+    require_once __DIR__ . '/php/session_helper.php';
 
-// Abmelden: Session löschen
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
-    logout();
-}
+// === POST-Request-Handling für Logout ===
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+        logout();
+    }
 
-$eingeloggt = isLoggedIn();
-$currentUserId = getCurrentUserId();
-$currentUsername = getCurrentUsername();
+// === Session-Daten abrufen ===
+    $eingeloggt = isLoggedIn();
+    $currentUserId = getCurrentUserId();
+    $currentUsername = getCurrentUsername();
 
-$currentPage = basename($_SERVER['PHP_SELF']); // z.B. 'Profil.php'
+    $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
 <header class="desktop-header">

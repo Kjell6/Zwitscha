@@ -1,38 +1,35 @@
 <?php
-require_once __DIR__ . '/php/NutzerVerwaltung.php';
-require_once __DIR__ . '/php/session_helper.php';
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    require_once __DIR__ . '/php/session_helper.php';
 
-// Prüfen ob angemeldet
-requireLogin();
+    // === Initialisierung ===
+    requireLogin();
 
-$nutzerVerwaltung = new NutzerVerwaltung();
+    $nutzerVerwaltung = new NutzerVerwaltung();
 
-// Parameter aus der URL holen
-$profileId = isset($_GET['userid']) ? (int)$_GET['userid'] : 0;
-$type = isset($_GET['type']) ? $_GET['type'] : 'followers'; // Standardmäßig 'followers'
+    // === URL-Parameter verarbeiten ===
+    $profileId = isset($_GET['userid']) ? (int)$_GET['userid'] : 0;
+    $type = isset($_GET['type']) ? $_GET['type'] : 'followers'; // Standardmäßig 'followers'
 
-if ($profileId === 0) {
-    header("Location: index.php");
-    exit();
-}
+    if ($profileId === 0) {
+        header("Location: index.php");
+        exit();
+    }
 
-// Profildaten des Nutzers laden, für den die Liste angezeigt wird
-$profileUser = $nutzerVerwaltung->getUserById($profileId);
-if (!$profileUser) {
-    // Wenn der Nutzer nicht existiert, umleiten
-    header("Location: index.php");
-    exit();
-}
+    // === Daten für Follower-Liste laden ===
+    $profileUser = $nutzerVerwaltung->getUserById($profileId);
+    if (!$profileUser) {
+        header("Location: index.php");
+        exit();
+    }
 
-// Daten basierend auf dem Typ laden
-if ($type === 'following') {
-    $title = "Wem " . htmlspecialchars($profileUser['nutzerName']) . " folgt";
-    $userList = $nutzerVerwaltung->getFollowing($profileId);
-} else {
-    $title = "Follower von " . htmlspecialchars($profileUser['nutzerName']);
-    $userList = $nutzerVerwaltung->getFollowers($profileId);
-}
-
+    if ($type === 'following') {
+        $title = "Wem " . htmlspecialchars($profileUser['nutzerName']) . " folgt";
+        $userList = $nutzerVerwaltung->getFollowing($profileId);
+    } else {
+        $title = "Follower von " . htmlspecialchars($profileUser['nutzerName']);
+        $userList = $nutzerVerwaltung->getFollowers($profileId);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="de">

@@ -1,58 +1,54 @@
 <?php
-require_once __DIR__ . '/php/PostVerwaltung.php';
-require_once __DIR__ . '/php/NutzerVerwaltung.php';
-require_once __DIR__ . '/php/session_helper.php';
-require_once __DIR__ . '/php/helpers.php';
+    require_once __DIR__ . '/php/PostVerwaltung.php';
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    require_once __DIR__ . '/php/session_helper.php';
+    require_once __DIR__ . '/php/helpers.php';
 
+// === Initialisierung ===
+    requireLogin();
 
-// Prüfen ob angemeldet
-requireLogin();
+    $tag = $_GET['tag'] ?? null;
+    if (empty($tag)) {
+        header('Location: index.php');
+        exit();
+    }
 
-$tag = $_GET['tag'] ?? null;
-if (empty($tag)) {
-    header('Location: index.php');
-    exit();
-}
+    $postRepository = new PostVerwaltung();
+    $nutzerVerwaltung = new NutzerVerwaltung();
+    $currentUserId = getCurrentUserId();
+    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
-// Verwaltung instanziieren
-$postRepository = new PostVerwaltung();
-$nutzerVerwaltung = new NutzerVerwaltung();
+// === Daten für Hashtag-Anzeige laden ===
+    $posts = $postRepository->getPostsByHashtag($tag, $currentUserId);
+    $comments = $postRepository->getCommentsByHashtag($tag);
 
-$currentUserId = getCurrentUserId();
-$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+    // Posts und Kommentare in einem gemeinsamen Array kombinieren
+    $feedItems = [];
 
-// Posts und Kommentare für den Hashtag laden
-$posts = $postRepository->getPostsByHashtag($tag, $currentUserId);
-$comments = $postRepository->getCommentsByHashtag($tag);
+    // Posts hinzufügen
+    foreach ($posts as $post) {
+        $feedItems[] = [
+            'type' => 'post',
+            'data' => $post,
+            'timestamp' => $post['datumZeit']
+        ];
+    }
 
-// Posts und Kommentare in einem gemeinsamen Array kombinieren
-$feedItems = [];
+    // Kommentare hinzufügen
+    foreach ($comments as $comment) {
+        $feedItems[] = [
+            'type' => 'comment',
+            'data' => $comment,
+            'timestamp' => $comment['datumZeit']
+        ];
+    }
 
-// Posts hinzufügen
-foreach ($posts as $post) {
-    $feedItems[] = [
-        'type' => 'post',
-        'data' => $post,
-        'timestamp' => $post['datumZeit']
-    ];
-}
+    // Nach Datum sortieren (neueste zuerst)
+    usort($feedItems, function($a, $b) {
+        return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+    });
 
-// Kommentare hinzufügen
-foreach ($comments as $comment) {
-    $feedItems[] = [
-        'type' => 'comment',
-        'data' => $comment,
-        'timestamp' => $comment['datumZeit']
-    ];
-}
-
-// Nach Datum sortieren (neueste zuerst)
-usort($feedItems, function($a, $b) {
-    return strtotime($b['timestamp']) - strtotime($a['timestamp']);
-});
-
-$pageTitle = 'Posts und Kommentare mit #' . htmlspecialchars($tag);
-
+    $pageTitle = 'Posts und Kommentare mit #' . htmlspecialchars($tag);
 ?>
 
 <!DOCTYPE html>

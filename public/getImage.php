@@ -4,45 +4,45 @@ require_once 'php/NutzerVerwaltung.php';
 require_once 'php/PostVerwaltung.php';
 require_once 'php/session_helper.php';
 
+// === Initialisierung ===
+    $nutzerVerwaltung = new NutzerVerwaltung();
+    $postVerwaltung = new PostVerwaltung();
 
-$nutzerVerwaltung = new NutzerVerwaltung();
-$postVerwaltung = new PostVerwaltung();
+// === URL-Parameter verarbeiten ===
+    $type = $_GET['type'] ?? '';
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-$type = $_GET['type'] ?? '';
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
-if ($id > 0) {
-    $imageData = null;
-    if ($type === 'user') {
-        // Annahme: getNutzerById ist eine gültige Methode, die wir verwenden können.
-        $user = $nutzerVerwaltung->getUserById($id);
-        if ($user && isset($user['profilbild']) && $user['profilbild']) {
-            $imageData = $user['profilbild'];
+// === Bilddaten laden ===
+    if ($id > 0) {
+        $imageData = null;
+        if ($type === 'user') {
+            $user = $nutzerVerwaltung->getUserById($id);
+            if ($user && isset($user['profilbild']) && $user['profilbild']) {
+                $imageData = $user['profilbild'];
+            }
+        } elseif ($type === 'post') {
+            $currentUserId = getCurrentUserId() ?? 0;
+            $post = $postVerwaltung->getPostById($id, $currentUserId);
+            if ($post && isset($post['bildDaten']) && $post['bildDaten']) {
+                $imageData = $post['bildDaten'];
+            }
         }
-    } elseif ($type === 'post') {
-        // Für getPostById benötigen wir die ID des aktuellen Nutzers für die Berechtigungsprüfung
-        $currentUserId = getCurrentUserId() ?? 0;
-        $post = $postVerwaltung->getPostById($id, $currentUserId);
-        if ($post && isset($post['bildDaten']) && $post['bildDaten']) {
-            $imageData = $post['bildDaten'];
+
+        if ($imageData) {
+            // Versuchen, den Bildtyp zu erkennen, ansonsten Standard auf JPEG.
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mime_type = $finfo->buffer($imageData);
+            
+            // Default auf image/jpeg, wenn der Typ nicht erkannt werden kann
+            if (strpos($mime_type, 'image/') !== 0) {
+                $mime_type = 'image/jpeg';
+            }
+
+            header("Content-Type: " . $mime_type);
+            echo $imageData;
+            exit;
         }
     }
-
-    if ($imageData) {
-        // Versuchen, den Bildtyp zu erkennen, ansonsten Standard auf JPEG.
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime_type = $finfo->buffer($imageData);
-        
-        // Default auf image/jpeg, wenn der Typ nicht erkannt werden kann
-        if (strpos($mime_type, 'image/') !== 0) {
-            $mime_type = 'image/jpeg';
-        }
-
-        header("Content-Type: " . $mime_type);
-        echo $imageData;
-        exit;
-    }
-}
 
 // Wenn kein Bild gefunden wurde oder die ID ungültig ist, ein Platzhalterbild anzeigen.
 $placeholder = 'assets/placeholder-profilbild.jpg';

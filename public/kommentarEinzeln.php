@@ -1,15 +1,14 @@
 <?php
-// Überprüfe, ob die benötigten Variablen gesetzt sind
-if (!isset($comment) || !isset($currentUser)) {
-    echo '<p style="color: red;">Fehler: Notwendige Daten für Kommentar-Anzeige fehlen.</p>';
-    return;
-}
+// === Initialisierung ===
+    if (!isset($comment) || !isset($currentUser)) {
+        echo '<p style="color: red;">Fehler: Notwendige Daten für Kommentar-Anzeige fehlen.</p>';
+        return;
+    }
 
-// Berechtigung zum Löschen des Kommentars prüfen
-$isOwner = (int)$comment['userId'] === (int)$currentUser['id'];
-$isAdmin = isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
-$canDeleteComment = $isOwner || $isAdmin;
-
+// === Berechtigung prüfen ===
+    $isOwner = (int)$comment['userId'] === (int)$currentUser['id'];
+    $isAdmin = isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
+    $canDeleteComment = $isOwner || $isAdmin;
 ?>
 
 <article class="post comment-item">

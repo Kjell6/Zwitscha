@@ -1,100 +1,98 @@
 <?php
-require_once __DIR__ . '/php/PostVerwaltung.php';
-require_once __DIR__ . '/php/NutzerVerwaltung.php';
-require_once __DIR__ . '/php/session_helper.php';
+    require_once __DIR__ . '/php/PostVerwaltung.php';
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    require_once __DIR__ . '/php/session_helper.php';
 
-// Verwaltung instanziieren
-$postRepository = new PostVerwaltung();
-$nutzerVerwaltung = new NutzerVerwaltung();
+// === Initialisierung ===
+    $postRepository = new PostVerwaltung();
+    $nutzerVerwaltung = new NutzerVerwaltung();
 
+// === POST-Request-Handling für neue Posts ===
+    $feedbackMessage = '';
+    $feedbackType = ''; // success, error, info
 
-// ---- POST Request Handling für neue Posts ----
-$feedbackMessage = '';
-$feedbackType = ''; // success, error, info
+    if ($_SERVER['REQUEST_METHOD'] === 'POST'
+        && isset($_POST['action'])
+        && $_POST['action'] === 'create_post'
+    ) {
+        // Prüfen ob angemeldet für Post-Erstellung
+        if (!isLoggedIn()) {
+            $feedbackMessage = 'Du musst angemeldet sein, um Posts zu erstellen.';
+            $feedbackType = 'error';
+        } else {
+            $postText   = trim($_POST['post_text'] ?? '');
+            $currentUserId = getCurrentUserId();
 
-// ---- POST Request Handling für ERSTELLEN ----
-if ($_SERVER['REQUEST_METHOD'] === 'POST'
-    && isset($_POST['action'])
-    && $_POST['action'] === 'create_post'
-) {
-    // Prüfen ob angemeldet für Post-Erstellung
-    if (!isLoggedIn()) {
-        $feedbackMessage = 'Du musst angemeldet sein, um Posts zu erstellen.';
-        $feedbackType = 'error';
-    } else {
-        $postText   = trim($_POST['post_text'] ?? '');
-        // User-ID aus Session holen
-        $currentUserId = getCurrentUserId();
+        // Prüfen, ob der Post-Text leer ist
+        if (empty($postText)) {
+            $feedbackMessage = 'Post-Text darf nicht leer sein.';
+            $feedbackType    = 'error';
 
-    if (empty($postText)) {
-        $feedbackMessage = 'Post-Text darf nicht leer sein.';
-        $feedbackType    = 'error';
+        // Prüfen, ob der Post-Text zu lang ist
+        } elseif (strlen($postText) > 300) {
+            $feedbackMessage = 'Post-Text darf maximal 300 Zeichen lang sein.';
+            $feedbackType    = 'error';
 
-    } elseif (strlen($postText) > 300) {
-        $feedbackMessage = 'Post-Text darf maximal 300 Zeichen lang sein.';
-        $feedbackType    = 'error';
+        } else {
+            $imageData = null;
+            // Prüfen, ob ein Bild hochgeladen wurde und fehlerfrei ist
+            if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
+                // Datei-Validierung
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-    } else {
-        $imageData = null;
-        // Prüfen, ob ein Bild hochgeladen wurde und fehlerfrei ist
-        if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
-            // Datei-Validierung
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
-            if (!in_array($_FILES['post_image']['type'], $allowedTypes)) {
-                $feedbackMessage = 'Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.';
-                $feedbackType = 'error';
-            } elseif ($_FILES['post_image']['size'] > 2 * 1024 * 1024) { // 2 MB Limit (entspricht Server-Limit)
-                $feedbackMessage = 'Das Bild ist zu groß. Maximal 2 MB sind erlaubt.';
-                $feedbackType = 'error';
-            } else {
-                $imageData = file_get_contents($_FILES['post_image']['tmp_name']);
-                if ($imageData === false) {
-                    $feedbackMessage = 'Fehler beim Lesen der Bilddatei.';
+                if (!in_array($_FILES['post_image']['type'], $allowedTypes)) {
+                    $feedbackMessage = 'Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.';
                     $feedbackType = 'error';
+                } elseif ($_FILES['post_image']['size'] > 2 * 1024 * 1024) { // 2 MB Limit (entspricht Server-Limit)
+                    $feedbackMessage = 'Das Bild ist zu groß. Maximal 2 MB sind erlaubt.';
+                    $feedbackType = 'error';
+                } else {
+                    $imageData = file_get_contents($_FILES['post_image']['tmp_name']);
+                    if ($imageData === false) {
+                        $feedbackMessage = 'Fehler beim Lesen der Bilddatei.';
+                        $feedbackType = 'error';
+                    }
+                }
+            } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                $feedbackMessage = 'Fehler beim Hochladen der Datei.';
+                $feedbackType = 'error';
+            }
+
+                // Post nur erstellen, wenn kein Fehler beim Bild-Upload aufgetreten ist
+                if ($feedbackType !== 'error') {
+                    $newPostId = $postRepository->createPost($currentUserId, $postText, $imageData);
+
+                if ($newPostId) {
+                    $feedbackMessage = 'Post erfolgreich angelegt.';
+                    $feedbackType    = 'success';
+                    // Leere die Post-Variable, um doppeltes Senden zu verhindern (Post/Redirect/Get Pattern)
+                    header("Location: " . $_SERVER['PHP_SELF'] . '#post-' . $newPostId);
+                    exit();
+                } else {
+                    $feedbackMessage = 'Fehler beim Speichern des Posts in der Datenbank.';
+                    $feedbackType    = 'error';
                 }
             }
-        } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_NO_FILE) {
-            $feedbackMessage = 'Fehler beim Hochladen der Datei.';
-            $feedbackType = 'error';
         }
-
-        // Post nur erstellen, wenn kein Fehler beim Bild-Upload aufgetreten ist
-        if ($feedbackType !== 'error') {
-            $newPostId = $postRepository->createPost($currentUserId, $postText, $imageData);
-
-            if ($newPostId) {
-                $feedbackMessage = 'Post erfolgreich angelegt.';
-                $feedbackType    = 'success';
-                // Leere die Post-Variable, um doppeltes Senden zu verhindern (Post/Redirect/Get Pattern)
-                header("Location: " . $_SERVER['PHP_SELF'] . '#post-' . $newPostId);
-                exit();
-            } else {
-                $feedbackMessage = 'Fehler beim Speichern des Posts in der Datenbank.';
-                $feedbackType    = 'error';
-            }
         }
     }
+
+// === Daten für Feed-Anzeige laden ===
+
+    requireLogin();
+
+    $currentUserId = getCurrentUserId();
+    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+    $limit = 15;
+
+    $showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
+
+    // Posts aus der Datenbank laden
+    if ($showFollowedOnly) {
+        $posts = $postRepository->getFollowedPosts($currentUserId, $limit, 0);
+    } else {
+        $posts = $postRepository->getAllPosts($currentUserId, $limit, 0);
     }
-}
-
-
-// ---- Dynamische Inhalte: Posts laden ----
-// Prüfen ob angemeldet
-requireLogin();
-
-$currentUserId = getCurrentUserId();
-$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
-$limit = 15;
-
-$showFollowedOnly = isset($_GET['filter']) && $_GET['filter'] === 'followed';
-
-// Posts aus der Datenbank laden
-if ($showFollowedOnly) {
-    $posts = $postRepository->getFollowedPosts($currentUserId, $limit, 0);
-} else {
-    $posts = $postRepository->getAllPosts($currentUserId, $limit, 0);
-}
 ?>
 
 <!DOCTYPE html>

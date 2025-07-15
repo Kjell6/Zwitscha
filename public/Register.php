@@ -1,38 +1,40 @@
 <?php
-require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
 
-$message = '';
-$error = '';
-$redirect = false;
+// === Initialisierung ===
+    $message = '';
+    $error = '';
+    $redirect = false;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $benutzername = isset($_POST['benutzername']) ? trim($_POST['benutzername']) : '';
-    $passwort = isset($_POST['passwort']) ? $_POST['passwort'] : '';
+// === POST-Request-Handling für Registrierung ===
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $benutzername = isset($_POST['benutzername']) ? trim($_POST['benutzername']) : '';
+        $passwort = isset($_POST['passwort']) ? $_POST['passwort'] : '';
 
-    if (empty($benutzername) || empty($passwort)) {
-        $error = 'Bitte Benutzername und Passwort eingeben.';
-    } elseif (strlen($benutzername) < 3 || strlen($benutzername) > 20) {
-        $error = 'Benutzername muss zwischen 3 und 20 Zeichen lang sein.';
-    } elseif (!preg_match('/^[a-zA-Z0-9._-]+$/', $benutzername)) {
-        $error = 'Benutzername darf nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche enthalten.';
-    } elseif (strlen($passwort) < 6 || strlen($passwort) > 100) {
-        $error = 'Passwort muss zwischen 6 und 100 Zeichen lang sein.';
-    } elseif (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $passwort)) {
-        $error = 'Passwort enthält unerlaubte Zeichen.';
-    } else {
-        // NutzerVerwaltung instanziieren und Registrierung versuchen
-        $nutzerVerwaltung = new NutzerVerwaltung();
-        $result = $nutzerVerwaltung->registerUser($benutzername, $passwort);
-        
-        if ($result['success']) {
-            $successMessage = urlencode('Registrierung erfolgreich! Du kannst dich jetzt anmelden.');
-            header("Location: Login.php?message=" . $successMessage);
-            exit(); 
+        if (empty($benutzername) || empty($passwort)) {
+            $error = 'Bitte Benutzername und Passwort eingeben.';
+        } elseif (strlen($benutzername) < 3 || strlen($benutzername) > 20) {
+            $error = 'Benutzername muss zwischen 3 und 20 Zeichen lang sein.';
+        } elseif (!preg_match('/^[a-zA-Z0-9._-]+$/', $benutzername)) {
+            $error = 'Benutzername darf nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche enthalten.';
+        } elseif (strlen($passwort) < 6 || strlen($passwort) > 100) {
+            $error = 'Passwort muss zwischen 6 und 100 Zeichen lang sein.';
+        } elseif (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $passwort)) {
+            $error = 'Passwort enthält unerlaubte Zeichen.';
         } else {
-            $error = $result['message'];
+            // NutzerVerwaltung instanziieren und Registrierung versuchen
+            $nutzerVerwaltung = new NutzerVerwaltung();
+            $result = $nutzerVerwaltung->registerUser($benutzername, $passwort);
+            
+            if ($result['success']) {
+                $successMessage = urlencode('Registrierung erfolgreich! Du kannst dich jetzt anmelden.');
+                header("Location: Login.php?message=" . $successMessage);
+                exit(); 
+            } else {
+                $error = $result['message'];
+            }
         }
     }
-}
 ?>
 
 <!DOCTYPE html>

@@ -1,38 +1,36 @@
 <?php
+    require_once __DIR__ . '/php/helpers.php';
 
-require_once __DIR__ . '/php/helpers.php';
+// === Initialisierung ===
+    if (!isset($post)) {
+        die('Post-Daten nicht verfügbar');
+    }
 
-// Überprüfe ob die benötigten Variablen gesetzt sind
-if (!isset($post)) {
-    die('Post-Daten nicht verfügbar');
-}
+// === Aktueller Benutzer laden ===
+    if (!isset($currentUser)) {
+        require_once __DIR__ . '/php/NutzerVerwaltung.php';
+        require_once __DIR__ . '/php/session_helper.php';
+        $nutzerVerwaltung = new NutzerVerwaltung();
+        $currentUserId = getCurrentUserId() ?? 0;
+        $currentUser = $currentUserId ? $nutzerVerwaltung->getUserById($currentUserId) : null;
+    }
 
-// ---- AKTUELLER BENUTZER ----
-// Verwende $currentUser aus der einbindenden Datei oder lade ihn aus der Datenbank
-if (!isset($currentUser)) {
-    require_once __DIR__ . '/php/NutzerVerwaltung.php';
-    require_once __DIR__ . '/php/session_helper.php';
-    $nutzerVerwaltung = new NutzerVerwaltung();
-    $currentUserId = getCurrentUserId() ?? 0; // 0 wenn nicht angemeldet
-    $currentUser = $currentUserId ? $nutzerVerwaltung->getUserById($currentUserId) : null;
-}
+    // NutzerVerwaltung für Template bereitstellen
+    if (!isset($nutzerVerwaltung)) {
+        require_once __DIR__ . '/php/NutzerVerwaltung.php';
+        $nutzerVerwaltung = new NutzerVerwaltung();
+    }
 
-// Stelle sicher, dass $nutzerVerwaltung immer eine Instanz ist.
-if (!isset($nutzerVerwaltung)) {
-    require_once __DIR__ . '/php/NutzerVerwaltung.php';
-    $nutzerVerwaltung = new NutzerVerwaltung();
-}
+// === Berechtigung prüfen ===
+    $isOwner = $currentUser && (int)$post['userId'] === (int)$currentUser['id'];
+    $isAdmin = $currentUser && isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
+    $canDelete = ($isAdmin || $isOwner);
 
-// Berechtigung zum Löschen prüfen: Ist der Nutzer Admin ODER der Autor des Posts?
-$isOwner = $currentUser && (int)$post['userId'] === (int)$currentUser['id'];
-$isAdmin = $currentUser && isset($currentUser['istAdministrator']) && $currentUser['istAdministrator'];
-$canDelete = ($isAdmin || $isOwner);
+    // Relative Zeit berechnen
+    $time_label = time_ago($post['datumZeit']);
 
-// Relative Zeit berechnen
-$time_label = time_ago($post['datumZeit']);
-
-// Mapping von DB-Reaktionstypen zu Emojis (zentral definiert)
-$reactionEmojiMap = getReactionEmojiMap();
+    // Mapping von DB-Reaktionstypen zu Emojis (zentral definiert)
+    $reactionEmojiMap = getReactionEmojiMap();
 ?>
 
 <article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>" onclick="navigateToPost(event, <?php echo $post['id']; ?>)">

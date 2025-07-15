@@ -1,112 +1,108 @@
 <?php
-require_once __DIR__ . '/php/NutzerVerwaltung.php';
-require_once __DIR__ . '/php/session_helper.php';
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    require_once __DIR__ . '/php/session_helper.php';
 
-// Überprüfen ob Nutzer angemeldet ist
-requireLogin();
+// === Initialisierung ===
+    requireLogin();
 
-$nutzerVerwaltung = new NutzerVerwaltung();
+    $nutzerVerwaltung = new NutzerVerwaltung();
+    $currentUserId = getCurrentUserId();
+    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
-// Aktuelle User-ID aus Session holen
-$currentUserId = getCurrentUserId();
-$currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+    if (!$currentUser) {
+        die('Benutzer nicht gefunden.');
+    }
 
-if (!$currentUser) {
-    die('Benutzer nicht gefunden.');
-}
+    $message = '';
+    $error = '';
 
-$message = '';
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['delete-account'])) {
-        // Account löschen
-        $success = $nutzerVerwaltung->deleteUser($currentUserId);
-        if ($success) {
-            // Nach dem Löschen zur Login-Seite umleiten
-            header('Location: Login.php?message=account_deleted');
-            exit;
-        } else {
-            $error = "Fehler beim Löschen des Accounts.";
-        }
-        
-    } elseif (isset($_POST['change-name'])) {
-        // Name ändern
-        $newName = trim($_POST['new-name'] ?? '');
-        if (empty($newName)) {
-            $error = "Der Name darf nicht leer sein.";
-        } elseif (strlen($newName) < 3) {
-            $error = "Der Name muss mindestens 3 Zeichen lang sein.";
-        } elseif (strlen($newName) > 20) {
-            $error = "Der Name darf maximal 20 Zeichen lang sein.";
-        } elseif (!preg_match('/^[a-zA-Z0-9._-]+$/', $newName)) {
-            $error = "Der Name darf nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche enthalten.";
-        } else {
-            $success = $nutzerVerwaltung->updateUserName($currentUserId, $newName);
+// === POST-Request-Handling für Einstellungen ===
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['delete-account'])) {
+            // Account löschen
+            $success = $nutzerVerwaltung->deleteUser($currentUserId);
             if ($success) {
-                $message = "Name wurde erfolgreich geändert.";
-                // Aktuelle Nutzerdaten neu laden
-                $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+                header('Location: Login.php?message=account_deleted');
+                exit;
             } else {
-                $error = "Fehler beim Ändern des Namens.";
+                $error = "Fehler beim Löschen des Accounts.";
             }
-        }
-        
-    } elseif (isset($_POST['change-password'])) {
-        // Passwort ändern
-        $currentPassword = $_POST['current-password'] ?? '';
-        $newPassword = $_POST['new-password'] ?? '';
-        $confirmPassword = $_POST['confirm-password'] ?? '';
-
-        if (!$nutzerVerwaltung->verifyCurrentPassword($currentUserId, $currentPassword)) {
-            $error = "Das aktuelle Passwort ist falsch.";
-        } elseif (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $newPassword)) {
-            $error = "Das neue Passwort enthält unerlaubte Zeichen.";
-        } elseif (strlen($newPassword) < 6) {
-            $error = "Das neue Passwort muss mindestens 6 Zeichen lang sein.";
-        } elseif (strlen($newPassword) > 100) {
-            $error = "Das neue Passwort darf maximal 100 Zeichen lang sein.";
-        } elseif ($newPassword !== $confirmPassword) {
-            $error = "Die neuen Passwörter stimmen nicht überein.";
-        } else {
-            $success = $nutzerVerwaltung->updatePassword($currentUserId, $newPassword);
-            if ($success) {
-                $message = "Passwort wurde erfolgreich geändert.";
-            } else {
-                $error = "Fehler beim Ändern des Passworts.";
-            }
-        }
-        
-    } elseif (isset($_POST['change-avatar'])) {
-        // Profilbild ändern
-        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-            // Datei-Validierung
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             
-            if (!in_array($_FILES['avatar']['type'], $allowedTypes)) {
-                $error = "Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.";
-            } elseif ($_FILES['avatar']['size'] > 2 * 1024 * 1024) { // 2 MB Limit (entspricht Server-Limit)
-                $error = "Das Bild ist zu groß. Maximal 2 MB sind erlaubt.";
+        } elseif (isset($_POST['change-name'])) {
+            // Name ändern
+            $newName = trim($_POST['new-name'] ?? '');
+            if (empty($newName)) {
+                $error = "Der Name darf nicht leer sein.";
+            } elseif (strlen($newName) < 3) {
+                $error = "Der Name muss mindestens 3 Zeichen lang sein.";
+            } elseif (strlen($newName) > 20) {
+                $error = "Der Name darf maximal 20 Zeichen lang sein.";
+            } elseif (!preg_match('/^[a-zA-Z0-9._-]+$/', $newName)) {
+                $error = "Der Name darf nur Buchstaben, Zahlen, Punkte, Unterstriche und Bindestriche enthalten.";
             } else {
-                $imageData = file_get_contents($_FILES['avatar']['tmp_name']);
-                if ($imageData === false) {
-                    $error = "Fehler beim Lesen der Bilddatei.";
+                $success = $nutzerVerwaltung->updateUserName($currentUserId, $newName);
+                if ($success) {
+                    $message = "Name wurde erfolgreich geändert.";
+                    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
                 } else {
-                    $success = $nutzerVerwaltung->updateProfileImage($currentUserId, $imageData);
-                    if ($success) {
-                        $message = "Profilbild wurde erfolgreich aktualisiert.";
-                        // Aktuelle Nutzerdaten neu laden, damit das neue Bild angezeigt wird
-                        $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
-                    } else {
-                        $error = "Fehler beim Speichern des Profilbilds in der Datenbank.";
-                    }
+                    $error = "Fehler beim Ändern des Namens.";
                 }
             }
-        } else {
-            $error = "Bitte wählen Sie eine Datei aus.";
+            
+        } elseif (isset($_POST['change-password'])) {
+            // Passwort ändern
+            $currentPassword = $_POST['current-password'] ?? '';
+            $newPassword = $_POST['new-password'] ?? '';
+            $confirmPassword = $_POST['confirm-password'] ?? '';
+
+            if (!$nutzerVerwaltung->verifyCurrentPassword($currentUserId, $currentPassword)) {
+                $error = "Das aktuelle Passwort ist falsch.";
+            } elseif (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $newPassword)) {
+                $error = "Das neue Passwort enthält unerlaubte Zeichen.";
+            } elseif (strlen($newPassword) < 6) {
+                $error = "Das neue Passwort muss mindestens 6 Zeichen lang sein.";
+            } elseif (strlen($newPassword) > 100) {
+                $error = "Das neue Passwort darf maximal 100 Zeichen lang sein.";
+            } elseif ($newPassword !== $confirmPassword) {
+                $error = "Die neuen Passwörter stimmen nicht überein.";
+            } else {
+                $success = $nutzerVerwaltung->updatePassword($currentUserId, $newPassword);
+                if ($success) {
+                    $message = "Passwort wurde erfolgreich geändert.";
+                } else {
+                    $error = "Fehler beim Ändern des Passworts.";
+                }
+            }
+            
+        } elseif (isset($_POST['change-avatar'])) {
+            // Profilbild ändern
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                // Datei-Validierung
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                
+                if (!in_array($_FILES['avatar']['type'], $allowedTypes)) {
+                    $error = "Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.";
+                } elseif ($_FILES['avatar']['size'] > 2 * 1024 * 1024) { // 2 MB Limit 
+                    $error = "Das Bild ist zu groß. Maximal 2 MB sind erlaubt.";
+                } else {
+                    $imageData = file_get_contents($_FILES['avatar']['tmp_name']);
+                    if ($imageData === false) {
+                        $error = "Fehler beim Lesen der Bilddatei.";
+                    } else {
+                        $success = $nutzerVerwaltung->updateProfileImage($currentUserId, $imageData);
+                        if ($success) {
+                            $message = "Profilbild wurde erfolgreich aktualisiert.";
+                            $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+                        } else {
+                            $error = "Fehler beim Speichern des Profilbilds in der Datenbank.";
+                        }
+                    }
+                }
+            } else {
+                $error = "Bitte wählen Sie eine Datei aus.";
+            }
         }
     }
-}
 ?>
 
 

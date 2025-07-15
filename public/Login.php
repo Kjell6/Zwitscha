@@ -1,47 +1,49 @@
 <?php
-session_start();
-require_once __DIR__ . '/php/NutzerVerwaltung.php';
+    session_start();
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
 
-$error = '';
-$successMessage = '';
+// === Initialisierung ===
+    $error = '';
+    $successMessage = '';
 
-// Prüfen, ob eine Erfolgsnachricht von der Registrierung übergeben wurde
-if (isset($_GET['message'])) {
-    $successMessage = htmlspecialchars($_GET['message']);
-}
+    // Prüfen, ob eine Erfolgsnachricht von der Registrierung übergeben wurde
+    if (isset($_GET['message'])) {
+        $successMessage = htmlspecialchars($_GET['message']);
+    }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $benutzername = isset($_POST['benutzername']) ? trim($_POST['benutzername']) : '';
-    $passwort = isset($_POST['passwort']) ? $_POST['passwort'] : '';
+// === POST-Request-Handling für Login ===
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $benutzername = isset($_POST['benutzername']) ? trim($_POST['benutzername']) : '';
+        $passwort = isset($_POST['passwort']) ? $_POST['passwort'] : '';
 
-    if (empty($benutzername) || empty($passwort)) {
-        $error = 'Benutzername und Passwort sind erforderlich.';
-    } else {
-        // NutzerVerwaltung instanziieren und Login versuchen
-        $nutzerVerwaltung = new NutzerVerwaltung();
-        $user = $nutzerVerwaltung->authenticateUser($benutzername, $passwort);
-        
-        if ($user) {
-            // Login erfolgreich - Session setzen
-            $_SESSION['angemeldet'] = true;
-            $_SESSION['eingeloggt'] = true;
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['nutzerName'];
-            $_SESSION['ist_admin'] = $user['istAdministrator'];
-
-            if (isset($_POST['remember_me'])) {
-                $nutzerVerwaltung->createRememberToken($user['id']);
-            }
-            
-            // Redirect zur ursprünglich gewünschten Seite oder zur Startseite
-            $redirectUrl = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php';
-            header("Location: " . $redirectUrl);
-            exit;
+        if (empty($benutzername) || empty($passwort)) {
+            $error = 'Benutzername und Passwort sind erforderlich.';
         } else {
-            $error = 'Benutzername oder Passwort ist falsch.';
+            // NutzerVerwaltung instanziieren und Login versuchen
+            $nutzerVerwaltung = new NutzerVerwaltung();
+            $user = $nutzerVerwaltung->authenticateUser($benutzername, $passwort);
+            
+            if ($user) {
+                // Login erfolgreich - Session setzen
+                $_SESSION['angemeldet'] = true;
+                $_SESSION['eingeloggt'] = true;
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['nutzerName'];
+                $_SESSION['ist_admin'] = $user['istAdministrator'];
+
+                if (isset($_POST['remember_me'])) {
+                    $nutzerVerwaltung->createRememberToken($user['id']);
+                }
+                
+                // Redirect zur ursprünglich gewünschten Seite oder zur Startseite
+                $redirectUrl = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php';
+                header("Location: " . $redirectUrl);
+                exit;
+            } else {
+                $error = 'Benutzername oder Passwort ist falsch.';
+            }
         }
     }
-}
 ?>
 
 <!DOCTYPE html>

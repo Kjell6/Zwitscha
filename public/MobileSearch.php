@@ -1,5 +1,18 @@
 <?php
-require_once __DIR__ . '/php/session_helper.php';
+    require_once __DIR__ . '/php/session_helper.php';
+    require_once __DIR__ . '/php/NutzerVerwaltung.php';
+
+// === Initialisierung ===
+    requireLogin();
+
+    $nutzerVerwaltung = new NutzerVerwaltung();
+    $currentUserId = getCurrentUserId();
+    $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
+
+    if (!$currentUser) {
+        header("Location: Login.php");
+        exit();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="de">
