@@ -118,28 +118,7 @@
 
 <?php include 'lightbox.php'; ?>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initial setup für bereits geladene Kommentare
-        initializeCommentSystem();
-
-        // "Mehr laden"-Funktionalität
-        const hashtag = '<?php echo htmlspecialchars($tag, ENT_QUOTES); ?>';
-        const limit = <?php echo $limit; ?>;
-        
-        initializePagination({
-            containerId: 'hashtag-feed',
-            buttonId: 'mehr-laden-button',
-            buttonContainerId: 'mehr-laden-container',
-            context: 'hashtag',
-            limit: limit,
-            initialOffset: limit,
-            params: { tag: hashtag }
-        });
-    });
-</script>
-
-<!-- JavaScript-Funktionalität -->
+<!-- Refactored JavaScript-Funktionalität -->
 <script src="js/comment-utils.js"></script>
 <script src="js/pagination.js"></script>
 
@@ -148,6 +127,30 @@
 <script src="js/ajax/reactions.js"></script>
 <script src="js/ajax/posts.js"></script>
 <script src="js/ajax/comments.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initial setup für bereits geladene Kommentare
+        initializeCommentSystem();
+
+        const moreButton = document.getElementById('mehr-laden-button');
+        if (moreButton) {
+            // "Mehr laden"-Funktionalität
+            const hashtag = '<?php echo htmlspecialchars($tag, ENT_QUOTES); ?>';
+            const limit = <?php echo $limit; ?>;
+            
+            initializePagination({
+                containerId: 'hashtag-feed',
+                buttonId: 'mehr-laden-button',
+                buttonContainerId: 'mehr-laden-container',
+                context: 'hashtag',
+                limit: limit,
+                initialOffset: limit,
+                params: { tag: hashtag }
+            });
+        }
+    });
+</script>
 
 </body>
 </html> 

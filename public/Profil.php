@@ -339,6 +339,16 @@ try {
 
 <?php include 'lightbox.php'; ?>
 
+<!-- Refactored JavaScript-Funktionalität -->
+<script src="js/comment-utils.js"></script>
+<script src="js/pagination.js"></script>
+
+<!-- AJAX-Funktionalität -->
+<script src="js/ajax/utils.js"></script>
+<script src="js/ajax/reactions.js"></script>
+<script src="js/ajax/posts.js"></script>
+<script src="js/ajax/comments.js"></script>
+
 <script>
     // === ADMIN-FUNKTIONEN ===
     function confirmBan(form) {
@@ -356,18 +366,15 @@ try {
         return false; // Formular wird nicht gesendet
     }
 
-    // === PROFIL-SEITENFUNKTIONALITÄT ===
+    // === SEITENINITIALISIERUNG ===
     document.addEventListener("DOMContentLoaded", () => {
-        const profileId = <?php echo $profileId; ?>;
-        const limit = <?php echo $limit; ?>;
-        const isCommentsView = <?php echo $showComments ? 'true' : 'false'; ?>;
-
-        let offset = <?php echo $limit; ?>;
         const moreButton = document.getElementById('mehr-laden-button');
-        const contentContainer = document.getElementById('content-container');
 
         // "Mehr laden"-Button für Posts und Kommentare
         if (moreButton) {
+            const profileId = <?php echo $profileId; ?>;
+            const limit = <?php echo $limit; ?>;
+            const isCommentsView = <?php echo $showComments ? 'true' : 'false'; ?>;
             const context = isCommentsView ? 'user_comments' : 'user';
             const params = { userId: profileId };
             
@@ -384,19 +391,8 @@ try {
 
         // Initial setup für bereits geladene Kommentare
         initializeCommentSystem();
-
     });
 </script>
-
-<!-- JavaScript-Funktionalität -->
-<script src="js/comment-utils.js"></script>
-<script src="js/pagination.js"></script>
-
-<!-- AJAX-Funktionalität -->
-<script src="js/ajax/utils.js"></script>
-<script src="js/ajax/reactions.js"></script>
-<script src="js/ajax/posts.js"></script>
-<script src="js/ajax/comments.js"></script>
 
 </body>
 </html>

@@ -145,29 +145,21 @@
 
 <?php include 'lightbox.php'; ?>
 
-<script>
-    // === POST-FORMULAR FUNKTIONALITÄT ===
-    
-    // Zeichenzähler für Post-Textarea
-    initializeTextareaWithCounter({
-        textareaId: 'post-input',
-        counterSelector: '.character-count',
-        maxLength: 300,
-        warningThreshold: 280
-    });
+<!-- Refactored JavaScript-Funktionalität -->
+<script src="js/textarea-utils.js"></script>
+<script src="js/image-preview.js"></script>
+<script src="js/pagination.js"></script>
 
-    // === BILDVORSCHAU UND -KOMPRIMIERUNG ===
-    initializeImagePreview({
-        inputId: 'image-input',
-        previewId: 'preview-img',
-        previewContainerId: 'image-preview',
-        removeButtonId: 'remove-image'
-    });
-</script>
+<!-- AJAX-Funktionalität -->
+<script src="js/ajax/utils.js"></script>
+<script src="js/ajax/reactions.js"></script>
+<script src="js/ajax/posts.js"></script>
+<script src="js/ajax/comments.js"></script>
 
 <script>
-    // === "MEHR LADEN"-FUNKTIONALITÄT ===
+    // === SEITENINITIALISIERUNG ===
     document.addEventListener("DOMContentLoaded", () => {
+        // "Mehr laden"-Funktionalität
         const context = "<?php echo $showFollowedOnly ? 'followed' : 'all'; ?>";
         const limit = <?php echo $limit; ?>;
         
@@ -179,18 +171,23 @@
             limit: limit,
             initialOffset: limit
         });
+        
+        // Zeichenzähler für Post-Textarea
+        initializeTextareaWithCounter({
+            textareaId: 'post-input',
+            counterSelector: '.character-count',
+            maxLength: 300,
+            warningThreshold: 280
+        });
+
+        // Bildvorschau und -komprimierung
+        initializeImagePreview({
+            inputId: 'image-input',
+            previewId: 'preview-img',
+            previewContainerId: 'image-preview',
+            removeButtonId: 'remove-image'
+        });
     });
 </script>
-
-<!-- JavaScript-Funktionalität -->
-<script src="js/textarea-utils.js"></script>
-<script src="js/image-preview.js"></script>
-<script src="js/pagination.js"></script>
-
-<!-- AJAX-Funktionalität -->
-<script src="js/ajax/utils.js"></script>
-<script src="js/ajax/reactions.js"></script>
-<script src="js/ajax/posts.js"></script>
-<script src="js/ajax/comments.js"></script>
 </body>
 </html>

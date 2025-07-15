@@ -205,14 +205,9 @@
     <p>© 2025 Zwitscha</p>
 </footer>
 
-<script>
-    // === SEITENINITIALISIERUNG ===
-    document.addEventListener('DOMContentLoaded', () => {
-        initializeCommentSystem();
-    });
-</script>
+<?php include 'lightbox.php'; ?>
 
-<!-- JavaScript-Funktionalität -->
+<!-- Refactored JavaScript-Funktionalität -->
 <script src="js/comment-utils.js"></script>
 
 <!-- AJAX-Funktionalität -->
@@ -221,7 +216,12 @@
 <script src="js/ajax/posts.js"></script>
 <script src="js/ajax/comments.js"></script>
 
-<?php include 'lightbox.php'; ?>
+<script>
+    // === SEITENINITIALISIERUNG ===
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeCommentSystem();
+    });
+</script>
 
 </body>
 </html>

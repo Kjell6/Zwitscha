@@ -223,8 +223,9 @@
 <script src="js/image-preview.js"></script>
 
 <script>
-// === AVATAR-BILDKOMPRIMIERUNG ===
+// === SEITENINITIALISIERUNG ===
 document.addEventListener('DOMContentLoaded', function() {
+    // Avatar-Bildvorschau initialisieren
     initializeAvatarImagePreview(
         'avatar',
         'avatar-preview-img',
