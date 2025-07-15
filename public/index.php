@@ -149,131 +149,43 @@
     // === POST-FORMULAR FUNKTIONALITÄT ===
     
     // Zeichenzähler für Post-Textarea
-    const postInput = document.getElementById('post-input');
-    const charCount = document.querySelector('.character-count');
-
-    function updateCharCount() {
-        const count = postInput.value.length;
-        charCount.textContent = count + '/300';
-        // Warnung bei 280+ Zeichen
-        charCount.style.color = count > 280 ? '#dc3545' : '#6c757d';
-    }
-
-    postInput.addEventListener('input', () => {
-        // Automatische Höhenanpassung der Textarea
-        postInput.style.height = 'auto';
-        postInput.style.height = postInput.scrollHeight + 'px';
-
-        // Zeichenzähler aktualisieren
-        updateCharCount();
+    initializeTextareaWithCounter({
+        textareaId: 'post-input',
+        counterSelector: '.character-count',
+        maxLength: 300,
+        warningThreshold: 280
     });
 
     // === BILDVORSCHAU UND -KOMPRIMIERUNG ===
-    const imageInput = document.getElementById('image-input');
-    const imagePreview = document.getElementById('image-preview');
-    const previewImg = document.getElementById('preview-img');
-    const removeImageButton = document.getElementById('remove-image');
-
-    imageInput.addEventListener('change', async (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            // Dateiformatvalidierung
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-            const fileType = file.type.toLowerCase();
-            const isValidType = allowedTypes.some(type =>
-                fileType === type ||
-                (type === 'image/jpeg' && fileType === 'image/jpg') ||
-                (type === 'image/jpg' && fileType === 'image/jpeg')
-            );
-
-            if (!isValidType && file.size > 0) {
-                alert('Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.');
-                imageInput.value = '';
-                return;
-            }
-
-            try {
-                // Bildkomprimierung und Vorschau
-                imagePreview.style.display = 'block';
-                await window.imageCompressor.handleFileInput(imageInput, previewImg, (compressedFile) => {
-                    const originalSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                    const compressedSizeMB = (compressedFile.size / (1024 * 1024)).toFixed(2);
-                    console.log(`Komprimierung: ${originalSizeMB}MB → ${compressedSizeMB}MB`);
-                });
-            } catch (error) {
-                alert('Fehler bei der Bildverarbeitung: ' + error.message);
-                imageInput.value = '';
-                imagePreview.style.display = 'none';
-            }
-        }
-    });
-
-    // Bild entfernen
-    removeImageButton.addEventListener('click', () => {
-        imageInput.value = '';
-        previewImg.src = '#';
-        imagePreview.style.display = 'none';
+    initializeImagePreview({
+        inputId: 'image-input',
+        previewId: 'preview-img',
+        previewContainerId: 'image-preview',
+        removeButtonId: 'remove-image'
     });
 </script>
 
 <script>
     // === "MEHR LADEN"-FUNKTIONALITÄT ===
     document.addEventListener("DOMContentLoaded", () => {
-        const container = document.getElementById("posts-container");
-        const buttonContainer = document.getElementById('mehr-laden-container');
-
-        if (!buttonContainer) return;
-
-        const button = document.getElementById("mehr-laden-button");
-        let offset = <?php echo $limit; ?>;
-        const limit = <?php echo $limit; ?>;
         const context = "<?php echo $showFollowedOnly ? 'followed' : 'all'; ?>";
-
-        button.addEventListener("click", () => {
-            // Button-Status während des Ladens
-            button.disabled = true;
-            button.textContent = 'Lädt...';
-
-            // Posts vom Server laden
-            fetch(`php/get-posts.php?context=${context}&offset=${offset}&limit=${limit}`)
-                .then(res => {
-                    if (!res.ok) throw new Error('Fehler beim Laden der Posts');
-                    return res.text();
-                })
-                .then(html => {
-                    if (!html.trim()) {
-                        // Keine weiteren Posts vorhanden
-                        if (buttonContainer) buttonContainer.style.display = 'none';
-                    } else {
-                        // Neue Posts hinzufügen und Offset aktualisieren
-                        container.insertAdjacentHTML('beforeend', html);
-                        offset += limit;
-                        
-                        // Event-Handler für neue Posts einrichten
-                        setupReactionHandlers();
-                        
-                        // AJAX-Handler für neue Posts einrichten
-                        if (window.setupAjaxHandlers) {
-                            window.setupAjaxHandlers();
-                        }
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    button.textContent = 'Fehler!';
-                })
-                .finally(() => {
-                    // Button-Status zurücksetzen
-                    if (buttonContainer && buttonContainer.style.display !== 'none') {
-                        button.disabled = false;
-                        button.textContent = 'Mehr laden';
-                    }
-                });
+        const limit = <?php echo $limit; ?>;
+        
+        initializePagination({
+            containerId: 'posts-container',
+            buttonId: 'mehr-laden-button',
+            buttonContainerId: 'mehr-laden-container',
+            context: context,
+            limit: limit,
+            initialOffset: limit
         });
-
-
     });
 </script>
+
+<!-- JavaScript-Funktionalität -->
+<script src="js/textarea-utils.js"></script>
+<script src="js/image-preview.js"></script>
+<script src="js/pagination.js"></script>
 
 <!-- AJAX-Funktionalität -->
 <script src="js/ajax/utils.js"></script>

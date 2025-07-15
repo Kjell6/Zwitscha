@@ -120,78 +120,28 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Funktion für comment-context Event-Handler
-        function setupCommentContextHandlers() {
-            const commentContexts = document.querySelectorAll('.comment-context');
-            
-            commentContexts.forEach(context => {
-                const hashtagLinks = context.querySelectorAll('a.link');
-                hashtagLinks.forEach(link => {
-                    link.addEventListener('click', function(event) {
-                        event.stopPropagation();
-                    });
-                });
-            });
-        }
-        
         // Initial setup für bereits geladene Kommentare
-        setupCommentContextHandlers();
+        initializeCommentSystem();
 
         // "Mehr laden"-Funktionalität
-        const feedContainer = document.getElementById('hashtag-feed');
-        const buttonContainer = document.getElementById('mehr-laden-container');
+        const hashtag = '<?php echo htmlspecialchars($tag, ENT_QUOTES); ?>';
+        const limit = <?php echo $limit; ?>;
         
-        if (buttonContainer) {
-            const button = document.getElementById('mehr-laden-button');
-            const hashtag = '<?php echo htmlspecialchars($tag, ENT_QUOTES); ?>';
-            let offset = <?php echo $limit; ?>;
-            const limit = <?php echo $limit; ?>;
-
-            button.addEventListener('click', function() {
-                // Button-Status während des Ladens
-                button.disabled = true;
-                button.textContent = 'Lädt...';
-
-                // Hashtag-Inhalte vom Server laden
-                fetch(`php/get-posts.php?context=hashtag&tag=${encodeURIComponent(hashtag)}&offset=${offset}&limit=${limit}`)
-                    .then(response => {
-                        if (!response.ok) throw new Error('Fehler beim Laden der Inhalte');
-                        return response.text();
-                    })
-                    .then(html => {
-                        if (!html.trim()) {
-                            // Keine weiteren Inhalte vorhanden
-                            if (buttonContainer) buttonContainer.style.display = 'none';
-                        } else {
-                            // Neue Inhalte hinzufügen und Offset aktualisieren
-                            feedContainer.insertAdjacentHTML('beforeend', html);
-                            offset += limit;
-                            
-                            // Event-Handler für neue Posts und Kommentare einrichten
-                            setupCommentContextHandlers();
-                            setupReactionHandlers();
-                            
-                            // AJAX-Handler für neue Inhalte einrichten
-                            if (window.setupAjaxHandlers) {
-                                window.setupAjaxHandlers();
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Fehler beim Laden:', error);
-                        button.textContent = 'Fehler!';
-                    })
-                    .finally(() => {
-                        // Button-Status zurücksetzen
-                        if (buttonContainer && buttonContainer.style.display !== 'none') {
-                            button.disabled = false;
-                            button.textContent = 'Mehr laden';
-                        }
-                    });
-            });
-        }
+        initializePagination({
+            containerId: 'hashtag-feed',
+            buttonId: 'mehr-laden-button',
+            buttonContainerId: 'mehr-laden-container',
+            context: 'hashtag',
+            limit: limit,
+            initialOffset: limit,
+            params: { tag: hashtag }
+        });
     });
 </script>
+
+<!-- JavaScript-Funktionalität -->
+<script src="js/comment-utils.js"></script>
+<script src="js/pagination.js"></script>
 
 <!-- AJAX-Funktionalität -->
 <script src="js/ajax/utils.js"></script>

@@ -206,40 +206,14 @@
 </footer>
 
 <script>
-    // === ANTWORT-FORMULARE (nur UI-Logik) ===
-    function toggleReplyForm(commentId) {
-        const form = document.getElementById('reply-form-' + commentId);
-        if (!form) return;
-
-        form.classList.toggle('hidden');
-
-        // Zustand in sessionStorage speichern
-        let openReplies = JSON.parse(sessionStorage.getItem('openReplies')) || [];
-        const isOpen = !form.classList.contains('hidden');
-
-        if (isOpen) {
-            if (!openReplies.includes(commentId)) {
-                openReplies.push(commentId);
-            }
-        } else {
-            openReplies = openReplies.filter(id => id !== commentId);
-        }
-
-        sessionStorage.setItem('openReplies', JSON.stringify(openReplies));
-    }
-
     // === SEITENINITIALISIERUNG ===
     document.addEventListener('DOMContentLoaded', () => {
-        // Zustand aus sessionStorage wiederherstellen
-        const openReplies = JSON.parse(sessionStorage.getItem('openReplies')) || [];
-        openReplies.forEach(commentId => {
-            const form = document.getElementById('reply-form-' + commentId);
-            if (form) {
-                form.classList.remove('hidden');
-            }
-        });
+        initializeCommentSystem();
     });
 </script>
+
+<!-- JavaScript-Funktionalität -->
+<script src="js/comment-utils.js"></script>
 
 <!-- AJAX-Funktionalität -->
 <script src="js/ajax/utils.js"></script>

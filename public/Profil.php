@@ -368,85 +368,29 @@ try {
 
         // "Mehr laden"-Button für Posts und Kommentare
         if (moreButton) {
-            moreButton.addEventListener('click', () => {
-                moreButton.disabled = true;
-                moreButton.textContent = 'Lädt...';
-
-                // URL je nach Ansicht (Posts oder Kommentare)
-                let fetchUrl;
-                if (isCommentsView) {
-                    fetchUrl = `php/get-posts.php?context=user_comments&userId=${profileId}&offset=${offset}&limit=${limit}`;
-                } else {
-                    fetchUrl = `php/get-posts.php?context=user&userId=${profileId}&offset=${offset}&limit=${limit}`;
-                }
-
-                fetch(fetchUrl)
-                    .then(res => {
-                        if (!res.ok) throw new Error('Fehler beim Laden');
-                        return res.text();
-                    })
-                    .then(html => {
-                        if (!html.trim()) {
-                            // Keine weiteren Inhalte verfügbar
-                            moreButton.style.display = 'none';
-                        } else {
-                            contentContainer.insertAdjacentHTML('beforeend', html);
-                            offset += limit;
-
-                            // Event-Handler für neue Kommentare einrichten
-                            setupCommentContextHandlers();
-
-                            // Event-Handler für neue Reaktions-Formulare einrichten
-                            setupReactionHandlers();
-                            
-                            // AJAX-Handler für neue Inhalte einrichten
-                            if (window.setupAjaxHandlers) {
-                                window.setupAjaxHandlers();
-                            }
-
-                            // Prüfen, ob weniger Inhalte geladen wurden als erwartet
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = html;
-                            const loadedItems = tempDiv.querySelectorAll('.post, .comment-item').length;
-
-                            if (loadedItems < limit) {
-                                // Weniger als erwartet geladen - keine weiteren vorhanden
-                                moreButton.style.display = 'none';
-                            }
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        moreButton.textContent = 'Fehler!';
-                    })
-                    .finally(() => {
-                        if (moreButton.style.display !== 'none') {
-                            moreButton.disabled = false;
-                            moreButton.textContent = 'Mehr laden';
-                        }
-                    });
-            });
-        }
-
-        // Event-Handler für Kommentar-Links
-        function setupCommentContextHandlers() {
-            const commentContexts = document.querySelectorAll('.comment-context');
-
-            commentContexts.forEach(context => {
-                const hashtagLinks = context.querySelectorAll('a.link');
-                hashtagLinks.forEach(link => {
-                    link.addEventListener('click', function (event) {
-                        event.stopPropagation();
-                    });
-                });
+            const context = isCommentsView ? 'user_comments' : 'user';
+            const params = { userId: profileId };
+            
+            initializePagination({
+                containerId: 'content-container',
+                buttonId: 'mehr-laden-button',
+                buttonContainerId: 'mehr-laden-container',
+                context: context,
+                limit: limit,
+                initialOffset: limit,
+                params: params
             });
         }
 
         // Initial setup für bereits geladene Kommentare
-        setupCommentContextHandlers();
+        initializeCommentSystem();
 
     });
 </script>
+
+<!-- JavaScript-Funktionalität -->
+<script src="js/comment-utils.js"></script>
+<script src="js/pagination.js"></script>
 
 <!-- AJAX-Funktionalität -->
 <script src="js/ajax/utils.js"></script>

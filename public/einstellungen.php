@@ -219,28 +219,22 @@
 
 <?php include 'footerMobile.php'; ?>
 
+<!-- Refactored JavaScript-Funktionalität -->
+<script src="js/image-preview.js"></script>
+
 <script>
 // === AVATAR-BILDKOMPRIMIERUNG ===
 document.addEventListener('DOMContentLoaded', function() {
-    const avatarInput = document.getElementById('avatar');
-    const previewImg = document.getElementById('avatar-preview-img');
-
-    avatarInput.addEventListener('change', async function() {
-        if (avatarInput.files.length === 0) {
-            return;
-        }
-
-        try {
-            // Bildkomprimierung und Vorschau-Update
-            await window.imageCompressor.handleFileInput(avatarInput, previewImg, () => {
-                console.log('Bild erfolgreich komprimiert und Vorschau aktualisiert.');
-                // Die komprimierte Datei wird automatisch in das Input-Feld geschrieben
-            });
-        } catch (error) {
+    initializeAvatarImagePreview(
+        'avatar',
+        'avatar-preview-img',
+        () => {
+            console.log('Bild erfolgreich komprimiert und Vorschau aktualisiert.');
+        },
+        (error) => {
             alert(error.message);
-            avatarInput.value = ''; // Input-Feld zurücksetzen bei Fehler
         }
-    });
+    );
 });
 </script>
 
