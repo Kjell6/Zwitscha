@@ -209,6 +209,7 @@
 </footer>
 
 <script>
+    // === KOMMENTAR-FUNKTIONALITÄT ===
     const commentInput = document.getElementById('post-input');
     const charCount = document.querySelector('.form-submit-area .character-count');
 
@@ -226,12 +227,12 @@
         charCount.style.color = count > (maxLength - 20) ? '#dc3545' : '#6c757d';
     });
 
-
+    // === ANTWORT-FORMULARE ===
     function toggleReplyForm(commentId) {
         const form = document.getElementById('reply-form-' + commentId);
         if (!form) return;
 
-            form.classList.toggle('hidden');
+        form.classList.toggle('hidden');
 
         // Zustand in sessionStorage speichern
         let openReplies = JSON.parse(sessionStorage.getItem('openReplies')) || [];
@@ -250,6 +251,7 @@
         sessionStorage.setItem('openReplies', JSON.stringify(openReplies));
     }
 
+    // === SEITENINITIALISIERUNG ===
     document.addEventListener('DOMContentLoaded', () => {
         // Zustand aus sessionStorage wiederherstellen
         const openReplies = JSON.parse(sessionStorage.getItem('openReplies')) || [];
@@ -261,7 +263,7 @@
         });
     });
 
-
+    // === TEXTAREA-AUTOMATISIERUNG ===
     document.querySelectorAll('textarea').forEach(textarea => {
         const counter = textarea.closest('form').querySelector('.character-count');
 
@@ -281,7 +283,6 @@
             }
         });
     });
-
 
 </script>
 

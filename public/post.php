@@ -123,11 +123,13 @@ if (!function_exists('render_post_script')) {
     function render_post_script() {
         return '
         <script>
+            // === POST-NAVIGATION ===
             function navigateToPost(event, postId) {
-                // Verhindere Navigation, wenn auf ein interaktives Element geklickt wurde.
+                // Verhindere Navigation bei interaktiven Elementen (Buttons, Links)
                 if (event.target.closest(".no-post-details")) {
                     return;
                 }
+                // Navigiere zur Post-Detail-Seite
                 window.location.href = "postDetails.php?id=" + postId;
             }
         </script>

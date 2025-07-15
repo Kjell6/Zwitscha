@@ -69,6 +69,7 @@
 
     <!-- === SEARCH FUNCTIONALITY === -->
     <script>
+        // === DESKTOP-SUCHFUNKTIONALITÄT ===
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('header-search-input');
             const resultsDropdown = document.querySelector('.header-search-results-dropdown');
@@ -78,7 +79,7 @@
                 return;
             }
 
-            // Funktion zum Anzeigen der Suchergebnisse
+            // Suchergebnisse als HTML-Elemente darstellen
             function displayResults(results) {
                 resultsDropdown.innerHTML = '';
 
@@ -87,10 +88,12 @@
                     return;
                 }
 
+                // Überschrift hinzufügen
                 const heading = document.createElement('h3');
                 heading.textContent = 'Nutzer gefunden';
                 resultsDropdown.appendChild(heading);
 
+                // Ergebnisliste erstellen
                 const resultsList = document.createElement('ul');
                 resultsList.classList.add('header-search-results-list');
 
@@ -119,6 +122,7 @@
                 resultsDropdown.style.display = 'block';
             }
 
+            // Live-Suche bei Eingabe
             searchInput.addEventListener('input', () => {
                 const query = searchInput.value.trim();
                 
@@ -127,6 +131,7 @@
                     return;
                 }
 
+                // Suchanfrage an Server senden
                 fetch('php/search_handler.php', {
                     method: 'POST',
                     headers: {
@@ -144,14 +149,14 @@
                 });
             });
 
-            // Suchergebnisse ausblenden bei Klick außerhalb
+            // Ergebnisse ausblenden bei Klick außerhalb
             searchInput.addEventListener('blur', () => {
                 setTimeout(() => {
                     resultsDropdown.style.display = 'none';
                 }, 150);
             });
 
-            // Suchergebnisse wieder anzeigen bei Focus (falls bereits Text vorhanden)
+            // Ergebnisse wieder anzeigen bei Focus (falls bereits Text vorhanden)
             searchInput.addEventListener('focus', () => {
                 if (searchInput.value.trim().length >= 2) {
                     searchInput.dispatchEvent(new Event('input'));

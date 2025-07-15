@@ -340,6 +340,7 @@ try {
 <?php include 'lightbox.php'; ?>
 
 <script>
+    // === ADMIN-FUNKTIONEN ===
     function confirmBan(form) {
         const userToBan = "<?php echo htmlspecialchars($profile['nutzerName'], ENT_QUOTES); ?>";
         const message = `Um den Nutzer "${userToBan}" wirklich endgültig zu löschen, gib bitte den Nutzernamen zur Bestätigung ein.`;
@@ -355,6 +356,7 @@ try {
         return false; // Formular wird nicht gesendet
     }
 
+    // === PROFIL-SEITENFUNKTIONALITÄT ===
     document.addEventListener("DOMContentLoaded", () => {
         const profileId = <?php echo $profileId; ?>;
         const limit = <?php echo $limit; ?>;
@@ -364,12 +366,13 @@ try {
         const moreButton = document.getElementById('mehr-laden-button');
         const contentContainer = document.getElementById('content-container');
 
-        // "Mehr laden"-Button Funktionalität
+        // "Mehr laden"-Button für Posts und Kommentare
         if (moreButton) {
             moreButton.addEventListener('click', () => {
                 moreButton.disabled = true;
                 moreButton.textContent = 'Lädt...';
 
+                // URL je nach Ansicht (Posts oder Kommentare)
                 let fetchUrl;
                 if (isCommentsView) {
                     fetchUrl = `php/get-posts.php?context=user_comments&userId=${profileId}&offset=${offset}&limit=${limit}`;
@@ -390,10 +393,10 @@ try {
                             contentContainer.insertAdjacentHTML('beforeend', html);
                             offset += limit;
 
-                            // Setup event handlers für neue Kommentare
+                            // Event-Handler für neue Kommentare einrichten
                             setupCommentContextHandlers();
 
-                            // Prüfe, ob die Anzahl der geladenen Inhalte kleiner als das Limit ist
+                            // Prüfen, ob weniger Inhalte geladen wurden als erwartet
                             const tempDiv = document.createElement('div');
                             tempDiv.innerHTML = html;
                             const loadedItems = tempDiv.querySelectorAll('.post, .comment-item').length;
@@ -417,7 +420,7 @@ try {
             });
         }
 
-        // Funktion für comment-context Event-Handler
+        // Event-Handler für Kommentar-Links
         function setupCommentContextHandlers() {
             const commentContexts = document.querySelectorAll('.comment-context');
 

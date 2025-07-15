@@ -54,12 +54,13 @@
 
     <!-- === SEARCH FUNCTIONALITY === -->
     <script>
+        // === MOBILE-SUCHFUNKTIONALITÄT ===
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('mobile-search-input');
             const resultsContainer = document.getElementById('search-results');
             const resultsList = document.querySelector('.mobile-search-results-list');
 
-            // Funktion zum Anzeigen der Suchergebnisse
+            // Suchergebnisse als HTML-Elemente darstellen
             function displayResults(results) {
                 resultsList.innerHTML = '';
 
@@ -68,6 +69,7 @@
                     return;
                 }
 
+                // Ergebnisse durchlaufen und HTML-Elemente erstellen
                 results.forEach(user => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('search-result-item');
@@ -92,6 +94,7 @@
                 resultsContainer.style.display = 'block';
             }
 
+            // Live-Suche bei Eingabe
             searchInput.addEventListener('input', () => {
                 const query = searchInput.value.trim();
                 
@@ -100,6 +103,7 @@
                     return;
                 }
 
+                // Suchanfrage an Server senden
                 fetch('php/search_handler.php', {
                     method: 'POST',
                     headers: {

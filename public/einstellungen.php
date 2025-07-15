@@ -220,6 +220,7 @@
 <?php include 'footerMobile.php'; ?>
 
 <script>
+// === AVATAR-BILDKOMPRIMIERUNG ===
 document.addEventListener('DOMContentLoaded', function() {
     const avatarInput = document.getElementById('avatar');
     const previewImg = document.getElementById('avatar-preview-img');
@@ -230,15 +231,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            // Die vorhandene, benutzerdefinierte Kompressor-Klasse verwenden
+            // Bildkomprimierung und Vorschau-Update
             await window.imageCompressor.handleFileInput(avatarInput, previewImg, () => {
                 console.log('Bild erfolgreich komprimiert und Vorschau aktualisiert.');
-                // Die komprimierte Datei wird von der Bibliothek automatisch in das
-                // file-Input-Feld geschrieben, sodass das normale Formular-Submit funktioniert.
+                // Die komprimierte Datei wird automatisch in das Input-Feld geschrieben
             });
         } catch (error) {
-            alert(error.message); // Zeige die Fehlermeldung aus der Bibliothek an
-            avatarInput.value = ''; // Setze das Input-Feld zurück
+            alert(error.message);
+            avatarInput.value = ''; // Input-Feld zurücksetzen bei Fehler
         }
     });
 });

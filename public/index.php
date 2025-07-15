@@ -216,6 +216,8 @@
 <?php include 'lightbox.php'; ?>
 
 <script>
+    // === POST-FORMULAR FUNKTIONALITÄT ===
+    
     // Zeichenzähler für Post-Textarea
     const postInput = document.getElementById('post-input');
     const charCount = document.querySelector('.character-count');
@@ -223,11 +225,12 @@
     function updateCharCount() {
         const count = postInput.value.length;
         charCount.textContent = count + '/300';
+        // Warnung bei 280+ Zeichen
         charCount.style.color = count > 280 ? '#dc3545' : '#6c757d';
     }
 
     postInput.addEventListener('input', () => {
-        // Automatische Höhenanpassung
+        // Automatische Höhenanpassung der Textarea
         postInput.style.height = 'auto';
         postInput.style.height = postInput.scrollHeight + 'px';
 
@@ -235,7 +238,7 @@
         updateCharCount();
     });
 
-    // Bildvorschau
+    // === BILDVORSCHAU UND -KOMPRIMIERUNG ===
     const imageInput = document.getElementById('image-input');
     const imagePreview = document.getElementById('image-preview');
     const previewImg = document.getElementById('preview-img');
@@ -244,7 +247,7 @@
     imageInput.addEventListener('change', async (event) => {
         const file = event.target.files[0];
         if (file) {
-            // Prüfe, ob es ein gültiges Bildformat ist - Safari iOS kompatibel
+            // Dateiformatvalidierung
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
             const fileType = file.type.toLowerCase();
             const isValidType = allowedTypes.some(type =>
@@ -255,12 +258,12 @@
 
             if (!isValidType && file.size > 0) {
                 alert('Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.');
-                imageInput.value = ''; // Input zurücksetzen
+                imageInput.value = '';
                 return;
             }
 
             try {
-                // Automatische Bildkomprimierung vor Upload
+                // Bildkomprimierung und Vorschau
                 imagePreview.style.display = 'block';
                 await window.imageCompressor.handleFileInput(imageInput, previewImg, (compressedFile) => {
                     const originalSizeMB = (file.size / (1024 * 1024)).toFixed(2);
@@ -275,6 +278,7 @@
         }
     });
 
+    // Bild entfernen
     removeImageButton.addEventListener('click', () => {
         imageInput.value = '';
         previewImg.src = '#';
@@ -283,6 +287,7 @@
 </script>
 
 <script>
+    // === "MEHR LADEN"-FUNKTIONALITÄT ===
     document.addEventListener("DOMContentLoaded", () => {
         const container = document.getElementById("posts-container");
         const buttonContainer = document.getElementById('mehr-laden-container');
@@ -295,9 +300,11 @@
         const context = "<?php echo $showFollowedOnly ? 'followed' : 'all'; ?>";
 
         button.addEventListener("click", () => {
+            // Button-Status während des Ladens
             button.disabled = true;
             button.textContent = 'Lädt...';
 
+            // Posts vom Server laden
             fetch(`php/get-posts.php?context=${context}&offset=${offset}&limit=${limit}`)
                 .then(res => {
                     if (!res.ok) throw new Error('Fehler beim Laden der Posts');
@@ -305,8 +312,10 @@
                 })
                 .then(html => {
                     if (!html.trim()) {
+                        // Keine weiteren Posts vorhanden
                         if (buttonContainer) buttonContainer.style.display = 'none';
                     } else {
+                        // Neue Posts hinzufügen und Offset aktualisieren
                         container.insertAdjacentHTML('beforeend', html);
                         offset += limit;
                     }
@@ -316,6 +325,7 @@
                     button.textContent = 'Fehler!';
                 })
                 .finally(() => {
+                    // Button-Status zurücksetzen
                     if (buttonContainer && buttonContainer.style.display !== 'none') {
                         button.disabled = false;
                         button.textContent = 'Mehr laden';
