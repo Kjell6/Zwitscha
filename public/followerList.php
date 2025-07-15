@@ -43,20 +43,26 @@
 </head>
 <body>
 
+<!-- === HEADER === -->
 <?php include 'headerDesktop.php'; ?>
 
+<!-- === MAIN CONTAINER === -->
 <main class="container">
+    <!-- === PAGE HEADER === -->
     <div class="page-header-container">
         <button onclick="history.back()" class="back-button" type="button">Zurück</button>
         <h1><?php echo $title; ?></h1>
     </div>
 
+    <!-- === USER LIST === -->
     <div class="user-list">
         <?php if (empty($userList)): ?>
+            <!-- Empty State -->
             <div class="empty-state">
                 <p>Hier gibt es noch nichts zu sehen.</p>
             </div>
         <?php else: ?>
+            <!-- User List Items -->
             <?php foreach ($userList as $user): ?>
                 <a href="Profil.php?userid=<?php echo $user['id']; ?>" class="user-list-item">
                     <img src="getImage.php?type=user&id=<?php echo $user['id']; ?>" loading="lazy" alt="Profilbild" class="user-avatar">
@@ -67,6 +73,7 @@
     </div>
 </main>
 
+<!-- === FOOTER === -->
 <?php include 'footerMobile.php'; ?>
 
 </body>

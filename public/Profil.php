@@ -143,13 +143,15 @@ try {
 </head>
 <body>
 
+<!-- === HEADER === -->
 <?php include 'headerDesktop.php'; ?>
 <?php include 'footerMobile.php'; ?>
 
+<!-- === MAIN CONTAINER === -->
 <main class="container">
 
     <?php if (!$profile): ?>
-        <!-- ===== Fall: Profil nicht gefunden ===== -->
+        <!-- === PROFILE NOT FOUND === -->
         <div class="empty-state" style="text-align: center; margin: 3em 0;">
             <i class="bi bi-person-x" style="font-size: 48px; margin-bottom: 20px;"></i>
             <h3>Profil nicht gefunden</h3>
@@ -158,19 +160,20 @@ try {
         </div>
 
     <?php else: ?>
-        <!-- ============================
-              7) Profil-Kopfbereich (dynamisch)
-             ============================ -->
+        <!-- === PROFILE HEADER === -->
         <div class="profil-header">
+            <!-- Profile Image -->
             <img src="getImage.php?type=user&id=<?php echo $profile['id']; ?>" loading="lazy"
                  alt="Profilbild"
                  class="profilbild"
                  onclick="openLightbox('getImage.php?type=user&id=<?php echo $profile['id']; ?>')"
                  style="cursor: pointer;"/>
 
+            <!-- Profile Info -->
             <div class="profil-header pb-name-untereinander">
+                <!-- === PROFILE MAIN INFO === -->
                 <div class="profil-main-infos">
-                    <!-- Dynamischer Nutzername -->
+                    <!-- User Name with Admin Badge -->
                     <h1 class="profil-name">
                         <?php echo htmlspecialchars($profile['nutzerName']); ?>
                         <?php if ($profileUser && $profileUser['istAdministrator']): ?>
@@ -180,8 +183,9 @@ try {
                         <?php endif; ?>
                     </h1>
 
+                    <!-- === PROFILE BUTTONS === -->
                     <?php if ($currentUserId !== $profile['id']): ?>
-                        <!-- Follow/Unfollow-Form -->
+                        <!-- Follow/Unfollow Button -->
                         <form method="post" action="" style="display: inline;">
                             <input type="hidden" name="action" value="toggle_follow"/>
                             <input type="hidden" name="followeeId" value="<?php echo $profile['id']; ?>"/>
@@ -194,8 +198,9 @@ try {
                             </button>
                         </form>
 
-                        <!-- Admin-Status-Button (nur für Admins sichtbar) -->
+                        <!-- Admin Controls (Only for Admins) -->
                         <?php if ($currentUser && $currentUser['istAdministrator'] && $profileUser && $profileUser['nutzerName'] !== 'admin'): ?>
+                            <!-- Admin Status Toggle -->
                             <form method="post" action="" style="display: inline; margin-left: 10px;">
                                 <input type="hidden" name="action" value="toggle_admin"/>
                                 <input type="hidden" name="target_user_id" value="<?php echo $profile['id']; ?>"/>
@@ -210,7 +215,7 @@ try {
                                 </button>
                             </form>
 
-                            <!-- Nutzer Bannen Button -->
+                            <!-- Ban User Button -->
                             <form method="post" action="" style="display: inline; margin-left: 10px;"
                                   onsubmit="return confirmBan(this);">
                                 <input type="hidden" name="action" value="ban_user"/>
@@ -221,11 +226,12 @@ try {
                     <?php endif; ?>
                 </div>
 
-                <!-- Dynamisches Beitrittsdatum -->
+                <!-- === PROFILE METADATA === -->
+                <!-- Join Date -->
                 <p class="beitritts-datum"><i class="bi bi-calendar2-fill"></i>
                     Beigetreten <?php echo htmlspecialchars($joinDateLabel); ?></p>
 
-                <!-- Dynamische Zähler: Follower, Folge ich, Posts, Kommentare -->
+                <!-- === PROFILE STATS === -->
                 <div class="folgen-container">
                     <a href="followerList.php?userid=<?php echo $profile['id']; ?>&type=followers"
                        class="folge-info-link">
@@ -243,6 +249,7 @@ try {
                 </div>
             </div>
 
+            <!-- === MOBILE CONTROLS === -->
             <?php if ($currentUserId === $profile['id']): ?>
                 <a href="einstellungen.php" class="einstellungen-link mobile-only">
                     <i class="bi bi-gear-fill"></i>
@@ -254,9 +261,7 @@ try {
             <?php endif; ?>
         </div>
 
-        <!-- ============================
-              8) Toggle-Sektion: Posts und Kommentare
-             ============================ -->
+        <!-- === CONTENT NAVIGATION === -->
         <section class="profile-content">
             <!-- Content Toggle -->
             <div class="switch-wrapper">
@@ -273,7 +278,7 @@ try {
                 </div>
             </div>
 
-            <!-- Dynamic Content -->
+            <!-- === CONTENT AREA === -->
             <div class="feed" id="content-container">
                 <?php if ($showComments): ?>
                     <!-- Comments View -->
@@ -292,6 +297,7 @@ try {
                         }
                     }
                     ?>
+                    <!-- Posts Section -->
                 <?php else: ?>
                     <!-- Posts View -->
                     <?php

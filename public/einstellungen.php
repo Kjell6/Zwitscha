@@ -122,19 +122,23 @@
 
 <body>
 
+<!-- === HEADER === -->
 <?php include 'headerDesktop.php'; ?>
 
+<!-- === MAIN CONTAINER === -->
 <main class="container">
+    <!-- === SETTINGS CONTAINER === -->
     <section class="settings">
         <h2>Kontoeinstellungen</h2>
 
+        <!-- === FEEDBACK MESSAGES === -->
         <?php if (!empty($message)): ?>
             <p style="color: green; font-weight: bold;"><?= htmlspecialchars($message) ?></p>
         <?php elseif (!empty($error)): ?>
             <p style="color: red; font-weight: bold;"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-        <!-- Profilbild ändern -->
+        <!-- === AVATAR FORM === -->
         <form id="avatar-form" method="POST" enctype="multipart/form-data" class="card">
             <fieldset>
                 <legend>Profilbild ändern</legend>
@@ -156,7 +160,7 @@
             </fieldset>
         </form>
 
-        <!-- Name ändern -->
+        <!-- === NAME CHANGE FORM === -->
         <form method="POST" class="card">
             <fieldset>
                 <legend>Name ändern</legend>
@@ -171,7 +175,7 @@
             </fieldset>
         </form>
 
-        <!-- Passwort ändern -->
+        <!-- === PASSWORD CHANGE FORM === -->
         <form method="POST" class="card">
             <fieldset>
                 <legend>Passwort ändern</legend>
@@ -189,6 +193,7 @@
                         minlength="6"
                         maxlength="100"
                         title="Das Passwort muss mindestens 6 Zeichen lang sein und darf Buchstaben, Zahlen und gängige Sonderzeichen enthalten."
+                />
 
                 <label for="confirm-password">Neues Passwort bestätigen:</label>
                 <input type="password" id="confirm-password" name="confirm-password" required />
@@ -197,7 +202,7 @@
             </fieldset>
         </form>
 
-        <!-- Account löschen -->
+        <!-- === ACCOUNT DELETION FORM === -->
         <form method="POST" class="card" onsubmit="return confirm('Möchtest du deinen Account wirklich löschen?');">
             <fieldset>
                 <legend>Account löschen</legend>

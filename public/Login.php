@@ -58,20 +58,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
+<!-- === AUTH BODY === -->
 <body class="auth-body">
+    <!-- === AUTH CONTAINER === -->
     <div class="auth-container">
-        <!-- Login Form -->
+        <!-- === AUTH FORM CONTAINER === -->
         <div class="auth-form-container">
+            <!-- === LOGO SECTION === -->
             <div class="logo-section">
                 <img src="assets/favicon.png" alt="Zwitscha Logo" class="logo-image" />
             </div>
 
+            <!-- === AUTH FORM === -->
             <form id="login-form" class="auth-form" method="POST" action="">
+                <!-- === AUTH HEADER === -->
                 <div class="auth-header">
                     <h1>Willkommen zurück</h1>
                     <p>Melde dich mit deinem Account an</p>
                 </div>
 
+                <!-- === ALERT MESSAGES === -->
                 <?php if (!empty($successMessage)): ?>
                     <div class="alert alert-success">
                         <i class="bi bi-check-circle-fill"></i>
@@ -84,6 +90,7 @@
                     </div>
                 <?php endif; ?>
 
+                <!-- === FORM GROUPS === -->
                 <div class="form-group">
                     <label for="benutzername">Benutzername</label>
                     <div class="input-wrapper">
@@ -101,15 +108,18 @@
                     </div>
                 </div>
 
+                <!-- === REMEMBER ME === -->
                 <div class="form-group remember-me">
                     <input type="checkbox" id="remember_me" name="remember_me" value="1">
                     <label for="remember_me">Angemeldet bleiben</label>
                 </div>
 
+                <!-- === SUBMIT BUTTON === -->
                 <button type="submit" class="auth-button">
                     Anmelden
                 </button>
 
+                <!-- === AUTH FOOTER === -->
                 <div class="auth-footer">
                     <p>Noch keinen Account?</p>
                     <a href="Register.php" class="auth-link">Jetzt registrieren</a>

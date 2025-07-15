@@ -42,26 +42,33 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Registrieren - Zwitscha</title>
+    <title>Registrierung - Zwitscha</title>
     <link rel="icon" href="assets/favicon.png" type="image/png" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/Login.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
+<!-- === AUTH BODY === -->
 <body class="auth-body">
+    <!-- === AUTH CONTAINER === -->
     <div class="auth-container">
-        <!-- Register Form -->
+        <!-- === AUTH FORM CONTAINER === -->
         <div class="auth-form-container">
+            <!-- === LOGO SECTION === -->
             <div class="logo-section">
                     <img src="assets/favicon.png" alt="Zwitscha Logo" class="logo-image" />
             </div>
+            
+            <!-- === AUTH FORM === -->
             <form id="register-form" class="auth-form" method="POST" action="">
+                <!-- === AUTH HEADER === -->
                 <div class="auth-header">
                     <h1>Willkommen bei Zwitscha</h1>
                     <p>Erstelle deinen Account und werde Teil der Community</p>
                 </div>
 
+                <!-- === ALERT MESSAGES === -->
                 <?php if ($message): ?>
                     <div class="alert alert-success">
                         <i class="bi bi-check-circle-fill"></i>
@@ -74,6 +81,7 @@
                     </div>
                 <?php endif; ?>
 
+                <!-- === FORM GROUPS === -->
                 <div class="form-group">
                     <label for="benutzername">Benutzername</label>
                     <div class="input-wrapper">
@@ -97,10 +105,12 @@
                     </div>
                 </div>
 
+                <!-- === SUBMIT BUTTON === -->
                 <button type="submit" class="auth-button">
                     Registrieren
                 </button>
 
+                <!-- === AUTH FOOTER === -->
                 <div class="auth-footer">
                     <p>Bereits einen Account?</p>
                     <a href="Login.php" class="auth-link">Jetzt anmelden</a>

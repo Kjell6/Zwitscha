@@ -11,17 +11,23 @@
     $canDeleteComment = $isOwner || $isAdmin;
 ?>
 
+<!-- === COMMENT CONTAINER === -->
 <article class="post comment-layout">
+    <!-- Profile Image (Desktop) -->
     <a href="Profil.php?userid=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="no-post-details comment-profil-link">
         <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="post-user-image" loading="lazy" alt="Profilbild von <?php echo htmlspecialchars($comment_for_template['autor']); ?>">
     </a>
 
+    <!-- === COMMENT MAIN CONTENT === -->
     <main class="post-main-content">
+        <!-- === COMMENT HEADER === -->
         <section class="post-user-infos">
+            <!-- Profile Image (Mobile) -->
             <a href="Profil.php?userid=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="no-post-details comment-profil-link-inline">
                 <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="post-user-image-inline" loading="lazy" alt="">
             </a>
 
+            <!-- User Details -->
             <div class="post-user-details">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($comment_for_template['userId']); ?>" class="post-author-name">
                     <?php echo htmlspecialchars($comment_for_template['autor']); ?>
@@ -31,6 +37,7 @@
                 </time>
             </div>
 
+            <!-- Comment Options -->
             <?php if ($canDeleteComment): ?>
                 <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Kommentar wirklich löschen?');">
                     <input type="hidden" name="action" value="delete_comment">
@@ -43,10 +50,12 @@
             <?php endif; ?>
         </section>
 
+        <!-- === COMMENT CONTENT === -->
         <div class="post-content">
             <p><?php echo linkify_content($comment_for_template['text'], $nutzerVerwaltung); ?></p>
         </div>
 
+        <!-- === COMMENT ACTIONS === -->
         <div class="form-submit-area mt">
             <?php
             $antwortenCount = isset($comment_for_template['antworten']) ? count($comment_for_template['antworten']) : 0;
@@ -56,9 +65,9 @@
             </button>
         </div>
 
-
-        <!-- Antwortsektion (initial versteckt) -->
+        <!-- === REPLY SECTION === -->
         <div class="reply-section hidden" id="reply-form-<?php echo $comment_for_template['id']; ?>">
+            <!-- Reply Form -->
             <form method="POST" action="php/post_action_handler.php" class="create-post-form">
                 <input type="hidden" name="action" value="reply_comment">
                 <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
@@ -78,6 +87,7 @@
                 </div>
             </form>
 
+            <!-- === REPLIES LIST === -->
             <?php if (!empty($comment_for_template['antworten'])): ?>
                 <div class="replies-list">
                     <?php foreach ($comment_for_template['antworten'] as $antwort): ?>

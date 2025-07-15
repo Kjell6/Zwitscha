@@ -33,15 +33,23 @@
     $reactionEmojiMap = getReactionEmojiMap();
 ?>
 
+<!-- === POST CONTAINER === -->
 <article class="post" id="post-<?php echo $post['id']; ?>" data-post-id="<?php echo $post['id']; ?>" onclick="navigateToPost(event, <?php echo $post['id']; ?>)">
+    <!-- Profile Image (Desktop) -->
     <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
         <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image" loading="lazy"  alt="Profil-Bild">
     </a>
+    
+    <!-- === POST MAIN CONTENT === -->
     <main class="post-main-content">
+        <!-- === POST HEADER === -->
         <section class="post-user-infos">
+            <!-- Profile Image (Mobile) -->
             <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
                 <img src="getImage.php?type=user&id=<?php echo htmlspecialchars($post['userId']); ?>" class="post-user-image-inline" loading="lazy"  alt="Profil-Bild">
             </a>
+            
+            <!-- User Details -->
             <div class="post-user-details">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="post-author-name">
                     <?php echo htmlspecialchars($post['autor']); ?>
@@ -50,6 +58,8 @@
                     <?php echo htmlspecialchars($time_label); ?>
                 </time>
             </div>
+            
+            <!-- Post Options -->
             <?php if ($canDelete): ?>
                 <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
                     <input type="hidden" name="action" value="delete_post">
@@ -60,8 +70,12 @@
                 </form>
             <?php endif; ?>
         </section>
+        
+        <!-- === POST CONTENT === -->
         <div class="post-content">
             <p><?php echo linkify_content($post['text'], $nutzerVerwaltung); ?></p>
+            
+            <!-- === POST IMAGES === -->
             <?php if (!empty($post['bildDaten'])): ?>
                 <div class="post-image-container">
                     <img loading="lazy" src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
@@ -72,7 +86,10 @@
                 </div>
             <?php endif; ?>
         </div>
+        
+        <!-- === POST ACTIONS === -->
         <div class="post-actions">
+            <!-- Post Reactions -->
             <div class="post-reactions">
                 <?php
                 $emojis = ['👍', '👎', '❤️', '🤣', '❓', '‼️'];
@@ -91,6 +108,7 @@
                     </form>
                 <?php endforeach; ?>
             </div>
+            <!-- Action Buttons -->
             <a href="postDetails.php?id=<?php echo $post['id']; ?>" class="comment-link">
                 <button class="action-button comment-button" type="button">
                     <i class="bi bi-chat-dots-fill"></i> <?php echo $post['comments']; ?> Kommentar<?php echo $post['comments'] != 1 ? 'e' : ''; ?>

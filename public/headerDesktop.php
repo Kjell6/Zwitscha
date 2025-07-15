@@ -14,11 +14,13 @@
     $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
+<!-- === DESKTOP HEADER === -->
 <header class="desktop-header">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
+    <!-- === LOGO SECTION === -->
     <div class="header-section logo-section">
         <a href="index.php" class="logo">
             <picture>
@@ -28,38 +30,44 @@
         </a>
     </div>
 
+    <!-- === SEARCH SECTION === -->
     <div class="header-section search-section">
         <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
         <div class="header-search-results-dropdown"></div>
     </div>
 
+    <!-- === PROFILE SECTION === -->
     <div class="header-section profile-section">
+        <!-- Settings Link -->
         <a href="einstellungen.php" class="settings-link">
             <i class="bi bi-gear-fill"></i>
         </a>
 
+        <!-- User Authentication State -->
         <?php if ($eingeloggt): ?>
             <?php
             $isOwnProfile = ($currentPage === 'Profil.php' && isset($_GET['userid']) && (int)$_GET['userid'] === $currentUserId);
             ?>
             <?php if ($isOwnProfile): ?>
-                <!-- Auf dem EIGENEN Profil: Abmelden -->
+                <!-- Logout Button (On Own Profile) -->
                 <form method="post" style="display:inline;">
                     <button type="submit" name="logout" class="logout-button">Abmelden</button>
                 </form>
             <?php else: ?>
+                <!-- Profile Link (Other Pages) -->
                 <a href="Profil.php?userid=<?php echo $currentUserId; ?>" class="profile-link" title="<?php echo htmlspecialchars($currentUsername); ?>">
                     <i class="bi bi-person-fill"></i>
                 </a>
             <?php endif; ?>
         <?php else: ?>
-            <!-- Nicht eingeloggt: Anmelden -->
+            <!-- Login Button (Not Logged In) -->
             <a href="Login.php">
                 <button type="button">Anmelden</button>
             </a>
         <?php endif; ?>
     </div>
 
+    <!-- === SEARCH FUNCTIONALITY === -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('header-search-input');

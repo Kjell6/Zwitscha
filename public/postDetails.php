@@ -49,9 +49,12 @@
 </head>
 <body>
 
+<!-- === HEADER === -->
 <?php include 'headerDesktop.php'; ?>
 
+<!-- === MAIN CONTAINER === -->
 <main class="container">
+    <!-- === PAGE HEADER === -->
     <div class="page-header-container">
         <a href="index.php" class="logo">
             <button class="back-button" type="button">Zurück</button>
@@ -62,6 +65,7 @@
     <?php
     ?>
     <article class="detail-post">
+        <!-- === DETAIL POST === -->
         <section class="post-user-infos-detail">
             <div class="post-user-info-left">
                 <a href="Profil.php?userid=<?php echo htmlspecialchars($post['userId']); ?>" class="no-post-details">
@@ -80,6 +84,7 @@
                     </time>
                 </div>
             </div>
+            <!-- Post Options -->
             <?php
             // Berechtigung zum Löschen prüfen
             $isOwner = (int)$post['userId'] === (int)$currentUser['id'];
@@ -97,70 +102,76 @@
             <?php endif; ?>
         </section>
 
-        <div class="post-content-detail">
-            <p><?php echo linkify_content($post['text'], $nutzerVerwaltung); ?></p>
+            <!-- === POST CONTENT === -->
+            <div class="post-content-detail">
+                <p><?php echo linkify_content($post['text'], $nutzerVerwaltung); ?></p>
 
-            <?php if (!empty($post['bildDaten'])): ?>
-                <div class="post-image-container">
-                    <img loading="lazy" src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
-                         alt="Post-Bild"
-                         class="post-image"
-                         onclick="openLightbox('getImage.php?type=post&id=<?php echo $post['id']; ?>')"
-                         style="cursor: pointer;">
+                <!-- Post Image -->
+                <?php if (!empty($post['bildDaten'])): ?>
+                    <div class="post-image-container">
+                        <img loading="lazy" src="getImage.php?type=post&id=<?php echo $post['id']; ?>"
+                             alt="Post-Bild"
+                             class="post-image"
+                             onclick="openLightbox('getImage.php?type=post&id=<?php echo $post['id']; ?>')"
+                             style="cursor: pointer;">
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- === POST ACTIONS === -->
+            <section class="post-actions detail-actions">
+                <div class="post-reactions">
+                    <?php
+                    $emojis = ['👍', '👎', '❤️', '🤣', '❓', '‼️'];
+                    foreach ($emojis as $emoji):
+                        $count = $post['reactions'][$emoji] ?? 0;
+
+                        // Logik für aktive Reaktionen unter Verwendung des zentralen Mappings
+                        $reactionTypeFromEmoji = array_search($emoji, $reactionEmojiMap);
+                        $isActive = in_array($reactionTypeFromEmoji, $post['currentUserReactions']);
+                        ?>
+                        <form method="POST" action="php/post_action_handler.php" style="display:inline" class="reaction-form">
+                            <input type="hidden" name="action" value="toggle_reaction">
+                            <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                            <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
+                            <button class="reaction-button <?php echo $isActive ? 'active' : ''; ?>" type="submit" data-emoji="<?php echo $emoji; ?>">
+                                <?php echo $emoji; ?> <span class="reaction-counter"><?php echo $count; ?></span>
+                            </button>
+                        </form>
+                    <?php endforeach; ?>
                 </div>
-            <?php endif; ?>
-        </div>
+            </section>
+        </article>
 
-        <section class="post-actions detail-actions">
-            <div class="post-reactions">
-                <?php
-                $emojis = ['👍', '👎', '❤️', '🤣', '❓', '‼️'];
-                foreach ($emojis as $emoji):
-                    $count = $post['reactions'][$emoji] ?? 0;
+        <!-- === COMMENT CREATION FORM === -->
+        <form method="POST" action="php/post_action_handler.php" class="create-post-form">
+            <input type="hidden" name="action" value="create_comment">
+            <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
 
-                    // Logik für aktive Reaktionen unter Verwendung des zentralen Mappings
-                    $reactionTypeFromEmoji = array_search($emoji, $reactionEmojiMap);
-                    $isActive = in_array($reactionTypeFromEmoji, $post['currentUserReactions']);
-                    ?>
-                    <form method="POST" action="php/post_action_handler.php" style="display:inline" class="reaction-form">
-                        <input type="hidden" name="action" value="toggle_reaction">
-                        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                        <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
-                        <button class="reaction-button <?php echo $isActive ? 'active' : ''; ?>" type="submit" data-emoji="<?php echo $emoji; ?>">
-                            <?php echo $emoji; ?> <span class="reaction-counter"><?php echo $count; ?></span>
-                        </button>
-                    </form>
-                <?php endforeach; ?>
+            <div class="form-header">
+                <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" loading="lazy" alt="Dein Profilbild">
+                <textarea name="comment_text" id="post-input" placeholder="Schreibe einen Kommentar..." maxlength="300" required></textarea>
             </div>
-        </section>
-    </article>
 
-    <form method="POST" action="php/post_action_handler.php" class="create-post-form">
-        <input type="hidden" name="action" value="create_comment">
-        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-
-        <div class="form-header">
-            <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" loading="lazy" alt="Dein Profilbild">
-            <textarea name="comment_text" id="post-input" placeholder="Schreibe einen Kommentar..." maxlength="300" required></textarea>
-        </div>
-
-        <div class="form-footer">
-            <div class="form-actions"></div>
-            <div class="form-submit-area">
-                <p class="character-count">0/300</p>
-                <button class="post-button" type="submit">Kommentieren</button>
+            <div class="form-footer">
+                <div class="form-actions"></div>
+                <div class="form-submit-area">
+                    <p class="character-count">0/300</p>
+                    <button class="post-button" type="submit">Kommentieren</button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
 
-    <!-- Kommentare Sektion -->
+    <!-- === COMMENTS SECTION === -->
     <section class="comments-section">
+        <!-- Empty State -->
         <?php if (empty($comments)): ?>
             <div class="empty-state">
                 <i class="bi bi-chat-dots" style="font-size: 32px; margin-bottom: 15px;"></i>
                 <h3>Noch keine Kommentare</h3>
                 <p>Sei der Erste, der einen Kommentar schreibt!</p>
             </div>
+        <!-- Comments List -->
         <?php else: ?>
             <h2><?php echo count($comments); ?> Kommentar<?php echo count($comments) != 1 ? 'e' : ''; ?></h2>
             <div class="comments-list">
@@ -190,6 +201,7 @@
     </section>
 </main>
 
+<!-- === FOOTER === -->
 <?php include 'footerMobile.php'; ?>
 
 <footer>

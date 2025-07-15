@@ -110,30 +110,35 @@
     <script src="js/image-compression.js"></script>
 </head>
 <body>
+<!-- === HEADER === -->
 <?php include 'headerDesktop.php'; ?>
 
+<!-- === MAIN CONTENT === -->
 <div class="main-content">
-    <!-- Feedback Messages -->
+    <!-- === FEEDBACK MESSAGES === -->
     <?php if (!empty($feedbackMessage)): ?>
         <div class="feedback-message feedback-<?php echo $feedbackType; ?>">
             <?php echo htmlspecialchars($feedbackMessage); ?>
         </div>
     <?php endif; ?>
 
-    <!-- Post Erstellung Form -->
+    <!-- === CREATE POST FORM === -->
     <form method="POST" enctype="multipart/form-data" class="create-post-form">
         <input type="hidden" name="action" value="create_post">
 
+        <!-- Form Header -->
         <div class="form-header">
             <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" loading="lazy" alt="Dein Profilbild">
             <textarea name="post_text" id="post-input" placeholder="Was gibt's Neues?" maxlength="300" required></textarea>
         </div>
 
+        <!-- === IMAGE PREVIEW === -->
         <div class="image-preview" id="image-preview" style="display: none;">
             <img id="preview-img" src="#" alt="Bildvorschau">
             <button id="remove-image" type="button" aria-label="Bild entfernen"><i class="bi bi-x-lg"></i></button>
         </div>
 
+        <!-- === FORM FOOTER === -->
         <div class="form-footer">
             <div class="form-actions">
                 <label for="image-input" class="action-button" aria-label="Bild hinzufügen">
@@ -148,7 +153,7 @@
         </div>
     </form>
 
-    <!-- Filter Toggle -->
+    <!-- === POST TOGGLE === -->
     <div class="switch-wrapper">
         <div class="post-toggle">
             <input type="radio" id="all-posts" name="post-filter" <?php echo !$showFollowedOnly ? 'checked' : ''; ?>
@@ -161,13 +166,13 @@
         </div>
     </div>
 
-    <!-- Dynamischer Feed -->
-
+    <!-- === FEED CONTAINER === -->
     <section class="feed" id="posts-container">
         <?php
         if (empty($posts)) {
             if ($showFollowedOnly) {
                 ?>
+                <!-- Empty State - Followed Posts -->
                 <div class="empty-state">
                     <i class="bi bi-people" style="font-size: 48px; margin-bottom: 20px;"></i>
                     <h3>Keine Posts von gefolgten Nutzern</h3>
@@ -177,6 +182,7 @@
                 <?php
             } else {
                 ?>
+                <!-- Empty State - All Posts -->
                 <div class="empty-state">
                     <i class="bi bi-chat-square-text" style="font-size: 48px; margin-bottom: 20px;"></i>
                     <h3>Noch keine Posts vorhanden</h3>
@@ -185,6 +191,7 @@
                 <?php
             }
         } else {
+            // Dynamic Post Content
             foreach ($posts as $post) {
                 include 'post.php';
             }
@@ -192,7 +199,7 @@
         ?>
     </section>
 
-    <!-- "Mehr laden"-Button -->
+    <!-- === LOAD MORE SECTION === -->
     <?php if (count($posts) === $limit): ?>
     <div id="mehr-laden-container" style="display: flex; justify-content: center; margin: 20px 0;">
         <button id="mehr-laden-button" class="btn">Mehr laden</button>
