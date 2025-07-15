@@ -75,6 +75,11 @@ body {
     padding: 0 var(--spacing-xs);
 }
 
+.post-content-detail p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
 /* === POST ACTIONS === */
 .post-actions.detail-actions {
     display: flex;
@@ -125,7 +130,7 @@ body {
     flex-grow: 1;
     border: none;
     background-color: transparent;
-    resize: vertical;
+    resize: none; /* Erlaubt die automatische Größenanpassung durch JS */
     min-height: 24px;
     font-size: 1.1rem;
     color: var(--text-primary);

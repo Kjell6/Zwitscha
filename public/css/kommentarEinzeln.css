@@ -58,6 +58,8 @@
     color: var(--text-secondary);
     font-size: var(--font-size-sm);
     line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .comment-context-content .post-image-container {

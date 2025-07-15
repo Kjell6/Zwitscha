@@ -208,6 +208,7 @@
 <?php include 'lightbox.php'; ?>
 
 <!-- Refactored JavaScript-Funktionalität -->
+<script src="js/textarea-utils.js"></script>
 <script src="js/comment-utils.js"></script>
 
 <!-- AJAX-Funktionalität -->
@@ -219,7 +220,16 @@
 <script>
     // === SEITENINITIALISIERUNG ===
     document.addEventListener('DOMContentLoaded', () => {
+        // Initialisiert das Kommentar-System (Antworten, Löschen etc.)
         initializeCommentSystem();
+        
+        // Initialisiert die Textarea mit Zeichenzähler und automatischer Höhenanpassung
+        initializeTextareaWithCounter({
+            textareaId: 'post-input',
+            counterSelector: '.character-count',
+            maxLength: 300,
+            warningThreshold: 280
+        });
     });
 </script>
 

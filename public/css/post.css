@@ -13,6 +13,7 @@
 
 .post-main-content {
     width: 100%;
+    min-width: 0; /* Verhindert, dass Flex-Items bei langen Wörtern überlaufen */
 }
 
 /* === POST HEADER === */
@@ -73,7 +74,8 @@
 .post-content {
     padding: 0 var(--spacing-sm);
     color: var(--text-primary);
-    word-wrap: break-word;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
 }
 
 .post-content p {
