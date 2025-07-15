@@ -53,7 +53,57 @@ switch ($context) {
     case 'hashtag':
         $tag = $_GET['tag'] ?? '';
         if (!empty($tag)) {
-            $posts = $postVerwaltung->getPostsByHashtag($tag, $currentUserId, $limit, $offset);
+            // Für Hashtags laden wir mehr Posts und Kommentare, um sie zu kombinieren
+            $extendedLimit = $limit * 2; // Erweitert laden für bessere Auswahl
+            
+            $hashtagPosts = $postVerwaltung->getPostsByHashtag($tag, $currentUserId, $extendedLimit, 0);
+            $hashtagComments = $postVerwaltung->getCommentsByHashtag($tag, $extendedLimit, 0);
+            
+            // Posts und Kommentare kombinieren
+            $feedItems = [];
+            
+            // Posts hinzufügen
+            foreach ($hashtagPosts as $post) {
+                $feedItems[] = [
+                    'type' => 'post',
+                    'data' => $post,
+                    'timestamp' => $post['datumZeit']
+                ];
+            }
+            
+            // Kommentare hinzufügen
+            foreach ($hashtagComments as $comment) {
+                $feedItems[] = [
+                    'type' => 'comment',
+                    'data' => $comment,
+                    'timestamp' => $comment['datumZeit']
+                ];
+            }
+            
+            // Nach Datum sortieren (neueste zuerst)
+            usort($feedItems, function($a, $b) {
+                return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+            });
+            
+            // Offset und Limit anwenden
+            $feedItems = array_slice($feedItems, $offset, $limit);
+            
+            // Ausgabe der kombinierten Inhalte
+            if (empty($feedItems)) {
+                http_response_code(200); 
+                exit;
+            }
+            
+            foreach ($feedItems as $item) {
+                if ($item['type'] === 'post') {
+                    $post = $item['data'];
+                    include __DIR__ . '/../post.php';
+                } else {
+                    $comment = $item['data'];
+                    include __DIR__ . '/../kommentarEinzeln.php';
+                }
+            }
+            exit; // Wichtig: Verlassen der Funktion nach hashtag-Ausgabe
         }
         break;
 

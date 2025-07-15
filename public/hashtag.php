@@ -19,8 +19,9 @@
     $currentUser = $nutzerVerwaltung->getUserById($currentUserId);
 
 // === Daten für Hashtag-Anzeige laden ===
-    $posts = $postRepository->getPostsByHashtag($tag, $currentUserId);
-    $comments = $postRepository->getCommentsByHashtag($tag);
+    $limit = 15;
+    $posts = $postRepository->getPostsByHashtag($tag, $currentUserId, $limit, 0);
+    $comments = $postRepository->getCommentsByHashtag($tag, $limit, 0);
 
     // Posts und Kommentare in einem gemeinsamen Array kombinieren
     $feedItems = [];
@@ -48,6 +49,9 @@
         return strtotime($b['timestamp']) - strtotime($a['timestamp']);
     });
 
+    // Auf das Limit beschränken (da wir Posts und Kommentare kombinieren)
+    $feedItems = array_slice($feedItems, 0, $limit);
+
     $pageTitle = 'Posts und Kommentare mit #' . htmlspecialchars($tag);
 ?>
 
@@ -72,7 +76,7 @@
     <h1 class="page-title"><?php echo $pageTitle; ?></h1>
 
     <!-- Dynamischer Feed -->
-    <section class="feed">
+    <section class="feed" id="hashtag-feed">
         <?php
         if (empty($feedItems)) {
             ?>
@@ -98,6 +102,13 @@
         }
         ?>
     </section>
+
+    <!-- "Mehr laden"-Button -->
+    <?php if (count($feedItems) === $limit): ?>
+    <div id="mehr-laden-container" style="display: flex; justify-content: center; margin: 20px 0;">
+        <button id="mehr-laden-button" class="btn">Mehr laden</button>
+    </div>
+    <?php endif; ?>
 </div>
 
 <?php include 'footerMobile.php'; ?>
@@ -125,8 +136,60 @@
         
         // Initial setup für bereits geladene Kommentare
         setupCommentContextHandlers();
+
+        // "Mehr laden"-Funktionalität
+        const feedContainer = document.getElementById('hashtag-feed');
+        const buttonContainer = document.getElementById('mehr-laden-container');
+        
+        if (buttonContainer) {
+            const button = document.getElementById('mehr-laden-button');
+            const hashtag = '<?php echo htmlspecialchars($tag, ENT_QUOTES); ?>';
+            let offset = <?php echo $limit; ?>;
+            const limit = <?php echo $limit; ?>;
+
+            button.addEventListener('click', function() {
+                // Button-Status während des Ladens
+                button.disabled = true;
+                button.textContent = 'Lädt...';
+
+                // Hashtag-Inhalte vom Server laden
+                fetch(`php/get-posts.php?context=hashtag&tag=${encodeURIComponent(hashtag)}&offset=${offset}&limit=${limit}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Fehler beim Laden der Inhalte');
+                        return response.text();
+                    })
+                    .then(html => {
+                        if (!html.trim()) {
+                            // Keine weiteren Inhalte vorhanden
+                            if (buttonContainer) buttonContainer.style.display = 'none';
+                        } else {
+                            // Neue Inhalte hinzufügen und Offset aktualisieren
+                            feedContainer.insertAdjacentHTML('beforeend', html);
+                            offset += limit;
+                            
+                            // Event-Handler für neue Posts und Kommentare einrichten
+                            setupCommentContextHandlers();
+                            setupReactionHandlers();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fehler beim Laden:', error);
+                        button.textContent = 'Fehler!';
+                    })
+                    .finally(() => {
+                        // Button-Status zurücksetzen
+                        if (buttonContainer && buttonContainer.style.display !== 'none') {
+                            button.disabled = false;
+                            button.textContent = 'Mehr laden';
+                        }
+                    });
+            });
+        }
     });
 </script>
+
+<!-- Ajax-Reaktions-Funktionalität -->
+<script src="js/reactions.js"></script>
 
 </body>
 </html> 

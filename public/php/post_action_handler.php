@@ -40,24 +40,6 @@ switch ($action) {
         }
         break;
 
-    case 'toggle_reaction':
-        $postId = (int)($_POST['post_id'] ?? 0);
-        $emoji = trim($_POST['emoji'] ?? '');
-        
-        // Eingabe validieren
-        if ($postId <= 0 || empty($emoji) || strlen($emoji) > 10) {
-            break; 
-        }
-        
-        // Erlaubte Emojis prüfen
-        $allowedEmojis = ['👍', '👎', '❤️', '🤣', '❓', '‼️'];
-        if (!in_array($emoji, $allowedEmojis)) {
-            break;
-        }
-        
-        $postRepository->toggleReaction($currentUserId, $postId, $emoji);
-        break;
-
     case 'create_comment':
         $postId = (int)($_POST['post_id'] ?? 0);
         $commentText = trim($_POST['comment_text'] ?? '');

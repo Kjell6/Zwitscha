@@ -98,8 +98,7 @@
                     $reactionTypeFromEmoji = array_search($emoji, $reactionEmojiMap);
                     $isActive = in_array($reactionTypeFromEmoji, $post['currentUserReactions']);
                     ?>
-                    <form method="POST" action="php/post_action_handler.php" style="display: inline;" class="reaction-form">
-                        <input type="hidden" name="action" value="toggle_reaction">
+                    <form method="POST" action="php/reaction_handler.php" style="display: inline;" class="reaction-form">
                         <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                         <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
                         <button class="reaction-button no-post-details <?php echo $isActive ? 'active' : ''; ?>" type="submit" data-emoji="<?php echo $emoji; ?>">

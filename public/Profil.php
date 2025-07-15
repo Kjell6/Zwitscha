@@ -396,6 +396,9 @@ try {
                             // Event-Handler für neue Kommentare einrichten
                             setupCommentContextHandlers();
 
+                            // Event-Handler für neue Reaktions-Formulare einrichten
+                            setupReactionHandlers();
+
                             // Prüfen, ob weniger Inhalte geladen wurden als erwartet
                             const tempDiv = document.createElement('div');
                             tempDiv.innerHTML = html;
@@ -436,8 +439,13 @@ try {
 
         // Initial setup für bereits geladene Kommentare
         setupCommentContextHandlers();
+
+        // setupReactionHandlers ist jetzt eine globale Funktion in reactions.js
     });
 </script>
+
+<!-- Ajax-Reaktions-Funktionalität -->
+<script src="js/reactions.js"></script>
 
 </body>
 </html>

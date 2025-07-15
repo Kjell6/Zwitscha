@@ -158,6 +158,16 @@ link:hover {
     color: var(--primary-color);
 }
 
+.post-actions .reaction-button.loading {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.post-actions .reaction-button.loading:hover {
+    background-color: transparent;
+    color: var(--text-secondary);
+}
+
 .post-actions .comment-button {
     background: none;
     color: var(--text-secondary);

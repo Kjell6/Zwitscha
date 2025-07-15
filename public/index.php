@@ -318,6 +318,9 @@
                         // Neue Posts hinzufügen und Offset aktualisieren
                         container.insertAdjacentHTML('beforeend', html);
                         offset += limit;
+                        
+                        // Event-Handler für neue Posts einrichten
+                        setupReactionHandlers();
                     }
                 })
                 .catch(err => {
@@ -332,7 +335,12 @@
                     }
                 });
         });
+
+
     });
 </script>
+
+<!-- Ajax-Reaktions-Funktionalität -->
+<script src="js/reactions.js"></script>
 </body>
 </html>
