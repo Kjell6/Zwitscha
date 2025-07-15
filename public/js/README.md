@@ -1,117 +1,129 @@
-# JavaScript-Struktur
+# JavaScript Dokumentation
 
-Diese Ordnerstruktur organisiert die JavaScript-Funktionalität der Anwendung sauber nach Verantwortlichkeiten.
-
-## Refactoring-Übersicht
-
-Die neueren JavaScript-Dateien wurden erstellt, um duplizierte Funktionalität aus den PHP-Dateien zu extrahieren und in wiederverwendbare Module zu organisieren:
-
-- **Problem**: Duplizierte JavaScript-Funktionalität in mehreren PHP-Dateien
-- **Lösung**: Auslagern in separate JS-Dateien mit konfigurierbaren Funktionen
-- **Vorteil**: Bessere Wartbarkeit, weniger Duplikate, zentralisierte Funktionalität
+Diese Dokumentation beschreibt die clientseitige JavaScript-Logik der Anwendung. Die Skripte sind modular aufgebaut und nach ihrer Zuständigkeit in `js/` und `js/ajax/` unterteilt.
 
 ## Ordnerstruktur
 
 ```
 js/
-├── ajax/                    # AJAX-Funktionalität
-│   ├── utils.js            # Gemeinsame Hilfsfunktionen
-│   ├── posts.js            # Post-Erstellung und -Verwaltung
-│   ├── comments.js         # Kommentar-Funktionalität
-│   └── reactions.js        # Reaktions-System
-├── comment-utils.js        # Kommentar-Context-Handler
-├── image-compression.js    # Bildkomprimierung
-├── image-preview.js        # Bildvorschau und -komprimierung
-├── navigation.js           # Post-Navigation
+├── ajax/
+│   ├── utils.js            # AJAX-Hilfsfunktionen
+│   ├── posts.js            # AJAX für Posts (Erstellen, Löschen)
+│   ├── comments.js         # AJAX für Kommentare (Erstellen, Löschen)
+│   └── reactions.js        # AJAX für Reaktionen
+├── comment-utils.js        # Hilfsfunktionen für die Kommentar-Sektion
+├── image-compression.js    # Clientseitige Bildkomprimierung
+├── image-preview.js        # Bildvorschau für Formulare
+├── navigation.js           # Navigation für Posts
 ├── pagination.js           # "Mehr laden"-Funktionalität
-├── search.js              # Suchfunktionalität
-├── textarea-utils.js       # Textarea-Funktionalität
-└── README.md              # Diese Datei
+├── search.js               # Globale Suchfunktionalität
+├── textarea-utils.js       # Hilfsfunktionen für Textareas
+└── README.md               # Diese Datei
 ```
 
-## Dateien
+---
 
-### ajax/utils.js
-- **Zweck**: Gemeinsame AJAX-Hilfsfunktionen
+## AJAX-Module (`ajax/`)
+
+### `ajax/utils.js`
+Stellt eine `AjaxUtils`-Klasse mit statischen Hilfsmethoden bereit, die von anderen AJAX-Modulen verwendet werden.
+
 - **Klasse**: `AjaxUtils`
-- **Funktionen**: 
-  - `setButtonLoading()` - Button-Loading-Status
-  - `showFeedbackMessage()` - Feedback-Nachrichten
-  - `compressImage()` - Bildkomprimierung
-  - `updateCommentCount()` - Kommentar-Zähler
-  - `updateCommentsHeading()` - Kommentar-Überschriften
-  - `updateReplyCount()` - Antwort-Zähler
+- **Funktionen**:
+  - `setButtonLoading(button, text, isLoading)`: Setzt den Ladezustand eines Buttons.
+  - `showFeedbackMessage(message, type)`: Zeigt eine globale Feedback-Nachricht an.
+  - `compressImage(file)`: Komprimiert ein Bild vor dem Upload.
+  - `updateCommentCount(delta)`: Aktualisiert den Kommentar-Zähler eines Posts.
+  - `updateCommentsHeading(delta)`: Aktualisiert die Überschrift der Kommentar-Sektion.
+  - `updateReplyCount(commentId, delta)`: Aktualisiert den Antwort-Zähler eines Kommentars.
 
-### ajax/posts.js
-- **Zweck**: Post-Erstellung und -Verwaltung
+### `ajax/posts.js`
+Verwaltet das Erstellen und Löschen von Posts via AJAX.
+
 - **Klasse**: `PostAjax`
-- **Funktionen**:
-  - `handlePostCreation()` - Post erstellen
-  - `handlePostDeletion()` - Post löschen
-  - `resetPostForm()` - Post-Formular zurücksetzen
-  - `prependNewPost()` - Neuen Post einfügen
+- **Hauptfunktionen**:
+  - `handlePostCreation(form)`: Verarbeitet die Erstellung eines neuen Posts.
+  - `handlePostDeletion(form)`: Verarbeitet das Löschen eines Posts.
+  - `resetPostForm(form)`: Setzt das Post-Formular zurück.
+  - `prependNewPost(postHtml)`: Fügt den neuen Post-HTML-Code am Anfang der Liste ein.
 
-### ajax/comments.js
-- **Zweck**: Kommentar-Funktionalität
+### `ajax/comments.js`
+Verwaltet das Erstellen und Löschen von Kommentaren und Antworten via AJAX.
+
 - **Klasse**: `CommentAjax`
-- **Funktionen**:
-  - `handleCommentCreation()` - Kommentar erstellen
-  - `handleCommentDeletion()` - Kommentar löschen
-  - `insertNewComment()` - Neuen Kommentar einfügen
-  - `removeCommentFromDOM()` - Kommentar aus DOM entfernen
+- **Hauptfunktionen**:
+  - `handleCommentCreation(form)`: Verarbeitet die Erstellung eines Kommentars oder einer Antwort.
+  - `handleCommentDeletion(form)`: Verarbeitet das Löschen eines Kommentars.
+  - `insertNewComment(commentHtml, form)`: Fügt einen neuen Kommentar in den DOM ein.
+  - `removeCommentFromDOM(form)`: Entfernt einen Kommentar aus dem DOM.
 
-### ajax/reactions.js
-- **Zweck**: Reaktions-System (bereinigt, ohne Duplikate)
+### `ajax/reactions.js`
+Verwaltet das Umschalten von Reaktionen auf Posts und Kommentare.
+
 - **Klasse**: `ReactionAjax`
-- **Funktionen**:
-  - `handleReactionToggle()` - Reaktion umschalten
-  - `updateReactionButtons()` - Reaktions-Buttons aktualisieren
-  - `getReactionTypeFromEmoji()` - Emoji-Mapping
+- **Hauptfunktionen**:
+  - `handleReactionToggle(form)`: Verarbeitet das Hinzufügen/Entfernen einer Reaktion.
+  - `updateReactionButtons(postId, reactions, currentUserReactions)`: Aktualisiert die UI der Reaktions-Buttons.
+  - `getReactionTypeFromEmoji(emoji)`: Konvertiert ein Emoji-Symbol in den entsprechenden Reaktionstyp.
 
-### image-compression.js
-- **Zweck**: Bildkomprimierung für Uploads
+---
+
+## Utility-Module (`js/`)
+
+### `comment-utils.js`
+Enthält globale Hilfsfunktionen zur Verwaltung der Kommentar-Interaktionen.
+
+- **Funktionen**:
+  - `setupCommentContextHandlers()`: Verhindert, dass Klicks auf Links in Kommentaren zur Post-Detailseite navigieren.
+  - `toggleReplyForm(commentId)`: Zeigt das Antwortformular für einen Kommentar an oder verbirgt es.
+  - `restoreReplyFormsState()`: Stellt den Zustand der geöffneten Antwortformulare aus der `sessionStorage` wieder her.
+  - `initializeCommentSystem()`: Initialisiert alle Kommentar-Funktionen auf einer Seite.
+  - `setupCommentHandlersForNewContent()`: Richtet Event-Handler für dynamisch nachgeladene Kommentare ein.
+
+### `image-compression.js`
+Stellt eine globale `ImageCompressor`-Instanz zur Verfügung, um Bilder clientseitig zu komprimieren.
+
 - **Klasse**: `ImageCompressor`
-- **Status**: Unverändert (bereits gut strukturiert)
+- **Hauptfunktionen**:
+  - `compressImage(file)`: Komprimiert eine einzelne Bilddatei.
+  - `handleFileInput(fileInput, previewElement, callback)`: Komprimiert das Bild aus einem File-Input und zeigt eine Vorschau an.
 
-### search.js
-- **Zweck**: Gemeinsame Suchfunktionalität für Desktop und Mobile
-- **Funktionen**:
-  - `initializeSearch()` - Konfigurierbare Basis-Suchfunktion
-  - `initializeDesktopSearch()` - Desktop-Header-Suchfunktion
-  - `initializeMobileSearch()` - Mobile-Seiten-Suchfunktion
+### `image-preview.js`
+Bietet Funktionen zur Initialisierung von Bild-Vorschauen in Formularen, inklusive Validierung und Komprimierung.
 
-### pagination.js
-- **Zweck**: Universelle "Mehr laden"-Funktionalität für Posts
 - **Funktionen**:
-  - `initializePagination()` - Konfigurierbare Pagination-Funktionalität
-  - **Unterstützte Kontexte**: `all`, `followed`, `user`, `user_comments`, `hashtag`
-- **Konfiguration**: Container-IDs, Button-IDs, Limit, Offset, Parameter
+  - `initializeImagePreview(config)`: Eine hochgradig konfigurierbare Funktion zur Initialisierung einer Bildvorschau.
+  - `initializeSimpleImagePreview(...)`: Eine vereinfachte Wrapper-Funktion für Standard-Anwendungsfälle.
+  - `initializeAvatarImagePreview(...)`: Eine spezialisierte Funktion für die Vorschau von Avataren (z.B. im Profil).
 
-### comment-utils.js
-- **Zweck**: Kommentar-bezogene Utility-Funktionen
-- **Funktionen**:
-  - `setupCommentContextHandlers()` - Verhindert Navigation bei Hashtag-Links in Kommentaren
-  - `toggleReplyForm()` - Toggle-Funktionalität für Antwort-Formulare
-  - `initializeCommentSystem()` - Vollständige Kommentar-System-Initialisierung
-- **Zweck**: Verhindert unerwünschte Navigation bei interaktiven Elementen
+### `navigation.js`
+Verwaltet die Klick-Navigation auf Posts, um zur Detailansicht zu gelangen.
 
-### image-preview.js
-- **Zweck**: Bildvorschau und -komprimierung für Formulare
 - **Funktionen**:
-  - `initializeImagePreview()` - Konfigurierbare Bildvorschau-Funktionalität
-  - **Features**: Dateityp-Validierung, Komprimierung, Vorschau-Update
-- **Konfiguration**: Input-IDs, Vorschau-Container, erlaubte Dateitypen
+  - `navigateToPost(event, postId)`: Navigiert zur Post-Detailseite, ignoriert dabei Klicks auf interaktive Elemente.
+  - `setupPostNavigationHandlers()`: Richtet die Klick-Listener für alle Posts auf der Seite ein.
+  - `initializeNavigation()`: Initialisiert das Navigationssystem.
 
-### textarea-utils.js
-- **Zweck**: Textarea-Funktionalität (Zeichenzähler, Auto-Resize)
-- **Funktionen**:
-  - `initializeTextareaWithCounter()` - Textarea mit Zeichenzähler und Auto-Resize
-  - **Features**: Automatische Höhenanpassung, Zeichenzähler, Warnungen
-- **Konfiguration**: Textarea-ID, Counter-Selektor, Zeichenlimit
+### `pagination.js`
+Stellt eine universelle "Mehr laden"-Funktionalität für verschiedene Inhaltstypen bereit.
 
-### navigation.js
-- **Zweck**: Post-Navigation-Funktionalität
 - **Funktionen**:
-  - `navigateToPost()` - Navigation zu Post-Detail-Seite
-  - `setupPostNavigationHandlers()` - Event-Handler für Post-Navigation
-- **Zweck**: Verhindert Navigation bei interaktiven Elementen (Buttons, Links)
+  - `initializePagination(config)`: Initialisiert die Paginierung mit einer detaillierten Konfiguration.
+  - `initializeSimplePagination(...)`: Eine vereinfachte Wrapper-Funktion für Standard-Paginierungen.
+  - **Unterstützte Kontexte**: `all`, `followed`, `user`, `user_comments`, `hashtag`.
+
+### `search.js`
+Stellt eine wiederverwendbare Suchfunktionalität bereit.
+
+- **Funktionen**:
+  - `initializeSearch(config)`: Eine konfigurierbare Basisfunktion für die Live-Suche.
+  - `initializeDesktopSearch()`: Initialisiert die Suche im Desktop-Header.
+  - `initializeMobileSearch()`: Initialisiert die Suche auf der mobilen Suchseite.
+
+### `textarea-utils.js`
+Enthält Hilfsfunktionen zur Verbesserung von `textarea`-Elementen.
+
+- **Funktionen**:
+  - `initializeTextareaWithCounter(config)`: Fügt einer Textarea einen Zeichenzähler und eine automatische Höhenanpassung hinzu.
+  - `initializeSimpleTextarea(...)`: Eine vereinfachte Wrapper-Funktion für `initializeTextareaWithCounter`.
+  - `initializeAutoResizeTextarea(textareaId)`: Aktiviert nur die automatische Höhenanpassung für eine Textarea.
