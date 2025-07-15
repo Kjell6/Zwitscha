@@ -398,6 +398,11 @@ try {
 
                             // Event-Handler für neue Reaktions-Formulare einrichten
                             setupReactionHandlers();
+                            
+                            // AJAX-Handler für neue Inhalte einrichten
+                            if (window.setupAjaxHandlers) {
+                                window.setupAjaxHandlers();
+                            }
 
                             // Prüfen, ob weniger Inhalte geladen wurden als erwartet
                             const tempDiv = document.createElement('div');
@@ -440,12 +445,12 @@ try {
         // Initial setup für bereits geladene Kommentare
         setupCommentContextHandlers();
 
-        // setupReactionHandlers ist jetzt eine globale Funktion in reactions.js
     });
 </script>
 
-<!-- Ajax-Reaktions-Funktionalität -->
+<!-- AJAX-Funktionalität -->
 <script src="js/reactions.js"></script>
+<script src="js/ajax-handler.js"></script>
 
 </body>
 </html>

@@ -170,6 +170,11 @@
                             // Event-Handler für neue Posts und Kommentare einrichten
                             setupCommentContextHandlers();
                             setupReactionHandlers();
+                            
+                            // AJAX-Handler für neue Inhalte einrichten
+                            if (window.setupAjaxHandlers) {
+                                window.setupAjaxHandlers();
+                            }
                         }
                     })
                     .catch(error => {
@@ -188,8 +193,9 @@
     });
 </script>
 
-<!-- Ajax-Reaktions-Funktionalität -->
+<!-- AJAX-Funktionalität -->
 <script src="js/reactions.js"></script>
+<script src="js/ajax-handler.js"></script>
 
 </body>
 </html> 

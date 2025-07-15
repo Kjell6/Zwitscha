@@ -388,9 +388,10 @@ class PostVerwaltung {
      * @param int $postId Die ID des Posts.
      * @param int $userId Die ID des Autors.
      * @param string $text Der Kommentartext.
-     * @return bool True bei Erfolg.
+     * @param int|null $parentCommentId Die ID des übergeordneten Kommentars (für Antworten).
+     * @return int|false Die ID des neuen Kommentars bei Erfolg, false bei Fehler.
      */
-    public function createComment(int $postId, int $userId, string $text, ?int $parentCommentId = null): bool {
+    public function createComment(int $postId, int $userId, string $text, ?int $parentCommentId = null): int|false {
         $sql = "INSERT INTO kommentar (post_id, nutzer_id, text, parent_comment_id) VALUES (?, ?, ?, ?)";
 
         $stmt = $this->db->prepare($sql);
@@ -403,10 +404,42 @@ class PostVerwaltung {
             $stmt->bind_param("iisi", $postId, $userId, $text, $parentCommentId);
         }
 
-        $success = $stmt->execute();
+        if ($stmt->execute()) {
+            $newCommentId = $this->db->insert_id;
+            $stmt->close();
+            return $newCommentId;
+        }
+
+        $stmt->close();
+        return false;
+    }
+
+    /**
+     * Holt einen einzelnen Kommentar mit Nutzer-Informationen.
+     *
+     * @param int $commentId Die ID des Kommentars.
+     * @return array|null Die Kommentar-Daten oder null, wenn nicht gefunden.
+     */
+    public function getCommentById(int $commentId): ?array {
+        $sql = "
+            SELECT 
+                k.id, k.text, k.datumZeit, k.post_id, k.parent_comment_id, k.nutzer_id,
+                n.nutzerName AS nutzer_name, n.profilbild
+            FROM kommentar k
+            JOIN nutzer n ON k.nutzer_id = n.id
+            WHERE k.id = ?
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return null;
+
+        $stmt->bind_param("i", $commentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $comment = $result->fetch_assoc();
         $stmt->close();
 
-        return $success;
+        return $comment ?: null;
     }
 
 

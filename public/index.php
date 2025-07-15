@@ -7,76 +7,6 @@
     $postRepository = new PostVerwaltung();
     $nutzerVerwaltung = new NutzerVerwaltung();
 
-// === POST-Request-Handling für neue Posts ===
-    $feedbackMessage = '';
-    $feedbackType = ''; // success, error, info
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST'
-        && isset($_POST['action'])
-        && $_POST['action'] === 'create_post'
-    ) {
-        // Prüfen ob angemeldet für Post-Erstellung
-        if (!isLoggedIn()) {
-            $feedbackMessage = 'Du musst angemeldet sein, um Posts zu erstellen.';
-            $feedbackType = 'error';
-        } else {
-            $postText   = trim($_POST['post_text'] ?? '');
-            $currentUserId = getCurrentUserId();
-
-        // Prüfen, ob der Post-Text leer ist
-        if (empty($postText)) {
-            $feedbackMessage = 'Post-Text darf nicht leer sein.';
-            $feedbackType    = 'error';
-
-        // Prüfen, ob der Post-Text zu lang ist
-        } elseif (strlen($postText) > 300) {
-            $feedbackMessage = 'Post-Text darf maximal 300 Zeichen lang sein.';
-            $feedbackType    = 'error';
-
-        } else {
-            $imageData = null;
-            // Prüfen, ob ein Bild hochgeladen wurde und fehlerfrei ist
-            if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
-                // Datei-Validierung
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
-                if (!in_array($_FILES['post_image']['type'], $allowedTypes)) {
-                    $feedbackMessage = 'Nur JPEG, PNG, GIF und WebP Dateien sind erlaubt.';
-                    $feedbackType = 'error';
-                } elseif ($_FILES['post_image']['size'] > 2 * 1024 * 1024) { // 2 MB Limit (entspricht Server-Limit)
-                    $feedbackMessage = 'Das Bild ist zu groß. Maximal 2 MB sind erlaubt.';
-                    $feedbackType = 'error';
-                } else {
-                    $imageData = file_get_contents($_FILES['post_image']['tmp_name']);
-                    if ($imageData === false) {
-                        $feedbackMessage = 'Fehler beim Lesen der Bilddatei.';
-                        $feedbackType = 'error';
-                    }
-                }
-            } elseif (isset($_FILES['post_image']) && $_FILES['post_image']['error'] !== UPLOAD_ERR_NO_FILE) {
-                $feedbackMessage = 'Fehler beim Hochladen der Datei.';
-                $feedbackType = 'error';
-            }
-
-                // Post nur erstellen, wenn kein Fehler beim Bild-Upload aufgetreten ist
-                if ($feedbackType !== 'error') {
-                    $newPostId = $postRepository->createPost($currentUserId, $postText, $imageData);
-
-                if ($newPostId) {
-                    $feedbackMessage = 'Post erfolgreich angelegt.';
-                    $feedbackType    = 'success';
-                    // Leere die Post-Variable, um doppeltes Senden zu verhindern (Post/Redirect/Get Pattern)
-                    header("Location: " . $_SERVER['PHP_SELF'] . '#post-' . $newPostId);
-                    exit();
-                } else {
-                    $feedbackMessage = 'Fehler beim Speichern des Posts in der Datenbank.';
-                    $feedbackType    = 'error';
-                }
-            }
-        }
-        }
-    }
-
 // === Daten für Feed-Anzeige laden ===
 
     requireLogin();
@@ -115,15 +45,15 @@
 
 <!-- === MAIN CONTENT === -->
 <div class="main-content">
-    <!-- === FEEDBACK MESSAGES === -->
-    <?php if (!empty($feedbackMessage)): ?>
-        <div class="feedback-message feedback-<?php echo $feedbackType; ?>">
-            <?php echo htmlspecialchars($feedbackMessage); ?>
+    <!-- === FEEDBACK MESSAGES (AJAX) === -->
+    <div id="feedback-container" class="feedback-container" style="display: none;">
+        <div id="feedback-message" class="feedback-message">
+            <span id="feedback-text"></span>
         </div>
-    <?php endif; ?>
+    </div>
 
     <!-- === CREATE POST FORM === -->
-    <form method="POST" enctype="multipart/form-data" class="create-post-form">
+    <form enctype="multipart/form-data" class="create-post-form">
         <input type="hidden" name="action" value="create_post">
 
         <!-- Form Header -->
@@ -321,6 +251,11 @@
                         
                         // Event-Handler für neue Posts einrichten
                         setupReactionHandlers();
+                        
+                        // AJAX-Handler für neue Posts einrichten
+                        if (window.setupAjaxHandlers) {
+                            window.setupAjaxHandlers();
+                        }
                     }
                 })
                 .catch(err => {
@@ -340,7 +275,8 @@
     });
 </script>
 
-<!-- Ajax-Reaktions-Funktionalität -->
+<!-- AJAX-Funktionalität -->
 <script src="js/reactions.js"></script>
+<script src="js/ajax-handler.js"></script>
 </body>
 </html>

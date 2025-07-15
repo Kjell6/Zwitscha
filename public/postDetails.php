@@ -92,7 +92,7 @@
             $canDeletePost = ($isAdmin || $isOwner);
             if ($canDeletePost):
                 ?>
-                <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Post wirklich löschen?');">
+                <form class="delete-form" data-type="post" data-post-id="<?php echo $post['id']; ?>" style="display: inline;">
                     <input type="hidden" name="action" value="delete_post">
                     <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                     <button class="post-options-button no-post-details" type="submit" aria-label="Post löschen">
@@ -130,7 +130,7 @@
                         $reactionTypeFromEmoji = array_search($emoji, $reactionEmojiMap);
                         $isActive = in_array($reactionTypeFromEmoji, $post['currentUserReactions']);
                         ?>
-                        <form method="POST" action="php/reaction_handler.php" style="display:inline" class="reaction-form">
+                        <form style="display:inline" class="reaction-form">
                             <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                             <input type="hidden" name="emoji" value="<?php echo $emoji; ?>">
                             <button class="reaction-button <?php echo $isActive ? 'active' : ''; ?>" type="submit" data-emoji="<?php echo $emoji; ?>">
@@ -142,8 +142,8 @@
             </section>
         </article>
 
-        <!-- === COMMENT CREATION FORM === -->
-        <form method="POST" action="php/post_action_handler.php" class="create-post-form">
+        <!-- === COMMENT CREATION FORM (AJAX) === -->
+        <form class="create-post-form comment-form" data-post-id="<?php echo $post['id']; ?>">
             <input type="hidden" name="action" value="create_comment">
             <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
 
@@ -208,25 +208,7 @@
 </footer>
 
 <script>
-    // === KOMMENTAR-FUNKTIONALITÄT ===
-    const commentInput = document.getElementById('post-input');
-    const charCount = document.querySelector('.form-submit-area .character-count');
-
-    commentInput.addEventListener('input', () => {
-        // Automatische Höhenanpassung
-        commentInput.style.height = 'auto';
-        commentInput.style.height = commentInput.scrollHeight + 'px';
-
-        // Zeichenzähler aktualisieren
-        const count = commentInput.value.length;
-        const maxLength = commentInput.maxLength;
-        charCount.textContent = count + '/' + maxLength;
-        
-        // Farbe ändern, wenn das Limit fast erreicht ist
-        charCount.style.color = count > (maxLength - 20) ? '#dc3545' : '#6c757d';
-    });
-
-    // === ANTWORT-FORMULARE ===
+    // === ANTWORT-FORMULARE (nur UI-Logik) ===
     function toggleReplyForm(commentId) {
         const form = document.getElementById('reply-form-' + commentId);
         if (!form) return;
@@ -238,12 +220,10 @@
         const isOpen = !form.classList.contains('hidden');
 
         if (isOpen) {
-            // Zur Liste hinzufügen, wenn nicht schon vorhanden
             if (!openReplies.includes(commentId)) {
                 openReplies.push(commentId);
-        }
+            }
         } else {
-            // Aus der Liste entfernen
             openReplies = openReplies.filter(id => id !== commentId);
         }
 
@@ -261,35 +241,13 @@
             }
         });
     });
-
-    // === TEXTAREA-AUTOMATISIERUNG ===
-    document.querySelectorAll('textarea').forEach(textarea => {
-        const counter = textarea.closest('form').querySelector('.character-count');
-
-        textarea.addEventListener('input', () => {
-            // Höhe automatisch anpassen
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-
-            // Zeichenzähler aktualisieren, falls vorhanden
-            if (counter) {
-                const count = textarea.value.length;
-                const maxLength = textarea.maxLength;
-                counter.textContent = count + '/' + maxLength;
-
-                // Farbe ändern, wenn nah am Limit
-                counter.style.color = count > (maxLength - 20) ? '#dc3545' : '#6c757d';
-            }
-        });
-    });
-
 </script>
 
-<!-- Ajax-Reaktions-Funktionalität -->
+<!-- AJAX-Funktionalität -->
 <script src="js/reactions.js"></script>
+<script src="js/ajax-handler.js"></script>
 
 <?php include 'lightbox.php'; ?>
-
 
 </body>
 </html>

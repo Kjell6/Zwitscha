@@ -28,7 +28,7 @@
             </div>
 
             <?php if ($canDeleteComment): ?>
-                <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Kommentar wirklich löschen?');">
+                <form class="delete-form" data-type="comment" data-comment-id="<?php echo $comment['id']; ?>" style="display: inline;">
                     <input type="hidden" name="action" value="delete_comment">
                     <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
                     <button class="post-options-button no-post-details" type="submit" aria-label="Kommentar löschen">

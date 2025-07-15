@@ -39,7 +39,7 @@
 
             <!-- Comment Options -->
             <?php if ($canDeleteComment): ?>
-                <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Kommentar wirklich löschen?');">
+                <form class="delete-form" data-type="comment" data-comment-id="<?php echo $comment_for_template['id']; ?>" data-post-id="<?php echo $postId; ?>" style="display: inline;">
                     <input type="hidden" name="action" value="delete_comment">
                     <input type="hidden" name="comment_id" value="<?php echo $comment_for_template['id']; ?>">
                     <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
@@ -60,15 +60,15 @@
             <?php
             $antwortenCount = isset($comment_for_template['antworten']) ? count($comment_for_template['antworten']) : 0;
             ?>
-            <button class="reply-button" onclick="toggleReplyForm(<?php echo $comment_for_template['id']; ?>)">
+            <button class="reply-button" data-comment-id="<?php echo $comment_for_template['id']; ?>">
                 <i class="bi bi-chat-dots-fill"></i> Antworten<?php echo $antwortenCount > 0 ? " ({$antwortenCount})" : ""; ?>
             </button>
         </div>
 
         <!-- === REPLY SECTION === -->
         <div class="reply-section hidden" id="reply-form-<?php echo $comment_for_template['id']; ?>">
-            <!-- Reply Form -->
-            <form method="POST" action="php/post_action_handler.php" class="create-post-form">
+            <!-- Reply Form (AJAX) -->
+            <form class="create-post-form reply-form" data-post-id="<?php echo $postId; ?>" data-parent-comment-id="<?php echo $comment_for_template['id']; ?>">
                 <input type="hidden" name="action" value="reply_comment">
                 <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
                 <input type="hidden" name="parent_comment_id" value="<?php echo $comment_for_template['id']; ?>">
@@ -116,7 +116,7 @@
                                         </time>
                                     </div>
                                     <?php if ($canDeleteReply): ?>
-                                        <form method="POST" action="php/post_action_handler.php" style="display: inline;" onsubmit="return confirm('Antwort wirklich löschen?');">
+                                        <form class="delete-form" data-type="comment" data-comment-id="<?php echo $antwort['id']; ?>" data-post-id="<?php echo $postId; ?>" style="display: inline;">
                                             <input type="hidden" name="action" value="delete_comment">
                                             <input type="hidden" name="comment_id" value="<?php echo $antwort['id']; ?>">
                                             <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
