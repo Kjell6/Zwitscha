@@ -47,6 +47,16 @@ h2 {
     color: var(--text-primary);
 }
 
+/* === MOBILE SEARCH RESULTS === */
+.mobile-search-results-list .search-result-item {
+    margin-bottom: var(--spacing-md);
+}
+
+.mobile-search-results-list .search-result-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 480px) {
     body {

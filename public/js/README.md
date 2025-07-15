@@ -12,6 +12,7 @@ js/
 │   ├── comments.js         # Kommentar-Funktionalität
 │   └── reactions.js        # Reaktions-System
 ├── image-compression.js    # Bildkomprimierung
+├── search.js              # Suchfunktionalität
 └── README.md              # Diese Datei
 ```
 
@@ -58,3 +59,10 @@ js/
 - **Zweck**: Bildkomprimierung für Uploads
 - **Klasse**: `ImageCompressor`
 - **Status**: Unverändert (bereits gut strukturiert)
+
+### search.js
+- **Zweck**: Gemeinsame Suchfunktionalität für Desktop und Mobile
+- **Funktionen**:
+  - `initializeSearch()` - Konfigurierbare Basis-Suchfunktion
+  - `initializeDesktopSearch()` - Desktop-Header-Suchfunktion
+  - `initializeMobileSearch()` - Mobile-Seiten-Suchfunktion
