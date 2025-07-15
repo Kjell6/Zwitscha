@@ -1,4 +1,4 @@
-/* Grundlegendes Layout für die Suchseite */
+/* === BODY LAYOUT === */
 body {
     max-width: var(--container-max-width);
     margin-left: auto;
@@ -15,14 +15,11 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling für die Hauptüberschrift */
 h2 {
     margin-bottom: var(--spacing-md);
 }
 
-/* Styling für jedes einzelne Suchergebnis Item */
-
-/* Styling für den Link im Suchergebnis */
+/* === SEARCH RESULTS === */
 .search-result-item a {
     display: flex;
     align-items: center;
@@ -31,12 +28,10 @@ h2 {
     transition: color var(--transition-fast);
 }
 
-/* Hover-Effekt für den Link */
 .search-result-item a:hover {
     color: var(--primary-color);
 }
 
-/* Styling für das Profilbild im Suchergebnis */
 .search-result-item img {
     display: block;
     width: 40px;
@@ -47,13 +42,12 @@ h2 {
     flex-shrink: 0;
 }
 
-/* Styling für den Benutzernamen im Suchergebnis */
 .search-result-item span {
     font-weight: bold;
     color: var(--text-primary);
 }
 
-/* Responsive Anpassungen */
+/* === RESPONSIVE DESIGN === */
 @media (max-width: 480px) {
     body {
         padding-left: var(--spacing-xs);

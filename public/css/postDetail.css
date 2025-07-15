@@ -1,4 +1,4 @@
-/* Nutzt den body als Container */
+/* === BODY LAYOUT === */
 body {
     max-width: var(--container-max-width);
     margin-left: auto;
@@ -6,7 +6,7 @@ body {
     padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
 }
 
-/* Container für Zurück-Button und Überschrift */
+/* === PAGE HEADER === */
 .page-header-container {
     display: flex;
     align-items: center;
@@ -14,25 +14,22 @@ body {
     margin-bottom: var(--spacing-md);
 }
 
-/* Styling für den Zurück-Button Container */
 .back-button {
     flex-shrink: 0;
 }
 
-/* Styling für den Button im Zurück-Button Container */
 .back-button button {
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: var(--font-size-sm);
 }
 
-/* Styling für die Überschrift in der Detailansicht */
 .page-header-container h1 {
     font-size: var(--font-size-lg);
     margin-bottom: 0;
     flex-grow: 1;
 }
 
-/* Styling für den Haupt-Post in der Detailansicht */
+/* === DETAIL POST === */
 .detail-post {
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius-md);
@@ -42,7 +39,6 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling für die Benutzerinformationen Sektion */
 .post-user-infos-detail {
     display: flex;
     align-items: center;
@@ -53,14 +49,12 @@ body {
     flex-wrap: wrap;
 }
 
-/* Neuer Stil für den linken Teil der Benutzerinfos */
 .post-user-info-left {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
 }
 
-/* Styling für das Profilbild */
 .post-user-infos-detail img {
     display: block;
     border-radius: 50%;
@@ -77,16 +71,11 @@ body {
     align-items: flex-start;
 }
 
-
-
-/* Styling für den Post-Inhalt */
 .post-content-detail {
     padding: 0 var(--spacing-xs);
 }
 
-
-/* Styling für die Aktions-Sektion in der Detailansicht */
-/* Diese Sektion enthält nun die Emoji-Reaktionen und die Kommentar-Input-Gruppe */
+/* === POST ACTIONS === */
 .post-actions.detail-actions {
     display: flex;
     flex-direction: column;
@@ -95,7 +84,6 @@ body {
     padding: 0;
 }
 
-/* Styling für den Container der Emoji-Reaktionen */
 .post-actions .post-reactions {
     display: flex;
     gap: var(--spacing-xs);
@@ -103,12 +91,7 @@ body {
     padding: 0 var(--spacing-xs);
 }
 
-/* Gruppierung für Input und Kommentar-Button */
-
-/* Styling für das Kommentar-Eingabefeld */
-
-/* Styling für den Kommentar-Button */
-
+/* === CREATE POST FORM === */
 .create-post-form {
     background-color: var(--light-color);
     border-radius: var(--border-radius-md);
@@ -145,7 +128,6 @@ body {
     resize: vertical;
     min-height: 24px;
     font-size: 1.1rem;
-
     color: var(--text-primary);
     padding: var(--spacing-xs) 0;
     line-height: 1.5;
@@ -156,13 +138,12 @@ body {
     outline: none;
 }
 
-/* Form Footer */
 .create-post-form .form-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: var(--spacing-xs);
-    margin-left: calc(48px + var(--spacing-sm)); /* Einrücken */
+    margin-left: calc(48px + var(--spacing-sm));
     padding-top: var(--spacing-xs);
     border-top: 1px solid var(--bg-color);
 }
@@ -190,7 +171,7 @@ body {
     background-color: var(--primary-color);
     color: var(--light-color);
     font-weight: bold;
-    border-radius: 50px; /* Pill-shape */
+    border-radius: 50px;
     padding: 8px 20px;
     transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
@@ -205,6 +186,7 @@ body {
     transform: none;
 }
 
+/* === REPLY SECTION === */
 .hidden {
     display: none;
 }
@@ -213,7 +195,6 @@ body {
     padding-right: var(--spacing-sm);
 }
 
-/* Styling für den Kommentar-Button */
 .reply-button {
     margin-left: var(--spacing-xs);
     background: none;
@@ -228,13 +209,11 @@ body {
     background-color: var(--hover-color);
 }
 
-/* Spezifisches Spacing für das Antwort-Formular innerhalb eines Kommentars */
 .reply-section .create-post-form {
     margin: var(--spacing-sm) 0;
     background-color: #fbfbfb;
 }
 
-/* Hintergrundfarbe für verschachtelte Kommentare/Antworten */
 .replies-list .post.comment-layout {
     background-color: #fbfbfb;
 }
@@ -245,22 +224,25 @@ body {
     }
 }
 
-/* Styling für die Kommentare-Sektion */
+/* === COMMENTS SECTION === */
 .comments-section {
     padding: var(--spacing-md) 0;
     padding-left: var(--spacing-sm);
     padding-right: var(--spacing-sm);
 }
 
-/* Styling für die Überschrift der Kommentare */
 .comments-section h2 {
     margin-bottom: var(--spacing-md);
     font-size: var(--font-size-xl);
 }
 
-/* Styling für die Kommentare-Liste */
+.comment-submit-area .character-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
 
-/* Responsive Anpassungen */
+/* === RESPONSIVE DESIGN === */
 @media (max-width: 480px) {
     body {
         padding-left: var(--spacing-xs);
@@ -271,7 +253,6 @@ body {
         font-size: var(--font-size-lg);
     }
 
-    /* Anpassung der Aktions-Sektion in der Detailansicht für kleine Bildschirme */
     .post-actions.detail-actions {
         gap: var(--spacing-sm);
     }
@@ -279,9 +260,6 @@ body {
     .post-actions .post-reactions {
         flex-direction: row;
     }
-
-    /* Anpassung der Kommentar-Input-Gruppe auf kleinen Bildschirmen */
-
 }
 
 @media (max-width: 390px) {
@@ -296,11 +274,4 @@ body {
     .create-post-form .user-avatar {
         display: none;
     }
-
-}
-
-.comment-submit-area .character-count {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin: 0;
 }

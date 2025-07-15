@@ -1,3 +1,4 @@
+/* === DESKTOP HEADER === */
 .desktop-header {
     display: none;
     align-items: center;
@@ -5,7 +6,7 @@
     background-color: var(--light-color);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-bottom: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius-md); /* Abgerundete Ecken */
+    border-radius: var(--border-radius-md);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
@@ -14,11 +15,9 @@
     box-sizing: border-box;
 }
 
-/* Standardmäßig ausblenden */
 .desktop-header {
     display: none;
 }
-
 
 .desktop-header .header-section {
     display: flex;
@@ -33,16 +32,15 @@
     height: 80px;
 }
 
-/* Styling für den Suchbereich im Desktop-Header */
+/* === SEARCH SECTION === */
 .desktop-header .search-section {
     flex-grow: 1;
     padding: 0 var(--spacing-sm);
     max-width: 600px;
-    position: relative; /* Container für Dropdown */
+    position: relative;
     display: flex;
 }
 
-/* Styling für den Suchergebnisse-Dropdown-Container */
 .header-search-results-dropdown {
     position: absolute;
     width: 100%;
@@ -62,7 +60,6 @@
     box-sizing: border-box;
 }
 
-/* Überschrift im Dropdown */
 .header-search-results-dropdown h3 {
     font-size: var(--font-size-sm);
     color: var(--text-secondary);
@@ -70,19 +67,16 @@
     padding: 0;
 }
 
-/* Liste im Dropdown */
 .header-search-results-dropdown ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-/* Einzelnes Suchergebnis im Dropdown */
 .header-search-results-dropdown .search-result-item {
     padding: var(--spacing-xs) var(--spacing-sm);
 }
 
-/* Link im Suchergebnis */
 .header-search-results-dropdown .search-result-item a {
     display: flex;
     align-items: center;
@@ -90,7 +84,6 @@
     color: var(--text-primary);
 }
 
-/* Profilbild im Suchergebnis */
 .header-search-results-dropdown .search-result-item img {
     display: block;
     width: 30px;
@@ -101,40 +94,36 @@
     flex-shrink: 0;
 }
 
-/* Benutzername im Suchergebnis */
 .header-search-results-dropdown .search-result-item span {
     font-weight: bold;
     color: var(--text-primary);
 }
 
-/* Profil- und Einstellungen-Sektion */
+/* === PROFILE SECTION === */
 .desktop-header .profile-section {
     padding-left: var(--spacing-sm);
-    display: flex;           /* Flexbox für horizontale Anordnung */
-    gap: var(--spacing-md);  /* Abstand zwischen den Links */
-    justify-content: center; /* Zentriert die Links */
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
     align-items: center;
 }
 
-
-/* Gemeinsame Link-Stile */
 .desktop-header .profile-section a {
     color: var(--text-primary);
     text-decoration: none;
-    font-size: var(--font-size-lg); /* Icon-Größe */
+    font-size: var(--font-size-lg);
     transition: color var(--transition-fast);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--border-radius-sm);
 }
 
-/* Hover-Effekt für Links */
 .desktop-header .profile-section a:hover {
     color: var(--primary-color);
     background-color: var(--bg-color);
     cursor: pointer;
 }
 
-/* Sichtbar nur ab 768px */
+/* === RESPONSIVE DESIGN === */
 @media (min-width: 769px) {
     .desktop-header {
         display: flex;

@@ -1,3 +1,4 @@
+/* === BODY LAYOUT === */
 body {
     padding-top: var(--spacing-sm);
     max-width: var(--container-max-width);
@@ -7,6 +8,7 @@ body {
     padding-right: var(--spacing-sm);
 }
 
+/* === PAGE HEADER === */
 .page-header-container {
     display: flex;
     align-items: center;
@@ -21,6 +23,7 @@ body {
     margin: 0;
 }
 
+/* === USER LIST === */
 .user-list {
     display: flex;
     flex-direction: column;
@@ -35,7 +38,6 @@ body {
     text-decoration: none;
     color: var(--text-primary);
     transition: background-color var(--transition-fast);
-
     background-color: var(--light-color);
     border-radius: var(--border-radius-md);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -54,6 +56,7 @@ body {
     font-size: var(--font-size-md);
 }
 
+/* === EMPTY STATE === */
 .empty-state {
     text-align: center;
     padding: var(--spacing-xl) var(--spacing-sm);

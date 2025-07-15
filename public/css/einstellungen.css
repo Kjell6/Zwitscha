@@ -1,25 +1,23 @@
-/* Body wie auf der Startseite */
+/* === BODY LAYOUT === */
 body {
     padding: var(--spacing-sm);
 }
 
-/* Einstellungs-Wrapper */
+/* === SETTINGS CONTAINER === */
 .settings {
     margin-bottom: var(--spacing-lg);
 }
 
-/* Überschrift */
 .settings h2 {
     text-align: center;
 }
 
-/* Formular-Karte */
+/* === FORM STYLING === */
 form.card {
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
 }
 
-/* Feldset und Legend */
 form.card fieldset {
     border: none;
     padding: 0;
@@ -32,12 +30,10 @@ form.card legend {
     margin-bottom: var(--spacing-sm);
 }
 
-/* Label */
 form.card label {
     color: var(--text-secondary);
     margin-bottom: var(--spacing-xs);
 }
-
 
 form.card button.button {
     background-color: var(--primary-color);
@@ -48,7 +44,7 @@ form.card button.button:hover {
     background-color: var(--primary-hover);
 }
 
-/* Reduziertes Layout für Profilbild-Formular */
+/* === AVATAR FORM === */
 .avatar-form-layout {
     display: flex;
     justify-content: flex-start;
@@ -85,7 +81,7 @@ form.card button.button:hover {
     border-color: var(--primary-color);
 }
 
-/* Danger-Button */
+/* === DANGER BUTTON === */
 form.card button.danger {
     background-color: var(--danger-color);
     color: var(--light-color);

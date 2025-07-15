@@ -1,6 +1,6 @@
-/* Mobiler Footer */
+/* === MOBILE FOOTER === */
 .mobile-footer {
-    display: none; /* Wird standardmäßig nicht angezeigt */
+    display: none;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -26,17 +26,15 @@
     transition: color var(--transition-fast);
 }
 
-
-/* Sichtbar nur auf kleinen Bildschirmen */
+/* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
     .mobile-footer {
         display: block;
     }
 
-    /* Platz für den Footer schaffen, damit kein Content vom Footer überdeckt wird */
     body::after {
         content: "";
         display: block;
-        height: calc(60px); /* Höhe des mobilen Footers */
+        height: calc(60px);
     }
 }

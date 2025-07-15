@@ -1,4 +1,4 @@
-/* Comment Context Styling - Post-Bezug für einzelne Kommentare */
+/* === COMMENT CONTEXT === */
 .comment-context {
     background-color: #fbfbfb;
     border: var(--border-width) solid var(--border-color);
@@ -92,9 +92,7 @@
     text-decoration: none;
 }
 
-
-
-/* Mobile Anpassungen */
+/* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
     .comment-context {
         padding: var(--spacing-xs);

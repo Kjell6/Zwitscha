@@ -1,50 +1,50 @@
+/* === CSS VARIABLEN === */
 :root {
   /* Farbpalette */
-  --primary-color: #22DA26;       /* Hauptfarbe */
-  --primary-hover: #1baf1e;       /* Hover-Zustand für Hauptfarbe */
+  --primary-color: #22DA26;
+  --primary-hover: #1baf1e;
   --hover-color: #22da2619;
-  --light-color: #ffffff;         /* Helle Farbe */
-  --button-color: #222;           /* Button-Farbe */
-  --button-hover: #444;           /* Button-Hover-Farbe */
+  --light-color: #ffffff;
+  --button-color: #222;
+  --button-hover: #444;
 
   /* Neutralfarben */
-  --text-primary: #222;           /* Haupttextfarbe */
-  --text-secondary: #777;         /* Sekundärtextfarbe für Footer etc. */
-  --border-color: #ddd;           /* Rahmenfarbe */
-  --input-border: #ccc;           /* Rahmenfarbe für Eingabefelder */
-  --bg-color: #f5f5f5;            /* Hintergrundfarbe */
+  --text-primary: #222;
+  --text-secondary: #777;
+  --border-color: #ddd;
+  --input-border: #ccc;
+  --bg-color: #f5f5f5;
 
   /* Gefahrfarben */
   --danger-color: #e53935;
   --danger-hover: #c62828;
 
-
   /* Typografie */
   --font-family-main: 'Roboto', sans-serif;
 
   /* Schriftgrößen */
-  --font-size-xs: 0.9rem;         /* Footer-Größe */
-  --font-size-sm: 0.95rem;        /* Kleine Texte */
-  --font-size-md: 1rem;           /* 16px Basisgröße */
-  --font-size-lg: 1.2rem;         /* Größere Texte */
-  --font-size-xl: 1.5rem;         /* Überschriften */
-  --font-size-xxl: 2rem;          /* Große Überschriften */
+  --font-size-xs: 0.9rem;
+  --font-size-sm: 0.95rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.2rem;
+  --font-size-xl: 1.5rem;
+  --font-size-xxl: 2rem;
 
   /* Zeilenabstände */
-  --line-height-tight: 1.2;       /* Für Überschriften */
-  --line-height-normal: 1.6;      /* Für Fließtext */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.6;
 
   /* Abstände */
   --spacing-xxs: 0.3rem;
-  --spacing-xs: 0.5rem;           /* 8px */
-  --spacing-sm: 1rem;             /* 16px */
-  --spacing-md: 1.5rem;           /* 24px */
-  --spacing-lg: 2rem;             /* 32px */
-  --spacing-xl: 2.5rem;           /* 40px */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 2.5rem;
 
   /* Rahmen */
-  --border-radius-sm: 8px;        /* Kleine Rundungen */
-  --border-radius-md: 16px;        /* Standard-Rundungen für Buttons, Inputs */
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
   --border-width: 1px;
 
   /* Container-Größen */
@@ -56,7 +56,7 @@
   --transition-normal: 0.3s ease;
 }
 
-/* Basis-Reset */
+/* === BASIS RESET === */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -71,18 +71,14 @@ html {
 body {
   font-family: var(--font-family-main);
   font-size: var(--font-size-md);
-
-  /* Vielleicht wieder löschen */
   max-width: var(--container-max-width);
-  margin: 0 auto; /* Zentriert das Body-Element auf der Seite */
-
+  margin: 0 auto;
   line-height: var(--line-height-normal);
   color: var(--text-primary);
   background-color: var(--bg-color);
 }
 
-
-/* Basisstilisierung für häufig verwendete Elemente */
+/* === TYPOGRAFIE === */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: var(--text-primary);
@@ -90,11 +86,10 @@ h1, h2, h3, h4, h5, h6 {
   line-height: var(--line-height-tight);
 }
 
-/* Grundlegende Listen-Resets */
 ul, ol {
-  list-style: none; /* Entfernt Standard-Listenpunkte */
-  padding: 0; /* Entfernt Standard-Padding */
-  margin: 0; /* Entfernt Standard-Margin */
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 h1 { font-size: var(--font-size-xxl); }
@@ -117,7 +112,7 @@ a:hover {
   color: var(--primary-hover);
 }
 
-/* Buttons */
+/* === BUTTONS === */
 button, .button {
   display: inline-block;
   background-color: var(--button-color);
@@ -135,7 +130,7 @@ button:hover, .button:hover {
   background-color: var(--button-hover);
 }
 
-/* Container und Layout */
+/* === LAYOUT UND CONTAINER === */
 .header-wrapper {
   width: 100%;
 }
@@ -147,7 +142,7 @@ button:hover, .button:hover {
   padding: var(--spacing-md) 0;
 }
 
-/* Eingabefelder */
+/* === FORM ELEMENTE === */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -174,7 +169,7 @@ label {
   font-weight: 500;
 }
 
-/* Kartenkomponente für Beiträge/Nachrichten */
+/* === KARTEN KOMPONENTE === */
 .card {
   background-color: var(--light-color);
   border: var(--border-width) solid var(--border-color);
@@ -189,7 +184,7 @@ label {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-/* Footer */
+/* === FOOTER === */
 footer {
   text-align: center;
   padding: var(--spacing-md) 0;
@@ -199,7 +194,7 @@ footer {
   margin-top: var(--spacing-xl);
 }
 
-/* Hilfsstilisierungen */
+/* === HILFSSTILISIERUNGEN === */
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 
@@ -215,20 +210,16 @@ footer {
 .w-full { width: 100%; }
 .w-half { width: 50%; }
 
-/* Abstände */
+.mt-1 { margin-top: 0.25rem; }
 .mt-2 { margin-top: 0.5rem; }
 .mt-4 { margin-top: 1rem; }
-.mb-4 { margin-bottom: 1rem; }
-
-/* Zusätzliche Abstandsklassen */
-.mt-1 { margin-top: 0.25rem; }
 .mt-8 { margin-top: 2rem; }
 .mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
 .mb-8 { margin-bottom: 2rem; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 
-
-/* Responsive-Design-Breakpoints */
+/* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
   :root {
     --spacing-md: 1rem;
@@ -241,28 +232,23 @@ footer {
   }
 }
 
-/* Dark Mode Overrides */
+/* === DARK MODE === */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Farbpalette */
     --primary-color: #1fd323;
     --primary-hover: #1bae1d;
     --hover-color: #1fd32319;
     --light-color: #222222;
     --button-color: #3a3a3a;
     --button-hover: #4A4A4A;
-
-    /* Neutralfarben */
-    --text-primary: #f0f0f0;        /* Haupttext hell */
-    --text-secondary: #bbb;        /* Sekundärtext hell */
-    --border-color: #444;          /* Rahmen dunkler */
-    --input-border: #555;          /* Input-Rahmen dunkler */
-    --bg-color: #121212;           /* dunkler Seiten-Hintergrund */
-
+    --text-primary: #f0f0f0;
+    --text-secondary: #bbb;
+    --border-color: #444;
+    --input-border: #555;
+    --bg-color: #121212;
     --shadow-color: rgba(0, 0, 0, 0.6);
   }
 
-  /* Karten- und Post-Shadow */
   .card,
   .post {
     box-shadow: 0 1px 3px var(--shadow-color);
@@ -272,7 +258,6 @@ footer {
     color: #ffffff;
   }
 
-  /* Form-Elemente im Dark Mode */
   input[type="text"],
   input[type="email"],
   input[type="password"],
