@@ -41,7 +41,6 @@ if (file_exists($tempHistoryFile)) {
     $lines = file($tempHistoryFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $tempHistory = array_slice($lines, -5);
 }
-// Aktuellen Wert anhängen (für Anzeige, nicht zum Speichern!)
 $tempHistory[] = $cpuTemp;
 
 // Festplattenplatz
@@ -50,23 +49,22 @@ $diskFree = round(disk_free_space("/") / (1024 ** 3), 2); // GB
 $diskUsed = $diskTotal - $diskFree;
 $diskUsedPercent = $diskTotal > 0 ? round($diskUsed / $diskTotal * 100) : 0;
 
-// Netzwerkdetails
+// Netzwerkdetails (nur IP, MAC, Status, aber nur anzeigen, wenn Wert vorhanden)
 function getNetworkDetails() {
     $ifaces = ['eth0', 'wlan0'];
     $details = [];
     foreach ($ifaces as $iface) {
-        $ip = trim(shell_exec("ip -4 addr show $iface 2>/dev/null | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'"));
-        $mac = trim(shell_exec("cat /sys/class/net/$iface/address 2>/dev/null"));
-        $status = trim(shell_exec("cat /sys/class/net/$iface/operstate 2>/dev/null"));
-        $ssid = $iface === 'wlan0' ? trim(shell_exec("iwgetid -r 2>/dev/null")) : '';
-        $signal = $iface === 'wlan0' ? trim(shell_exec("iwconfig wlan0 2>/dev/null | grep 'Link Quality' | awk '{print $2}' | cut -d= -f2")) : '';
-        if ($ip || $mac) {
+        $ipRaw = shell_exec("ip -4 addr show $iface 2>/dev/null | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'");
+        $ip = $ipRaw !== null ? trim($ipRaw) : '';
+        $macRaw = shell_exec("cat /sys/class/net/$iface/address 2>/dev/null");
+        $mac = $macRaw !== null ? trim($macRaw) : '';
+        $statusRaw = shell_exec("cat /sys/class/net/$iface/operstate 2>/dev/null");
+        $status = $statusRaw !== null ? trim($statusRaw) : '';
+        if ($ip || $mac || $status) {
             $details[$iface] = [
                 'ip' => $ip,
                 'mac' => $mac,
-                'status' => $status,
-                'ssid' => $ssid,
-                'signal' => $signal
+                'status' => $status
             ];
         }
     }
@@ -75,7 +73,8 @@ function getNetworkDetails() {
 $networkDetails = getNetworkDetails();
 
 // Letzter Reboot
-$lastReboot = trim(shell_exec("who -b | awk '{print $3, $4}'"));
+$lastRebootRaw = shell_exec("who -b | awk '{print $3, $4}'");
+$lastReboot = $lastRebootRaw !== null ? trim($lastRebootRaw) : '';
 
 // Systemauslastung (Prozentwerte)
 $cpuLoadPercent = $cpuCores > 0 ? round($load[0] / $cpuCores * 100) : 0;
@@ -90,48 +89,57 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
     <link rel="stylesheet" href="css/style.css">
     <style>
         body {
-            background: #181a1b;
+            background: #111;
             color: #fff;
             font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
             margin: 0;
             padding: 0;
         }
         .container {
-            max-width: 1100px;
+            max-width: 900px;
             margin: 2em auto;
             padding: 0 1em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .cards {
             display: flex;
             flex-wrap: wrap;
             gap: 2em;
             justify-content: center;
+            width: 100%;
         }
         .card {
-            background: #222426;
+            background: #181818;
             border-radius: 12px;
             box-shadow: 0 2px 12px #0005;
             padding: 2em 2em 1.5em 2em;
             min-width: 270px;
             flex: 1 1 320px;
             margin-bottom: 2em;
-            border: 1px solid #2a7a2e44;
+            border: 1px solid #333;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1 {
-            color: #2aff2a;
+            color: #fff;
             font-size: 2.2em;
             margin-bottom: 1.2em;
             letter-spacing: 1px;
-            text-shadow: 0 0 8px #2aff2a33;
+            text-align: center;
         }
         h2 {
-            color: #2aff2a;
+            color: #fff;
             font-size: 1.2em;
             margin-bottom: 0.7em;
             letter-spacing: 1px;
+            text-align: center;
         }
         dt {
-            color: #2aff2a;
+            color: #fff;
             font-weight: bold;
             margin-top: 1em;
         }
@@ -140,7 +148,7 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
             margin-bottom: .5em;
         }
         .bar {
-            background: #333;
+            background: #222;
             border-radius: 6px;
             overflow: hidden;
             height: 1.2em;
@@ -149,20 +157,19 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
         }
         .bar-inner {
             height: 100%;
-            background: linear-gradient(90deg, #2aff2a, #1e7a1e);
+            background: #fff;
+            opacity: 0.2;
             transition: width 0.5s;
         }
-        .bar-inner.cpu { background: linear-gradient(90deg, #2aff2a, #ffeb3b, #ff2a2a); }
-        .bar-inner.ram { background: linear-gradient(90deg, #2aff2a, #ffeb3b, #ff2a2a); }
-        .bar-inner.disk { background: linear-gradient(90deg, #2aff2a, #ffeb3b, #ff2a2a); }
         .terminal-box {
-            background: #181a1b;
-            border: 1px solid #2a7a2e44;
+            background: #111;
+            border: 1px solid #333;
             border-radius: 8px;
             padding: 1em 1.5em;
             margin-bottom: 1em;
             font-size: 1em;
             box-shadow: 0 1px 6px #0002;
+            color: #fff;
         }
         .network-table {
             width: 100%;
@@ -170,14 +177,14 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
             margin-bottom: 1em;
         }
         .network-table th, .network-table td {
-            border-bottom: 1px solid #2a7a2e33;
+            border-bottom: 1px solid #333;
             padding: 0.4em 0.7em;
             text-align: left;
         }
         .network-table th {
-            color: #2aff2a;
+            color: #fff;
             font-weight: bold;
-            background: #232526;
+            background: #181818;
         }
         .network-table td {
             color: #fff;
@@ -191,7 +198,8 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
         }
         .temp-bar {
             width: 18px;
-            background: linear-gradient(180deg, #2aff2a, #ffeb3b, #ff2a2a);
+            background: #fff;
+            opacity: 0.2;
             border-radius: 4px 4px 0 0;
             display: inline-block;
             margin-right: 2px;
@@ -232,15 +240,13 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
         <div class="card">
             <h2>Netzwerk</h2>
             <table class="network-table">
-                <tr><th>Interface</th><th>Status</th><th>IP</th><th>MAC</th><th>SSID</th><th>Signal</th></tr>
+                <tr><th>Interface</th><th>Status</th><th>IP</th><th>MAC</th></tr>
                 <?php foreach ($networkDetails as $iface => $d): ?>
                     <tr>
                         <td><?= htmlspecialchars($iface) ?></td>
                         <td><?= htmlspecialchars($d['status']) ?></td>
                         <td><?= htmlspecialchars($d['ip']) ?></td>
                         <td><?= htmlspecialchars($d['mac']) ?></td>
-                        <td><?= htmlspecialchars($d['ssid']) ?></td>
-                        <td><?= htmlspecialchars($d['signal']) ?></td>
                     </tr>
                 <?php endforeach; ?>
             </table>
@@ -250,11 +256,11 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
             <h2>Systemauslastung</h2>
             <div class="terminal-box">
                 <b>CPU-Last:</b> <?= $cpuLoadPercent ?>% (<?= implode(' / ', $load) ?>)<br>
-                <div class="bar"><div class="bar-inner cpu" style="width: <?= $cpuLoadPercent ?>%"></div></div>
+                <div class="bar"><div class="bar-inner" style="width: <?= $cpuLoadPercent ?>%"></div></div>
                 <b>RAM benutzt:</b> <?= $usedMem ?> MB / <?= $totalMem ?> MB (<?= $ramUsedPercent ?>%)<br>
-                <div class="bar"><div class="bar-inner ram" style="width: <?= $ramUsedPercent ?>%"></div></div>
+                <div class="bar"><div class="bar-inner" style="width: <?= $ramUsedPercent ?>%"></div></div>
                 <b>Festplatte:</b> <?= $diskUsed ?> GB / <?= $diskTotal ?> GB (<?= $diskUsedPercent ?>%)<br>
-                <div class="bar"><div class="bar-inner disk" style="width: <?= $diskUsedPercent ?>%"></div></div>
+                <div class="bar"><div class="bar-inner" style="width: <?= $diskUsedPercent ?>%"></div></div>
             </div>
         </div>
         <!-- Temperatur Card -->
