@@ -99,16 +99,15 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
             max-width: 900px;
             margin: 2em auto;
             padding: 0 1em;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: center;
         }
         .cards {
             display: flex;
             flex-wrap: wrap;
             gap: 2em;
             justify-content: center;
-            width: 100%;
+            margin: 0 auto;
+            max-width: 900px;
         }
         .card {
             background: #181818;
@@ -123,6 +122,8 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-left: auto;
+            margin-right: auto;
         }
         h1 {
             color: #fff;
@@ -195,6 +196,7 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
             align-items: flex-end;
             height: 60px;
             margin-top: 1em;
+            justify-content: center;
         }
         .temp-bar {
             width: 18px;
@@ -215,8 +217,8 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
             white-space: nowrap;
         }
         @media (max-width: 900px) {
-            .cards { flex-direction: column; align-items: stretch; }
-            .card { min-width: 0; }
+            .cards { flex-direction: column; align-items: center; }
+            .card { width: 100%; max-width: 400px; margin: 0 auto 2em auto; }
         }
     </style>
 </head>
