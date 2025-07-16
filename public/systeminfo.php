@@ -86,14 +86,11 @@ $ramUsedPercent = $totalMem > 0 ? round($usedMem / $totalMem * 100) : 0;
 <head>
     <meta charset="UTF-8">
     <title>Raspberry Pi Systeminfo</title>
-    <link rel="stylesheet" href="css/style.css">
     <style>
         body {
             background: #111;
             color: #fff;
             font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
-            margin: 0;
-            padding: 0;
             width: 100%;
             align-items: center;
         }
