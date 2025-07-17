@@ -35,7 +35,7 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8081:80"
     volumes:
       - ./public:/var/www/html/
     links:
@@ -59,7 +59,6 @@ services:
     links:
       - db
     environment:
-      PMA_USER: webapp
-      PMA_PASSWORD: hopper
+      PMA_HOST: db
 volumes:
   dbvolume: {}
