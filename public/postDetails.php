@@ -230,6 +230,14 @@
             maxLength: 300,
             warningThreshold: 280
         });
+
+        // Initialisiert die Textarea mit Zeichenzähler und automatischer Höhenanpassung
+        initializeTextareaWithCounter({
+            textareaId: 'answer-input',
+            counterSelector: '.character-count-answer',
+            maxLength: 300,
+            warningThreshold: 280
+        });
     });
 </script>
 
