@@ -57,6 +57,12 @@ class PostAjax {
             // Button deaktivieren
             AjaxUtils.setButtonLoading(submitButton, 'Wird gepostet...');
             
+            // Login-Status vor Aktion validieren
+            const isValid = await AjaxUtils.validateLoginBeforeAction();
+            if (!isValid) {
+                return;
+            }
+            
             // FormData erstellen
             const formData = new FormData(form);
             
@@ -77,7 +83,7 @@ class PostAjax {
             });
             
             const result = await response.json();
-            
+
             if (result.success) {
                 // Formular zurücksetzen
                 this.resetPostForm(form);
@@ -105,6 +111,12 @@ class PostAjax {
         if (!confirm('Post wirklich löschen?')) return;
         
         try {
+            // Login-Status vor Aktion validieren
+            const isValid = await AjaxUtils.validateLoginBeforeAction();
+            if (!isValid) {
+                return;
+            }
+            
             // FormData erstellen
             const formData = new FormData(form);
             
@@ -118,7 +130,7 @@ class PostAjax {
             });
             
             const result = await response.json();
-            
+
             if (result.success) {
                 // Post aus DOM entfernen
                 const postElement = form.closest('.post');

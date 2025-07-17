@@ -32,7 +32,7 @@
 
     <!-- === SEARCH SECTION === -->
     <div class="header-section search-section">
-        <input type="text" placeholder="Suche..." class="search-bar" id="header-search-input" autocomplete="off">
+        <input type="text" placeholder="Nach Nutzern suchen..." class="search-bar" id="header-search-input" autocomplete="off">
         <div class="header-search-results-dropdown" id="header-search-results"></div>
     </div>
 

@@ -52,6 +52,12 @@ class ReactionAjax {
         button.classList.add('loading');
         
         try {
+            // Login-Status vor Aktion validieren
+            const isValid = await AjaxUtils.validateLoginBeforeAction();
+            if (!isValid) {
+                return;
+            }
+            
             // AJAX-Request senden
             const response = await fetch('php/reaction_handler.php', {
                 method: 'POST',

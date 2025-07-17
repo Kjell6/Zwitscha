@@ -118,6 +118,39 @@ class AjaxUtils {
             }
         }
     }
+
+    /**
+     * Validiert den aktuellen Login-Status vor einer Aktion
+     * @returns {Promise<boolean>} True wenn angemeldet und gültig, false sonst
+     */
+    static async validateLoginBeforeAction() {
+        try {
+            const response = await fetch('php/session_helper.php?action=validate', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            if (response.status === 401 || response.status === 403) {
+                window.location.href = 'Login.php';
+                return false;
+            }
+            
+            const result = await response.json();
+            
+            if (!result.valid || result.error === 'Nicht angemeldet') {
+                window.location.href = 'Login.php';
+                return false;
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Login-Validierung fehlgeschlagen:', error);
+            // Bei Netzwerkfehlern nicht weiterleiten, aber false zurückgeben
+            return false;
+        }
+    }
 }
 
 // Globale Verfügbarkeit

@@ -42,6 +42,10 @@ function ensureSessionStarted(): void {
  */
 function isLoggedIn(): bool {
     ensureSessionStarted();
+    // Prüfe zusätzlich, ob der Nutzer noch existiert
+    if (!validateCurrentUser()) {
+        return false;
+    }
     return isset($_SESSION['angemeldet']) && $_SESSION['angemeldet'] === true;
 }
 
@@ -92,6 +96,42 @@ function requireLogin(string $redirectAfterLogin = ''): void {
 }
 
 /**
+ * Überprüft ob der aktuelle Benutzer noch in der Datenbank existiert.
+ * Falls nicht, wird die Session beendet.
+ *
+ * @return bool True wenn der Benutzer noch existiert.
+ */
+function validateCurrentUser(): bool {
+    ensureSessionStarted();
+
+    // Wenn nicht angemeldet, ist die Validierung erfolgreich (kein Benutzer zum Validieren)
+    if (!isset($_SESSION['angemeldet']) || $_SESSION['angemeldet'] !== true) {
+        return true;
+    }
+
+    // Benutzer-ID aus Session holen
+    $userId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : null;
+    if (!$userId) {
+        // Session ohne Benutzer-ID ist ungültig
+        session_destroy();
+        return false;
+    }
+
+    // Benutzer in Datenbank prüfen
+    require_once __DIR__ . '/NutzerVerwaltung.php';
+    $nutzerVerwaltung = new NutzerVerwaltung();
+    $user = $nutzerVerwaltung->getUserById($userId);
+
+    if (!$user) {
+        // Benutzer existiert nicht mehr - Session beenden
+        session_destroy();
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * Meldet den aktuellen Nutzer ab.
  */
 function logout(): void {
@@ -111,5 +151,18 @@ function logout(): void {
 
     session_destroy();
     header("Location: Login.php");
+    exit();
+}
+
+// AJAX-Endpoint für Login-Validierung
+if (isset($_GET['action']) && $_GET['action'] === 'validate' && isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+    header('Content-Type: application/json');
+    
+    if (isLoggedIn()) {
+        echo json_encode(['valid' => true]);
+    } else {
+        http_response_code(401);
+        echo json_encode(['valid' => false, 'error' => 'Nicht angemeldet']);
+    }
     exit();
 }

@@ -94,6 +94,12 @@ class CommentAjax {
             // Button deaktivieren
             AjaxUtils.setButtonLoading(submitButton, 'Wird kommentiert...');
             
+            // Login-Status vor Aktion validieren
+            const isValid = await AjaxUtils.validateLoginBeforeAction();
+            if (!isValid) {
+                return;
+            }
+            
             // FormData erstellen
             const formData = new FormData(form);
             
@@ -105,9 +111,9 @@ class CommentAjax {
                 },
                 body: formData
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
                 // Formular zurücksetzen
                 this.resetCommentForm(form);
@@ -135,6 +141,12 @@ class CommentAjax {
         if (!confirm('Kommentar wirklich löschen?')) return;
         
         try {
+            // Login-Status vor Aktion validieren
+            const isValid = await AjaxUtils.validateLoginBeforeAction();
+            if (!isValid) {
+                return;
+            }
+            
             // FormData erstellen
             const formData = new FormData(form);
             
@@ -146,9 +158,9 @@ class CommentAjax {
                 },
                 body: formData
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
                 // Kommentar aus DOM entfernen
                 this.removeCommentFromDOM(form);
