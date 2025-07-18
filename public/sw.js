@@ -1,34 +1,23 @@
-const CACHE_NAME = 'zwitscha-cache-v1';
+const CACHE_NAME = 'zwitscha-cache-v2'; // Version erhöht, um alten Cache zu invalidieren
 const urlsToCache = [
-  '/',
-  '/index.php',
-  '/css/style.css',
-  '/css/header.css',
-  '/css/post.css',
-  '/assets/ZwitschaIcon.png',
-  '/assets/zwitscha.png'
+  // Das Caching von App-Shell-Dateien wird hier deaktiviert.
 ];
 
 self.addEventListener('install', event => {
+  // Der 'install'-Schritt kann leer bleiben oder für zukünftige Logik beibehalten werden.
+  // Wir führen keine Caching-Operationen mehr aus.
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then(cache => {
+      console.log('Cache geöffnet, aber keine Dateien zur Vorkonditionierung.');
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
+  // Diese Strategie versucht immer, aus dem Netzwerk zu laden.
+  // Wenn sie fehlschlägt, wird der Standard-Browserfehler für Offline angezeigt.
+  event.respondWith(fetch(event.request));
 });
 
 self.addEventListener('activate', event => {
@@ -38,6 +27,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            // Löscht alle alten Caches, die nicht auf der Whitelist stehen.
             return caches.delete(cacheName);
           }
         })
