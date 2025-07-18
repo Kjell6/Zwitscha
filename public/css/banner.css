@@ -1,0 +1,59 @@
+/* === PWA INSTALL BANNER === */
+.pwa-install-banner {
+    background-color: var(--light-color);
+    color: var(--text-primary);
+    padding: 1rem;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: slideInDown 0.5s ease-out forwards;
+}
+
+.pwa-install-banner span {
+    font-weight: 500;
+}
+
+.pwa-install-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pwa-install-banner .button-install {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.pwa-install-banner .button-install:hover {
+    background-color: var(--text-primary);
+}
+
+.pwa-install-banner .button-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0 0.5rem;
+}
+
+/* Animation für das Banner */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

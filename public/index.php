@@ -32,6 +32,7 @@
     <?php include 'global-header.php'; ?>
     <link rel="stylesheet" href="css/post.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/banner.css">
     <script src="js/image-compression.js"></script>
     <?php include 'pwa-header.php'; ?>
 </head>
