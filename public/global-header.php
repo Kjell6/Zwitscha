@@ -23,13 +23,15 @@ header("Expires: 0");
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#f5f5f5"/>
 <script>
-    // Service Worker komplett deaktiviert für minimale PWA
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
-            for (let registration of registrations) {
-                registration.unregister();
-                console.log('ServiceWorker deregistered');
-            }
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('ServiceWorker erfolgreich registriert, Scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('ServiceWorker Registrierung fehlgeschlagen:', error);
+                });
         });
     }
 </script> 

@@ -199,6 +199,16 @@
             </fieldset>
         </form>
 
+        <!-- === NOTIFICATION SETTINGS FORM === -->
+        <form id="notification-form" class="card">
+            <fieldset>
+                <legend>Benachrichtigungen</legend>
+                <p>Erhalten Sie Push-Benachrichtigungen direkt auf Ihrem Gerät.</p>
+                <button type="button" id="enable-notifications-button" class="button">Benachrichtigungen aktivieren</button>
+                <p id="notification-status" style="margin-top: 1rem; font-weight: bold;"></p>
+            </fieldset>
+        </form>
+
         <!-- === ACCOUNT DELETION FORM === -->
         <form method="POST" class="card" onsubmit="return confirm('Möchtest du deinen Account wirklich löschen?');">
             <fieldset>
@@ -216,24 +226,21 @@
 
 <?php include 'footerMobile.php'; ?>
 
-<!-- Refactored JavaScript-Funktionalität -->
 <script src="js/image-preview.js"></script>
-
-<script>
-// === SEITENINITIALISIERUNG ===
-document.addEventListener('DOMContentLoaded', function() {
-    // Avatar-Bildvorschau initialisieren
-    initializeAvatarImagePreview(
-        'avatar',
-        'avatar-preview-img',
-        () => {
-            console.log('Bild erfolgreich komprimiert und Vorschau aktualisiert.');
-        },
-        (error) => {
-            alert(error.message);
-        }
-    );
-});
+<script type="module">
+    import { initializeNotificationManager } from './js/notifications.js';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Avatar-Bildvorschau initialisieren
+        initializeAvatarImagePreview(
+            'avatar',
+            'avatar-preview-img'
+        );
+        
+        // Benachrichtigungs-Manager initialisieren
+        const vapidPublicKey = 'BJxX1uVuBeafFnQWLh49WksunbYOI-xM5iONmecrNta9V9MzOBsuBJgj6eJroTUZebP7zzlnwko-34Ck4upjafc';
+        initializeNotificationManager('enable-notifications-button', 'notification-status', vapidPublicKey);
+    });
 </script>
 
 </body>

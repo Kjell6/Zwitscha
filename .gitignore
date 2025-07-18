@@ -101,3 +101,6 @@ fabric.properties
 .idea/**/markdown-navigator/
 
 # End of https://www.gitignore.io/api/phpstorm
+public/assets/placeholder-profilbild-2.png
+/node_modules
+/public/vendor
