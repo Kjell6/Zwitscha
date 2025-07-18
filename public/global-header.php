@@ -19,28 +19,17 @@ header("Expires: 0");
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
-<!-- PWA mit minimaler Caching -->
+<!-- PWA Manifest und Service Worker -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#f5f5f5"/>
 <script>
-    // Service Worker für PWA installierbarkeit registrieren (aber ohne Caching)
+    // Service Worker komplett deaktiviert für minimale PWA
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').then(registration => {
-                console.log('ServiceWorker registered for PWA installability');
-            }).catch(err => {
-                console.log('ServiceWorker registration failed: ', err);
-            });
-        });
-    }
-    
-    // Zusätzliche Anti-Caching-Maßnahmen
-    // Browser-Cache regelmäßig löschen
-    if ('caches' in window) {
-        caches.keys().then(cacheNames => {
-            cacheNames.forEach(cacheName => {
-                caches.delete(cacheName);
-            });
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            for (let registration of registrations) {
+                registration.unregister();
+                console.log('ServiceWorker deregistered');
+            }
         });
     }
 </script> 
