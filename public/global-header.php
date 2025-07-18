@@ -18,30 +18,13 @@ if (!isset($pageTitle)) {
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#f5f5f5"/>
 <script>
+    // Service Worker komplett deaktiviert für minimale PWA
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').then(registration => {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                
-                // Sofortige Aktivierung des neuen Service Workers
-                if (registration.waiting) {
-                    registration.waiting.postMessage({action: 'skipWaiting'});
-                }
-                
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    if (newWorker) {
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // Neue Version verfügbar, aktiviere sofort
-                                newWorker.postMessage({action: 'skipWaiting'});
-                            }
-                        });
-                    }
-                });
-            }, err => {
-                console.log('ServiceWorker registration failed: ', err);
-            });
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            for (let registration of registrations) {
+                registration.unregister();
+                console.log('ServiceWorker deregistered');
+            }
         });
     }
 </script> 
