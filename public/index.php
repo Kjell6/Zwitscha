@@ -41,6 +41,15 @@
 
 <!-- === MAIN CONTENT === -->
 <div class="main-content">
+    <!-- === PWA INSTALL BANNER === -->
+    <div id="pwa-install-banner" class="pwa-install-banner" style="display: none;">
+        <span>Installieren Sie Zwitscha auf Ihrem Gerät für ein besseres Erlebnis.</span>
+        <div class="pwa-install-buttons">
+            <button id="pwa-install-button" class="button-install">Installieren</button>
+            <button id="pwa-close-banner-button" class="button-close" aria-label="Schließen">&times;</button>
+        </div>
+    </div>
+
     <!-- === FEEDBACK MESSAGES (AJAX) === -->
     <div id="feedback-container" class="feedback-container" style="display: none;">
         <div id="feedback-message" class="feedback-message">
@@ -185,5 +194,63 @@
         });
     });
 </script>
+
+<!-- PWA Installationslogik -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let deferredPrompt;
+    const installBanner = document.getElementById('pwa-install-banner');
+    const installButton = document.getElementById('pwa-install-button');
+    const closeButton = document.getElementById('pwa-close-banner-button');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Verhindert, dass der Mini-Infobar angezeigt wird
+        e.preventDefault();
+        // Speichert das Ereignis, um es später auszulösen
+        deferredPrompt = e;
+        // Zeigt unser benutzerdefiniertes Banner an
+        if (installBanner) {
+            installBanner.style.display = 'flex';
+        }
+    });
+
+    if (installButton) {
+        installButton.addEventListener('click', (e) => {
+            // Versteckt unser Banner
+            if (installBanner) {
+                installBanner.style.display = 'none';
+            }
+            // Zeigt den Installations-Dialog an
+            deferredPrompt.prompt();
+            // Wartet auf die Entscheidung des Nutzers
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the PWA installation');
+                } else {
+                    console.log('User dismissed the PWA installation');
+                }
+                deferredPrompt = null;
+            });
+        });
+    }
+
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            // Versteckt das Banner, wenn der Nutzer es schließt
+            if (installBanner) {
+                installBanner.style.display = 'none';
+            }
+        });
+    }
+
+    // Prüft, ob die App bereits installiert ist. Wenn ja, wird das Banner nicht angezeigt.
+    window.addEventListener('appinstalled', () => {
+        if (installBanner) {
+            installBanner.style.display = 'none';
+        }
+    });
+});
+</script>
+
 </body>
 </html>
