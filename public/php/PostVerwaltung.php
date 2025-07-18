@@ -3,12 +3,15 @@
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/NotificationManager.php';
 
 class PostVerwaltung {
     private mysqli $db;
+    private NotificationManager $notificationManager;
 
     public function __construct() {
         $this->db = db::getInstance();
+        $this->notificationManager = new NotificationManager();
     }
 
 
@@ -179,6 +182,13 @@ class PostVerwaltung {
         if ($stmt->execute()) {
             $newPostId = $this->db->insert_id;
             $stmt->close();
+            
+            // Benachrichtigungen für Follower auslösen
+            $this->notificationManager->handleNewPost($newPostId, $userId);
+
+            // Benachrichtigungen für Erwähnungen auslösen
+            $this->notificationManager->handleMentions($text, $userId, $newPostId, 'mention_in_post');
+
             return $newPostId;
         }
 
@@ -392,21 +402,41 @@ class PostVerwaltung {
      * @return int|false Die ID des neuen Kommentars bei Erfolg, false bei Fehler.
      */
     public function createComment(int $postId, int $userId, string $text, ?int $parentCommentId = null): int|false {
+        // Zuerst den Autor des Posts ermitteln
+        $post = $this->findPostById($postId);
+        if (!$post) {
+            return false; // Post nicht gefunden
+        }
+        $postAuthorId = $post['nutzer_id'];
+
         $sql = "INSERT INTO kommentar (post_id, nutzer_id, text, parent_comment_id) VALUES (?, ?, ?, ?)";
-
+        
         $stmt = $this->db->prepare($sql);
-        if (!$stmt) return false;
-
-        if ($parentCommentId === null) {
-            $null = null;
-            $stmt->bind_param("iisi", $postId, $userId, $text, $null);
-        } else {
-            $stmt->bind_param("iisi", $postId, $userId, $text, $parentCommentId);
+        if (!$stmt) {
+            return false;
         }
 
+        $stmt->bind_param("iisi", $postId, $userId, $text, $parentCommentId);
+        
         if ($stmt->execute()) {
             $newCommentId = $this->db->insert_id;
             $stmt->close();
+
+            // Benachrichtigung für den Post-Autor auslösen (nur bei Hauptkommentaren)
+            if ($parentCommentId === null) {
+                $this->notificationManager->handleNewComment($newCommentId, $postId, $userId, $postAuthorId);
+            } else {
+                // Es ist eine Antwort, Benachrichtigung für den Autor des Eltern-Kommentars auslösen
+                $parentComment = $this->findCommentById($parentCommentId);
+                if ($parentComment) {
+                    $parentCommentAuthorId = $parentComment['nutzer_id'];
+                    $this->notificationManager->handleNewReply($newCommentId, $userId, $parentCommentAuthorId);
+                }
+            }
+
+            // Benachrichtigungen für Erwähnungen im Kommentar auslösen
+            $this->notificationManager->handleMentions($text, $userId, $newCommentId, 'mention_in_comment');
+
             return $newCommentId;
         }
 

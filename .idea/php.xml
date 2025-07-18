@@ -10,6 +10,43 @@
     <option name="highlightLevel" value="WARNING" />
     <option name="transferred" value="true" />
   </component>
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/public/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/public/vendor/paragonie/sodium_compat" />
+      <path value="$PROJECT_DIR$/public/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/public/vendor/web-token/jwt-key-mgmt" />
+      <path value="$PROJECT_DIR$/public/vendor/web-token/jwt-util-ecc" />
+      <path value="$PROJECT_DIR$/public/vendor/web-token/jwt-signature" />
+      <path value="$PROJECT_DIR$/public/vendor/web-token/jwt-signature-algorithm-ecdsa" />
+      <path value="$PROJECT_DIR$/public/vendor/web-token/jwt-library" />
+      <path value="$PROJECT_DIR$/public/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/public/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/public/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/public/vendor/minishlink/web-push" />
+      <path value="$PROJECT_DIR$/public/vendor/spomky-labs/base64url" />
+      <path value="$PROJECT_DIR$/public/vendor/spomky-labs/pki-framework" />
+      <path value="$PROJECT_DIR$/public/vendor/composer" />
+      <path value="$PROJECT_DIR$/public/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/public/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/public/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/public/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/public/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/public/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/public/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/public/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/public/vendor/symfony/polyfill-intl-grapheme" />
+    </include_path>
+  </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>

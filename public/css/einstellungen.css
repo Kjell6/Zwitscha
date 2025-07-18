@@ -90,3 +90,16 @@ form.card button.danger {
 form.card button.danger:hover {
     background-color: var(--danger-hover);
 }
+
+/* === NOTIFICATION SETTINGS === */
+.notification-setting {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.notification-setting label {
+    margin-bottom: 0;
+    flex-grow: 1;
+}

@@ -101,9 +101,34 @@
             } else {
                 $error = "Bitte wählen Sie eine Datei aus.";
             }
+        } elseif (isset($_POST['update-notification-settings'])) {
+            // Benachrichtigungseinstellungen aktualisieren
+            $notificationTypes = [
+                'new_post_from_followed_user',
+                'new_comment_on_own_post',
+                'new_reply_to_own_comment',
+                'mention_in_post'
+            ];
+            
+            $all_successful = true;
+            foreach ($notificationTypes as $type) {
+                $isEnabled = isset($_POST[$type]);
+                $success = $nutzerVerwaltung->updateNotificationSetting($currentUserId, $type, $isEnabled);
+                if (!$success) {
+                    $all_successful = false;
+                }
+            }
+
+            if ($all_successful) {
+                $message = "Benachrichtigungseinstellungen erfolgreich gespeichert.";
+            } else {
+                $error = "Fehler beim Speichern der Benachrichtigungseinstellungen.";
+            }
         }
     }
+
     $pageTitle = 'Zwitscha – Einstellungen';
+    $notificationSettings = $nutzerVerwaltung->getNotificationSettings($currentUserId);
 ?>
 
 
@@ -200,12 +225,41 @@
         </form>
 
         <!-- === NOTIFICATION SETTINGS FORM === -->
-        <form id="notification-form" class="card">
+        <form id="notification-form" class="card" method="POST">
             <fieldset>
                 <legend>Benachrichtigungen</legend>
-                <p>Erhalten Sie Push-Benachrichtigungen direkt auf Ihrem Gerät.</p>
-                <button type="button" id="enable-notifications-button" class="button">Benachrichtigungen aktivieren</button>
-                <p id="notification-status" style="margin-top: 1rem; font-weight: bold;"></p>
+                <p>Hier kannst du deine Push-Benachrichtigungen verwalten.</p>
+                
+                <div id="notification-controls">
+                    <button type="button" id="enable-notifications-button" class="button">Benachrichtigungen im Browser erlauben</button>
+                    <p id="notification-status" style="margin-top: 1rem; font-weight: bold;"></p>
+                    
+                    <div id="notification-toggles" style="display: none; margin-top: 1rem;">
+                        <h4>Benachrichtigungsarten</h4>
+
+                        <div class="notification-setting">
+                            <label for="notif-new-post">Jemand, dem du folgst, postet etwas</label>
+                            <input type="checkbox" id="notif-new-post" name="new_post_from_followed_user" <?php echo ($notificationSettings['new_post_from_followed_user'] ?? false) ? 'checked' : ''; ?>>
+                        </div>
+
+                        <div class="notification-setting">
+                            <label for="notif-new-comment">Jemand kommentiert deinen Post</label>
+                            <input type="checkbox" id="notif-new-comment" name="new_comment_on_own_post" <?php echo ($notificationSettings['new_comment_on_own_post'] ?? false) ? 'checked' : ''; ?>>
+                        </div>
+
+                        <div class="notification-setting">
+                            <label for="notif-new-reply">Jemand antwortet auf deinen Kommentar</label>
+                            <input type="checkbox" id="notif-new-reply" name="new_reply_to_own_comment" <?php echo ($notificationSettings['new_reply_to_own_comment'] ?? false) ? 'checked' : ''; ?>>
+                        </div>
+
+                        <div class="notification-setting">
+                            <label for="notif-mention">Jemand erwähnt dich in einem Post oder Kommentar</label>
+                            <input type="checkbox" id="notif-mention" name="mention_in_post" <?php echo ($notificationSettings['mention_in_post'] ?? false) ? 'checked' : ''; ?>>
+                        </div>
+
+                        <button type="submit" name="update-notification-settings" class="button">Einstellungen speichern</button>
+                    </div>
+                </div>
             </fieldset>
         </form>
 
@@ -239,7 +293,7 @@
         
         // Benachrichtigungs-Manager initialisieren
         const vapidPublicKey = 'BJxX1uVuBeafFnQWLh49WksunbYOI-xM5iONmecrNta9V9MzOBsuBJgj6eJroTUZebP7zzlnwko-34Ck4upjafc';
-        initializeNotificationManager('enable-notifications-button', 'notification-status', vapidPublicKey);
+        initializeNotificationManager('enable-notifications-button', 'notification-status', vapidPublicKey, '#notification-toggles');
     });
 </script>
 

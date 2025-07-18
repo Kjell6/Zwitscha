@@ -216,6 +216,77 @@ class NutzerVerwaltung {
     }
 
     /**
+     * Holt die Benachrichtigungseinstellungen für einen bestimmten Nutzer.
+     * Wenn für den Nutzer noch keine Einstellungen existieren, werden diese automatisch
+     * mit den Standardwerten erstellt und dann zurückgegeben.
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @return array Ein assoziatives Array von Benachrichtigungstypen und deren Status.
+     */
+    public function getNotificationSettings(int $userId): array {
+        $sql = "SELECT notification_type, is_enabled FROM user_notification_settings WHERE user_id = ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            return []; // Bei DB-Fehler leeres Array zurückgeben
+        }
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $settings = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        // Wenn keine Einstellungen für den Nutzer existieren, jetzt erstellen.
+        if (empty($settings)) {
+            $this->createDefaultNotificationSettings($userId);
+            // Die Funktion erneut aufrufen, um die frisch erstellten Daten zu holen.
+            // Dies verhindert eine Endlosschleife, da beim zweiten Aufruf Einstellungen gefunden werden.
+            return $this->getNotificationSettings($userId);
+        }
+
+        $notificationSettings = [];
+        foreach ($settings as $setting) {
+            $notificationSettings[$setting['notification_type']] = (bool)$setting['is_enabled'];
+        }
+
+        return $notificationSettings;
+    }
+
+    /**
+     * Aktualisiert eine einzelne Benachrichtigungseinstellung für einen Nutzer.
+     *
+     * @param int $userId Die ID des Nutzers.
+     * @param string $notificationType Der Typ der Benachrichtigung.
+     * @param bool $isEnabled Der neue Status.
+     * @return bool True bei Erfolg.
+     */
+    public function updateNotificationSetting(int $userId, string $notificationType, bool $isEnabled): bool {
+        $sql = "
+            UPDATE user_notification_settings 
+            SET is_enabled = ? 
+            WHERE user_id = ? AND notification_type = ?
+        ";
+        
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("DB-Fehler bei updateNotificationSetting prepare: " . $this->db->error);
+            return false;
+        }
+
+        $enabledValue = $isEnabled ? 1 : 0;
+        $stmt->bind_param("iis", $enabledValue, $userId, $notificationType);
+        
+        $success = $stmt->execute();
+        if (!$success) {
+            error_log("DB-Fehler bei updateNotificationSetting execute: " . $stmt->error);
+        }
+
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
      * Überprüft das aktuelle Passwort eines Nutzers.
      *
      * @param int $userId Die ID des Nutzers.
@@ -344,7 +415,7 @@ class NutzerVerwaltung {
         if (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]+$/', $password)) {
             return ['success' => false, 'message' => 'Passwort enthält unerlaubte Zeichen.'];
         }
-        
+
         if ($this->usernameExists($username)) {
             return ['success' => false, 'message' => 'Benutzername ist bereits vergeben.'];
         }
@@ -352,7 +423,7 @@ class NutzerVerwaltung {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO nutzer (nutzerName, passwort, istAdministrator) VALUES (?, ?, ?)";
-        
+
         $stmt = $this->db->prepare($sql);
         if (!$stmt) {
             error_log("DB-Fehler bei registerUser prepare: " . $this->db->error);
@@ -365,9 +436,13 @@ class NutzerVerwaltung {
         if ($stmt->execute()) {
             $newUserId = $this->db->insert_id;
             $stmt->close();
+
+            // Standard-Benachrichtigungseinstellungen erstellen
+            $this->createDefaultNotificationSettings($newUserId);
+
             return [
-                'success' => true, 
-                'message' => 'Registrierung erfolgreich!', 
+                'success' => true,
+                'message' => 'Registrierung erfolgreich!',
                 'userId' => $newUserId
             ];
         } else {
@@ -378,7 +453,32 @@ class NutzerVerwaltung {
     }
 
     /**
-     * Prüft, ob ein Benutzername bereits existiert.
+     * Erstellt die Standard-Benachrichtigungseinstellungen für einen neuen Benutzer.
+     *
+     * @param int $userId Die ID des neuen Benutzers.
+     */
+    public function createDefaultNotificationSettings(int $userId): void {
+        $notificationTypes = [
+            'new_post_from_followed_user',
+            'new_comment_on_own_post',
+            'new_reply_to_own_comment',
+            'mention_in_post'
+        ];
+
+        $sql = "INSERT INTO user_notification_settings (user_id, notification_type) VALUES (?, ?)";
+        $stmt = $this->db->prepare($sql);
+
+        if ($stmt) {
+            foreach ($notificationTypes as $type) {
+                $stmt->bind_param("is", $userId, $type);
+                $stmt->execute();
+            }
+            $stmt->close();
+        }
+    }
+
+    /**
+     * Prüft, ob ein Nutzername bereits existiert.
      *
      * @param string $username Der zu prüfende Benutzername.
      * @return bool True wenn der Benutzername bereits existiert.

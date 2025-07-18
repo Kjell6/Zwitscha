@@ -78,6 +78,21 @@ if (!function_exists('getReactionEmojiMap')) {
     }
 }
 
+/**
+ * Extrahiert alle @-Erwähnungen aus einem Text.
+ *
+ * @param string $text Der zu durchsuchende Text.
+ * @return array Eine Liste von eindeutigen Benutzernamen (ohne @).
+ */
+function extractMentions(string $text): array {
+    preg_match_all('/@([a-zA-Z0-9._-]+)/', $text, $matches);
+    if (!empty($matches[1])) {
+        // Duplikate entfernen und zurückgeben
+        return array_unique($matches[1]);
+    }
+    return [];
+}
+
 if (!function_exists('linkify_content')) {
     /**
      * Wandelt @-Erwähnungen und #-Hashtags in einem Text in Links um.

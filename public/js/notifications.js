@@ -49,11 +49,30 @@ async function subscribeUser(statusElement, buttonElement, vapidPublicKey) {
     }
 }
 
-export function initializeNotificationManager(buttonId, statusId, vapidPublicKey) {
+export function initializeNotificationManager(buttonId, statusId, vapidPublicKey, togglesSelector) {
     const enableNotificationsButton = document.getElementById(buttonId);
     const notificationStatus = document.getElementById(statusId);
+    const notificationToggles = document.querySelector(togglesSelector);
 
     if (!enableNotificationsButton) return;
+
+    const updateUIBasedOnSubscription = (subscription) => {
+        if (subscription) {
+            notificationStatus.textContent = 'Benachrichtigungen sind im Browser aktiviert.';
+            notificationStatus.style.color = 'green';
+            enableNotificationsButton.style.display = 'none';
+            if (notificationToggles) {
+                notificationToggles.style.display = 'block';
+            }
+        } else {
+            notificationStatus.textContent = 'Benachrichtigungen sind im Browser blockiert oder nicht eingerichtet.';
+            notificationStatus.style.color = 'orange';
+            enableNotificationsButton.style.display = 'block';
+            if (notificationToggles) {
+                notificationToggles.style.display = 'none';
+            }
+        }
+    };
 
     console.log("DEBUG: Notification Manager wird initialisiert.");
 
@@ -78,7 +97,11 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
         Notification.requestPermission().then(permission => {
             console.log(`DEBUG: Erlaubnis-Status ist: ${permission}`);
             if (permission === 'granted') {
-                subscribeUser(notificationStatus, enableNotificationsButton, vapidPublicKey);
+                subscribeUser(notificationStatus, enableNotificationsButton, vapidPublicKey)
+                    .then(() => {
+                        // Nach erfolgreichem Abo das UI aktualisieren
+                        navigator.serviceWorker.ready.then(reg => reg.pushManager.getSubscription().then(updateUIBasedOnSubscription));
+                    });
             } else {
                 notificationStatus.textContent = 'Erlaubnis wurde verweigert.';
                 notificationStatus.style.color = 'orange';
@@ -89,16 +112,7 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
     // Initialen Status prüfen
     if (navigator.serviceWorker && navigator.serviceWorker.ready) {
         navigator.serviceWorker.ready.then(reg => {
-            reg.pushManager.getSubscription().then(sub => {
-                if (sub) {
-                    console.log("DEBUG: Bestehendes Abonnement gefunden.");
-                    notificationStatus.textContent = 'Benachrichtigungen sind bereits aktiviert.';
-                    notificationStatus.style.color = 'green';
-                    enableNotificationsButton.disabled = true;
-                } else {
-                    console.log("DEBUG: Kein bestehendes Abonnement gefunden.");
-                }
-            });
+            reg.pushManager.getSubscription().then(updateUIBasedOnSubscription);
         });
     }
 } 
