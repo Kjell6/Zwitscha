@@ -160,6 +160,45 @@
             <p style="color: red; font-weight: bold;"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
+        <!-- === NOTIFICATION SETTINGS FORM === -->
+        <form id="notification-form" class="card" method="POST">
+            <fieldset>
+                <legend>Benachrichtigungen</legend>
+                <p>Hier kannst du deine Push-Benachrichtigungen verwalten.</p>
+                
+                <div id="notification-controls">
+                    <button type="button" id="enable-notifications-button" class="button">Benachrichtigungen im Browser erlauben</button>
+                    <p id="notification-status" style="margin-top: 1rem; font-weight: bold;"></p>
+                    
+                    <div id="notification-toggles" style="display: none; margin-top: 1rem;">
+                        <h4>Benachrichtigungsarten</h4>
+
+                        <div class="notification-setting">
+                            <label for="notif-new-post">Jemand, dem du folgst, postet etwas</label>
+                            <input type="checkbox" id="notif-new-post" name="new_post_from_followed_user" <?php echo ($notificationSettings['new_post_from_followed_user'] ?? false) ? 'checked' : ''; ?>>
+                        </div>
+
+                        <div class="notification-setting">
+                            <label for="notif-new-comment">Jemand kommentiert deinen Post</label>
+                            <input type="checkbox" id="notif-new-comment" name="new_comment_on_own_post" <?php echo ($notificationSettings['new_comment_on_own_post'] ?? false) ? 'checked' : ''; ?>>
+                        </div>
+
+                        <div class="notification-setting">
+                            <label for="notif-new-reply">Jemand antwortet auf deinen Kommentar</label>
+                            <input type="checkbox" id="notif-new-reply" name="new_reply_to_own_comment" <?php echo ($notificationSettings['new_reply_to_own_comment'] ?? false) ? 'checked' : ''; ?>>
+                        </div>
+
+                        <div class="notification-setting">
+                            <label for="notif-mention">Jemand erwähnt dich in einem Post oder Kommentar</label>
+                            <input type="checkbox" id="notif-mention" name="mention_in_post" <?php echo ($notificationSettings['mention_in_post'] ?? false) ? 'checked' : ''; ?>>
+                        </div>
+
+                        <button type="submit" name="update-notification-settings" class="button">Einstellungen speichern</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
         <!-- === AVATAR FORM === -->
         <form id="avatar-form" method="POST" enctype="multipart/form-data" class="card">
             <fieldset>
@@ -221,45 +260,6 @@
                 <input type="password" id="confirm-password" name="confirm-password" required />
 
                 <button type="submit" name="change-password" class="button">Passwort aktualisieren</button>
-            </fieldset>
-        </form>
-
-        <!-- === NOTIFICATION SETTINGS FORM === -->
-        <form id="notification-form" class="card" method="POST">
-            <fieldset>
-                <legend>Benachrichtigungen</legend>
-                <p>Hier kannst du deine Push-Benachrichtigungen verwalten.</p>
-                
-                <div id="notification-controls">
-                    <button type="button" id="enable-notifications-button" class="button">Benachrichtigungen im Browser erlauben</button>
-                    <p id="notification-status" style="margin-top: 1rem; font-weight: bold;"></p>
-                    
-                    <div id="notification-toggles" style="display: none; margin-top: 1rem;">
-                        <h4>Benachrichtigungsarten</h4>
-
-                        <div class="notification-setting">
-                            <label for="notif-new-post">Jemand, dem du folgst, postet etwas</label>
-                            <input type="checkbox" id="notif-new-post" name="new_post_from_followed_user" <?php echo ($notificationSettings['new_post_from_followed_user'] ?? false) ? 'checked' : ''; ?>>
-                        </div>
-
-                        <div class="notification-setting">
-                            <label for="notif-new-comment">Jemand kommentiert deinen Post</label>
-                            <input type="checkbox" id="notif-new-comment" name="new_comment_on_own_post" <?php echo ($notificationSettings['new_comment_on_own_post'] ?? false) ? 'checked' : ''; ?>>
-                        </div>
-
-                        <div class="notification-setting">
-                            <label for="notif-new-reply">Jemand antwortet auf deinen Kommentar</label>
-                            <input type="checkbox" id="notif-new-reply" name="new_reply_to_own_comment" <?php echo ($notificationSettings['new_reply_to_own_comment'] ?? false) ? 'checked' : ''; ?>>
-                        </div>
-
-                        <div class="notification-setting">
-                            <label for="notif-mention">Jemand erwähnt dich in einem Post oder Kommentar</label>
-                            <input type="checkbox" id="notif-mention" name="mention_in_post" <?php echo ($notificationSettings['mention_in_post'] ?? false) ? 'checked' : ''; ?>>
-                        </div>
-
-                        <button type="submit" name="update-notification-settings" class="button">Einstellungen speichern</button>
-                    </div>
-                </div>
             </fieldset>
         </form>
 

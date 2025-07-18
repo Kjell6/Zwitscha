@@ -51,6 +51,9 @@
         </div>
     </div>
 
+    <!-- === NOTIFICATION BANNER === -->
+    <?php include 'notification-banner.php'; ?>
+
     <!-- === FEEDBACK MESSAGES (AJAX) === -->
     <div id="feedback-container" class="feedback-container" style="display: none;">
         <div id="feedback-message" class="feedback-message">
@@ -252,6 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
+
+<!-- Benachrichtigungs-Banner -->
+<script src="js/notification-banner.js"></script>
 
 </body>
 </html>

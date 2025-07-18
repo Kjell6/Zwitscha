@@ -287,6 +287,27 @@ class NutzerVerwaltung {
     }
 
     /**
+     * Prüft, ob ein Benutzer bereits Benachrichtigungseinstellungen hat.
+     *
+     * @param int $userId Die ID des Benutzers.
+     * @return bool True wenn der Benutzer bereits Einstellungen hat.
+     */
+    public function hasNotificationSettings(int $userId): bool {
+        $sql = "SELECT COUNT(*) as count FROM user_notification_settings WHERE user_id = ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $result['count'] > 0;
+    }
+
+    /**
      * Überprüft das aktuelle Passwort eines Nutzers.
      *
      * @param int $userId Die ID des Nutzers.

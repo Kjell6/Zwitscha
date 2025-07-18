@@ -46,6 +46,69 @@
     padding: 0 0.5rem;
 }
 
+/* === NOTIFICATION BANNER === */
+.notification-banner {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 1rem;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: slideInDown 0.5s ease-out forwards;
+}
+
+.notification-banner span {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notification-banner .banner-icon {
+    font-size: 1.2rem;
+}
+
+.notification-banner-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notification-banner .button-enable {
+    background-color: #fff;
+    color: var(--primary-color);
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.notification-banner .button-enable:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+}
+
+.notification-banner .button-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    transition: opacity 0.2s;
+}
+
+.notification-banner .button-close:hover {
+    opacity: 0.8;
+}
+
 /* Animation für das Banner */
 @keyframes slideInDown {
     from {
@@ -55,5 +118,21 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .pwa-install-banner,
+    .notification-banner {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .pwa-install-buttons,
+    .notification-banner-buttons {
+        width: 100%;
+        justify-content: center;
     }
 }
