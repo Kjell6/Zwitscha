@@ -35,7 +35,7 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "8081:80"
+      - "80:80"
     volumes:
       - ./public:/var/www/html/
     links:
