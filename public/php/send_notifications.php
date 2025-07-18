@@ -64,7 +64,7 @@ foreach ($notifications as $notification) {
     }
 
     // Nachricht zusammenstellen
-    list($title, $body, $url) = generateNotificationContent($notification, $postVerwaltung); // postVerwaltung übergeben
+    list($title, $body, $url) = generateNotificationContent($notification); // postVerwaltung übergeben
     $payload = json_encode(['title' => $title, 'body' => $body, 'icon' => 'https://web.zwitscha.social/assets/ZwitschaIcon.png', 'url' => $url]);
 
     foreach ($subscriptions as $sub) {
@@ -112,51 +112,49 @@ echo "Fertig.\n";
 /**
  * Generiert Titel, Text und URL für eine Benachrichtigung.
  */
-function generateNotificationContent(array $notification, PostVerwaltung $postVerwaltung): array {
+function generateNotificationContent(array $notification): array {
+    global $db; // Zugriff auf die globale DB-Instanz
     $sender = $notification['sender_name'];
     $base_url = 'https://web.zwitscha.social';
-    $referenceId = $notification['reference_id'];
-    $title = "Neue Benachrichtigung";
-    $body = "Du hast eine neue Benachrichtigung auf Zwitscha.";
-    $url = $base_url;
+    $url = $base_url; // Standard-URL
 
     switch ($notification['type']) {
         case 'new_post_from_followed_user':
             $title = "Neuer Post von @{$sender}";
             $body = "Schau dir an, was @{$sender} Neues gepostet hat!";
-            $url = "{$base_url}/postDetails.php?post_id={$referenceId}";
+            $url = "{$base_url}/postDetails.php?post_id={$notification['reference_id']}";
             break;
-
         case 'new_comment_on_own_post':
+            $title = "@{$sender} hat deinen Post kommentiert";
+            $body = "Dein Post hat einen neuen Kommentar erhalten.";
+            $url = "{$base_url}/kommentarEinzeln.php?comment_id={$notification['reference_id']}";
+            break;
         case 'new_reply_to_own_comment':
-            $comment = $postVerwaltung->getCommentById($referenceId);
-            if ($comment) {
-                $postId = $comment['post_id'];
-                $url = "{$base_url}/postDetails.php?post_id={$postId}#comment-{$referenceId}";
-                if ($notification['type'] === 'new_comment_on_own_post') {
-                    $title = "@{$sender} hat deinen Post kommentiert";
-                    $body = "Dein Post hat einen neuen Kommentar erhalten.";
-                } else {
-                    $title = "@{$sender} hat auf deinen Kommentar geantwortet";
-                    $body = "Jemand hat auf deinen Kommentar geantwortet.";
-                }
-            }
+            $title = "@{$sender} hat auf deinen Kommentar geantwortet";
+            $body = "Jemand hat auf deinen Kommentar geantwortet.";
+            $url = "{$base_url}/kommentarEinzeln.php?comment_id={$notification['reference_id']}";
             break;
-
         case 'mention_in_post':
-            $title = "Du wurdest von @{$sender} in einem Post erwähnt";
-            $body = "@{$sender} hat dich in einem Beitrag erwähnt.";
-            $url = "{$base_url}/postDetails.php?post_id={$referenceId}";
+            $title = "Du wurdest von @{$sender} erwähnt";
+            $body = "@{$sender} hat dich in einem Post erwähnt.";
+            $url = "{$base_url}/postDetails.php?post_id={$notification['reference_id']}";
             break;
-            
         case 'mention_in_comment':
-            $title = "Du wurdest von @{$sender} in einem Kommentar erwähnt";
+            $title = "Du wurdest von @{$sender} erwähnt";
             $body = "@{$sender} hat dich in einem Kommentar erwähnt.";
-            $comment = $postVerwaltung->getCommentById($referenceId);
-            if ($comment) {
-                $postId = $comment['post_id'];
-                $url = "{$base_url}/postDetails.php?post_id={$postId}#comment-{$referenceId}";
+            // Um zum Kommentar zu verlinken, brauchen wir die post_id
+            $stmt = $db->prepare("SELECT post_id FROM kommentar WHERE id = ?");
+            $stmt->bind_param('i', $notification['reference_id']);
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_assoc();
+            if ($result) {
+                // Link zum einzelnen Kommentar ist am besten, da es den Kontext zeigt.
+                $url = "{$base_url}/kommentarEinzeln.php?comment_id={$notification['reference_id']}";
             }
+            break;
+        default:
+            $title = "Neue Benachrichtigung";
+            $body = "Du hast eine neue Benachrichtigung auf Zwitscha.";
             break;
     }
     return [$title, $body, $url];
