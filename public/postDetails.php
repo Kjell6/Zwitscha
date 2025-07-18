@@ -31,21 +31,19 @@
 
 // === Template-Variablen ===
     $reactionEmojiMap = getReactionEmojiMap();
+    $pageTitle = $post ? 'Post von ' . htmlspecialchars($post['autor']) : 'Post Details';
 ?>
 
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $post ? 'Post von ' . htmlspecialchars($post['autor']) : 'Post Details'; ?></title>
-    <link rel="icon" href="assets/favicon.png" type="image/png">
-    <link rel="stylesheet" href="css/style.css">
+    <?php include 'global-header.php'; ?>
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/postDetail.css">
     <link rel="stylesheet" href="css/post.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <?php include 'pwa-header.php'; ?>
 </head>
 <body>
 

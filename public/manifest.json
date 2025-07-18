@@ -1,0 +1,21 @@
+{
+  "name": "Zwitscha",
+  "short_name": "Zwitscha",
+  "start_url": "/index.php",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f5f5f5",
+  "description": "Eine Social-Media-Anwendung.",
+  "icons": [
+    {
+      "src": "assets/ZwitschaIcon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/ZwitschaIcon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+} 

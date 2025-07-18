@@ -114,32 +114,17 @@ try {
     echo '<a href="index.php">Zurück zur Startseite</a>';
     exit;
 }
-
+$pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName']) : 'Profil nicht gefunden';
 ?>
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="icon" href="assets/favicon.png" type="image/png">
-    <title>
-        <?php
-        if ($profile) {
-            echo 'Profil von ' . htmlspecialchars($profile['nutzerName']);
-        } else {
-            echo 'Profil nicht gefunden';
-        }
-        ?>
-    </title>
-
+    <?php include 'global-header.php'; ?>
     <!-- CSS-Dateien -->
-    <link rel="stylesheet" href="css/style.css"/>
     <link rel="stylesheet" href="css/header.css"/>
     <link rel="stylesheet" href="css/profil.css"/>
     <link rel="stylesheet" href="css/post.css"/>
     <link rel="stylesheet" href="css/kommentarEinzeln.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 <body>
 

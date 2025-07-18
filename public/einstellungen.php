@@ -103,21 +103,18 @@
             }
         }
     }
+    $pageTitle = 'Zwitscha – Einstellungen';
 ?>
 
 
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zwitscha – Einstellungen</title>
-    <link rel="icon" href="assets/favicon.png" type="image/png" />
-
-    <link rel="stylesheet" href="css/style.css" />
+    <?php include 'global-header.php'; ?>
     <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/einstellungen.css" />
     <script src="js/image-compression.js"></script>
+    <?php include 'pwa-header.php'; ?>
 </head>
 
 <body>
