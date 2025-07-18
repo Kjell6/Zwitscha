@@ -1,22 +1,24 @@
-const CACHE_NAME = 'zwitscha-cache-v2'; // Version erhöht, um alten Cache zu invalidieren
-const urlsToCache = [
-  // Das Caching von App-Shell-Dateien wird hier deaktiviert.
-];
+const CACHE_NAME = 'zwitscha-cache-v3'; // Version erhöht, um neuen SW zu erzwingen
+const urlsToCache = [];
 
 self.addEventListener('install', event => {
-  // Der 'install'-Schritt kann leer bleiben oder für zukünftige Logik beibehalten werden.
-  // Wir führen keine Caching-Operationen mehr aus.
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log('Cache geöffnet, aber keine Dateien zur Vorkonditionierung.');
+      console.log('Cache geöffnet, keine Dateien zur Vorkonditionierung.');
       return cache.addAll(urlsToCache);
     })
   );
 });
 
 self.addEventListener('fetch', event => {
-  // Diese Strategie versucht immer, aus dem Netzwerk zu laden.
-  // Wenn sie fehlschlägt, wird der Standard-Browserfehler für Offline angezeigt.
+  // Ignoriere alle Anfragen, die keine GET-Anfragen sind.
+  // Das lässt Formular-Submits (POST) und andere Anfragen direkt zum Browser durch,
+  // um Weiterleitungen korrekt zu handhaben.
+  if (event.request.method !== 'GET') {
+    return; // Service Worker tut nichts, Browser übernimmt.
+  }
+
+  // Für alle GET-Anfragen, fahre mit der "Nur-Netzwerk"-Strategie fort.
   event.respondWith(fetch(event.request));
 });
 
@@ -27,7 +29,6 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            // Löscht alle alten Caches, die nicht auf der Whitelist stehen.
             return caches.delete(cacheName);
           }
         })
