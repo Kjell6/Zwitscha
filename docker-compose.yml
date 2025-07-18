@@ -35,7 +35,7 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8081:80"
     volumes:
       - ./public:/var/www/html/
     links:
@@ -43,6 +43,10 @@ services:
     environment:
       <<: *common-variables
       MYSQL_SERVER: db
+      # VAPID-Schlüssel werden aus der .env-Datei geladen
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_SUBJECT: ${VAPID_SUBJECT}
   db:
     image: "mariadb:10"
     restart: unless-stopped
@@ -60,5 +64,13 @@ services:
       - db
     environment:
       PMA_HOST: db
+  php-fpm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./public:/var/www/html
+    # Dieser Service ist für die aktuelle Konfiguration nicht aktiv in Gebrauch.
+    # Umgebungsvariablen werden hier nicht benötigt.
 volumes:
   dbvolume: {}

@@ -5,13 +5,18 @@ require_once __DIR__ . '/db.php';
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 
-// VAPID-Schlüssel (ersetzen Sie diese in einer Produktivumgebung durch Umgebungsvariablen)
-$vapidPublicKey = 'BJxX1uVuBeafFnQWLh49WksunbYOI-xM5iONmecrNta9V9MzOBsuBJgj6eJroTUZebP7zzlnwko-34Ck4upjafc';
-$vapidPrivateKey = 'TMX9g5c3uA7mp7QOaiYpSSfwwmfqoiE4sSTHaQhnSM0';
+// VAPID-Schlüssel aus Umgebungsvariablen laden
+$vapidPublicKey = $_SERVER['VAPID_PUBLIC_KEY'] ?? '';
+$vapidPrivateKey = $_SERVER['VAPID_PRIVATE_KEY'] ?? '';
+$vapidSubject = $_SERVER['VAPID_SUBJECT'] ?? 'mailto:default@example.com';
+
+if (empty($vapidPublicKey) || empty($vapidPrivateKey)) {
+    die("Fehler: VAPID-Schlüssel sind nicht in den Umgebungsvariablen gesetzt.");
+}
 
 $auth = [
     'VAPID' => [
-        'subject' => 'mailto:deine-email@dein-server.com', // Ersetzen Sie dies durch Ihre E-Mail
+        'subject' => $vapidSubject,
         'publicKey' => $vapidPublicKey,
         'privateKey' => $vapidPrivateKey,
     ],
