@@ -28,36 +28,28 @@ self.addEventListener('push', event => {
 });
 
 self.addEventListener('notificationclick', event => {
-    const notification = event.notification;
-    const urlToOpen = notification.data.url || '/';
-    notification.close();
-
-    // Dieses Promise stellt sicher, dass der Service Worker aktiv bleibt,
-    // bis die Interaktion abgeschlossen ist.
-    const promiseChain = clients.matchAll({
-        type: 'window',
-        includeUncontrolled: true
-    }).then(windowClients => {
-        let matchingClient = null;
-        for (let i = 0; i < windowClients.length; i++) {
-            const client = windowClients[i];
-            // Prüfen, ob der Client sichtbar ist. Dies ist ein guter Indikator
-            // für einen Client, den wir wiederverwenden können.
-            if (client.visibilityState === 'visible') {
-                matchingClient = client;
-                break;
+    event.notification.close();
+    
+    const urlToOpen = event.notification.data.url || '/';
+    
+    event.waitUntil(
+        clients.matchAll({
+            type: 'window',
+            includeUncontrolled: true
+        }).then(clientList => {
+            // Prüfe, ob bereits ein Tab mit der PWA offen ist
+            for (let i = 0; i < clientList.length; i++) {
+                const client = clientList[i];
+                // Prüfe, ob es sich um unsere PWA handelt (gleiche Origin)
+                if (client.url.includes(self.location.origin)) {
+                    // Navigiere den bestehenden Tab zur gewünschten URL
+                    client.navigate(urlToOpen);
+                    // Fokussiere den Tab
+                    return client.focus();
+                }
             }
-        }
-
-        if (matchingClient) {
-            // Wenn wir einen Client gefunden haben, navigieren wir ihn zur Ziel-URL
-            // und fokussieren ihn.
-            return matchingClient.navigate(urlToOpen).then(client => client.focus());
-        } else {
-            // Wenn kein Client gefunden wurde, öffnen wir ein neues Fenster.
+            // Falls kein bestehender Tab gefunden wurde, öffne einen neuen
             return clients.openWindow(urlToOpen);
-        }
-    });
-
-    event.waitUntil(promiseChain);
+        })
+    );
 }); 
