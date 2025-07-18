@@ -28,7 +28,36 @@ self.addEventListener('push', event => {
 });
 
 self.addEventListener('notificationclick', event => {
-    event.notification.close();
-    const urlToOpen = event.notification.data.url || '/';
-    event.waitUntil(clients.openWindow(urlToOpen));
+    const notification = event.notification;
+    const urlToOpen = notification.data.url || '/';
+    notification.close();
+
+    // Dieses Promise stellt sicher, dass der Service Worker aktiv bleibt,
+    // bis die Interaktion abgeschlossen ist.
+    const promiseChain = clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+    }).then(windowClients => {
+        let matchingClient = null;
+        for (let i = 0; i < windowClients.length; i++) {
+            const client = windowClients[i];
+            // Prüfen, ob der Client sichtbar ist. Dies ist ein guter Indikator
+            // für einen Client, den wir wiederverwenden können.
+            if (client.visibilityState === 'visible') {
+                matchingClient = client;
+                break;
+            }
+        }
+
+        if (matchingClient) {
+            // Wenn wir einen Client gefunden haben, navigieren wir ihn zur Ziel-URL
+            // und fokussieren ihn.
+            return matchingClient.navigate(urlToOpen).then(client => client.focus());
+        } else {
+            // Wenn kein Client gefunden wurde, öffnen wir ein neues Fenster.
+            return clients.openWindow(urlToOpen);
+        }
+    });
+
+    event.waitUntil(promiseChain);
 }); 
