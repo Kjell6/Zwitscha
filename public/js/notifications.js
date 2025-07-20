@@ -54,15 +54,9 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
     const notificationStatus = document.getElementById(statusId);
     const notificationToggles = document.querySelector(togglesSelector);
 
-    if (!enableNotificationsButton) {
-        console.error('DEBUG: Button mit ID', buttonId, 'nicht gefunden!');
-        return;
-    }
-
-    console.log("DEBUG: Notification Manager wird initialisiert mit:", { buttonId, statusId, togglesSelector });
+    if (!enableNotificationsButton) return;
 
     const updateUIBasedOnSubscription = (subscription) => {
-        console.log("DEBUG: updateUIBasedOnSubscription aufgerufen mit:", subscription ? 'SUBSCRIPTION VORHANDEN' : 'KEINE SUBSCRIPTION');
         if (subscription) {
             notificationStatus.textContent = 'Benachrichtigungen sind im Browser aktiviert.';
             notificationStatus.style.color = 'green';
@@ -82,23 +76,13 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
 
     // Neue Funktion: Prüft, ob das Abonnement serverseitig noch existiert
     const checkSubscriptionOnServer = async (subscription) => {
-        console.log("DEBUG: checkSubscriptionOnServer wird aufgerufen...");
         try {
             const response = await fetch('php/check_subscription.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ endpoint: subscription.endpoint })
             });
-            
-            console.log("DEBUG: Server-Antwort erhalten:", response.status, response.statusText);
-            
-            if (!response.ok) {
-                console.error("DEBUG: Server-Antwort nicht OK:", response.status);
-                return false;
-            }
-            
             const result = await response.json();
-            console.log("DEBUG: Server-Antwort JSON:", result);
             return result.exists;
         } catch (error) {
             console.error('DEBUG: Fehler beim Prüfen des Server-Abonnements:', error);
@@ -124,10 +108,6 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
             console.log('DEBUG: Erstelle neues Abonnement...');
             await subscribeUser(notificationStatus, enableNotificationsButton, vapidPublicKey);
             
-            // UI nach erfolgreichem Reset aktualisieren
-            const newSubscription = await registration.pushManager.getSubscription();
-            updateUIBasedOnSubscription(newSubscription);
-            
         } catch (error) {
             console.error('DEBUG: Fehler beim Zurücksetzen:', error);
             notificationStatus.textContent = 'Fehler beim Zurücksetzen: ' + error.message;
@@ -135,7 +115,7 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
         }
     };
 
-    console.log("DEBUG: Füge Event-Listener hinzu...");
+    console.log("DEBUG: Notification Manager wird initialisiert.");
 
     enableNotificationsButton.addEventListener('click', () => {
         console.log("DEBUG: Aktivierungs-Button geklickt.");
@@ -171,61 +151,36 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
     });
 
     // Initialen Status prüfen und erweiterte Logik für inkonsistente Zustände
-    console.log("DEBUG: Prüfe Service Worker Unterstützung...");
-    if (!('serviceWorker' in navigator)) {
-        console.error("DEBUG: Service Worker nicht unterstützt!");
-        notificationStatus.textContent = 'Service Worker wird nicht unterstützt.';
-        notificationStatus.style.color = 'red';
-        return;
-    }
-
-    console.log("DEBUG: Warte auf Service Worker ready...");
-    navigator.serviceWorker.ready
-        .then(async (reg) => {
-            console.log("DEBUG: Service Worker ist bereit, prüfe Subscription...");
+    if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+        navigator.serviceWorker.ready.then(async (reg) => {
+            const subscription = await reg.pushManager.getSubscription();
             
-            try {
-                const subscription = await reg.pushManager.getSubscription();
-                console.log("DEBUG: getSubscription() Ergebnis:", subscription ? 'SUBSCRIPTION GEFUNDEN' : 'KEINE SUBSCRIPTION');
+            if (subscription) {
+                console.log('DEBUG: Lokales Abonnement gefunden, prüfe Server-Status...');
+                const existsOnServer = await checkSubscriptionOnServer(subscription);
                 
-                if (subscription) {
-                    console.log('DEBUG: Lokales Abonnement gefunden, prüfe Server-Status...');
-                    console.log('DEBUG: Endpoint:', subscription.endpoint.substring(0, 50) + '...');
-                    
-                    const existsOnServer = await checkSubscriptionOnServer(subscription);
-                    console.log('DEBUG: Server-Check Ergebnis:', existsOnServer);
-                    
-                    if (existsOnServer) {
-                        console.log('DEBUG: Abonnement existiert auch auf dem Server.');
-                        updateUIBasedOnSubscription(subscription);
-                    } else {
-                        console.log('DEBUG: Abonnement existiert NICHT auf dem Server - inkonsistenter Zustand erkannt!');
-                        notificationStatus.textContent = 'Inkonsistenter Zustand erkannt. Klicken Sie hier zum Zurücksetzen.';
-                        notificationStatus.style.color = 'orange';
-                        notificationStatus.style.cursor = 'pointer';
-                        notificationStatus.style.textDecoration = 'underline';
-                        
-                        // Klick-Handler für das Zurücksetzen
-                        notificationStatus.addEventListener('click', resetSubscription);
-                        
-                        enableNotificationsButton.style.display = 'none';
-                        if (notificationToggles) {
-                            notificationToggles.style.display = 'none';
-                        }
-                    }
+                if (existsOnServer) {
+                    console.log('DEBUG: Abonnement existiert auch auf dem Server.');
+                    updateUIBasedOnSubscription(subscription);
                 } else {
-                    console.log('DEBUG: Kein lokales Abonnement gefunden.');
-                    updateUIBasedOnSubscription(null);
+                    console.log('DEBUG: Abonnement existiert NICHT auf dem Server - inkonsistenter Zustand erkannt!');
+                    notificationStatus.textContent = 'Inkonsistenter Zustand erkannt. Klicken Sie hier zum Zurücksetzen.';
+                    notificationStatus.style.color = 'orange';
+                    notificationStatus.style.cursor = 'pointer';
+                    notificationStatus.style.textDecoration = 'underline';
+                    
+                    // Klick-Handler für das Zurücksetzen
+                    notificationStatus.addEventListener('click', resetSubscription);
+                    
+                    enableNotificationsButton.style.display = 'none';
+                    if (notificationToggles) {
+                        notificationToggles.style.display = 'none';
+                    }
                 }
-            } catch (error) {
-                console.error('DEBUG: Fehler beim Prüfen der Subscription:', error);
-                notificationStatus.textContent = 'Fehler beim Prüfen des Subscription-Status: ' + error.message;
-                notificationStatus.style.color = 'red';
+            } else {
+                console.log('DEBUG: Kein lokales Abonnement gefunden.');
+                updateUIBasedOnSubscription(null);
             }
-        })
-        .catch((error) => {
-            console.error("DEBUG: Fehler beim Warten auf Service Worker ready:", error);
-            notificationStatus.textContent = 'Fehler beim Laden des Service Workers: ' + error.message;
-            notificationStatus.style.color = 'red';
         });
+    }
 } 
