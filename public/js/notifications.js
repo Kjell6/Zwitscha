@@ -137,9 +137,11 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
             console.log(`DEBUG: Erlaubnis-Status ist: ${permission}`);
             if (permission === 'granted') {
                 subscribeUser(notificationStatus, enableNotificationsButton, vapidPublicKey)
-                    .then(() => {
+                    .then(async () => {
                         // Nach erfolgreichem Abo das UI aktualisieren
-                        navigator.serviceWorker.ready.then(reg => reg.pushManager.getSubscription().then(updateUIBasedOnSubscription));
+                        const reg = await navigator.serviceWorker.ready;
+                        const subscription = await reg.pushManager.getSubscription();
+                        await updateUIBasedOnSubscription(subscription);
                     });
             } else {
                 notificationStatus.textContent = 'Erlaubnis wurde verweigert.';
@@ -150,8 +152,9 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
 
     // Initialen Status prüfen
     if (navigator.serviceWorker && navigator.serviceWorker.ready) {
-        navigator.serviceWorker.ready.then(reg => {
-            reg.pushManager.getSubscription().then(updateUIBasedOnSubscription);
+        navigator.serviceWorker.ready.then(async reg => {
+            const subscription = await reg.pushManager.getSubscription();
+            await updateUIBasedOnSubscription(subscription);
         });
     }
 } 
