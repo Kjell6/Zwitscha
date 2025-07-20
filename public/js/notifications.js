@@ -74,6 +74,47 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
         }
     };
 
+    // Neue Funktion: Prüft, ob das Abonnement serverseitig noch existiert
+    const checkSubscriptionOnServer = async (subscription) => {
+        try {
+            const response = await fetch('php/check_subscription.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ endpoint: subscription.endpoint })
+            });
+            const result = await response.json();
+            return result.exists;
+        } catch (error) {
+            console.error('DEBUG: Fehler beim Prüfen des Server-Abonnements:', error);
+            return false;
+        }
+    };
+
+    // Neue Funktion: Setzt das Abonnement zurück
+    const resetSubscription = async () => {
+        try {
+            console.log('DEBUG: Setze Abonnement zurück...');
+            notificationStatus.textContent = 'Setze Abonnement zurück...';
+            notificationStatus.style.color = 'orange';
+
+            const registration = await navigator.serviceWorker.ready;
+            const existingSubscription = await registration.pushManager.getSubscription();
+            
+            if (existingSubscription) {
+                console.log('DEBUG: Lösche bestehendes Abonnement...');
+                await existingSubscription.unsubscribe();
+            }
+
+            console.log('DEBUG: Erstelle neues Abonnement...');
+            await subscribeUser(notificationStatus, enableNotificationsButton, vapidPublicKey);
+            
+        } catch (error) {
+            console.error('DEBUG: Fehler beim Zurücksetzen:', error);
+            notificationStatus.textContent = 'Fehler beim Zurücksetzen: ' + error.message;
+            notificationStatus.style.color = 'red';
+        }
+    };
+
     console.log("DEBUG: Notification Manager wird initialisiert.");
 
     enableNotificationsButton.addEventListener('click', () => {
@@ -109,10 +150,37 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
         });
     });
 
-    // Initialen Status prüfen
+    // Initialen Status prüfen und erweiterte Logik für inkonsistente Zustände
     if (navigator.serviceWorker && navigator.serviceWorker.ready) {
-        navigator.serviceWorker.ready.then(reg => {
-            reg.pushManager.getSubscription().then(updateUIBasedOnSubscription);
+        navigator.serviceWorker.ready.then(async (reg) => {
+            const subscription = await reg.pushManager.getSubscription();
+            
+            if (subscription) {
+                console.log('DEBUG: Lokales Abonnement gefunden, prüfe Server-Status...');
+                const existsOnServer = await checkSubscriptionOnServer(subscription);
+                
+                if (existsOnServer) {
+                    console.log('DEBUG: Abonnement existiert auch auf dem Server.');
+                    updateUIBasedOnSubscription(subscription);
+                } else {
+                    console.log('DEBUG: Abonnement existiert NICHT auf dem Server - inkonsistenter Zustand erkannt!');
+                    notificationStatus.textContent = 'Inkonsistenter Zustand erkannt. Klicken Sie hier zum Zurücksetzen.';
+                    notificationStatus.style.color = 'orange';
+                    notificationStatus.style.cursor = 'pointer';
+                    notificationStatus.style.textDecoration = 'underline';
+                    
+                    // Klick-Handler für das Zurücksetzen
+                    notificationStatus.addEventListener('click', resetSubscription);
+                    
+                    enableNotificationsButton.style.display = 'none';
+                    if (notificationToggles) {
+                        notificationToggles.style.display = 'none';
+                    }
+                }
+            } else {
+                console.log('DEBUG: Kein lokales Abonnement gefunden.');
+                updateUIBasedOnSubscription(null);
+            }
         });
     }
 } 
