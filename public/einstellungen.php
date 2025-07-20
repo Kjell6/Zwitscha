@@ -129,6 +129,8 @@
 
     $pageTitle = 'Zwitscha – Einstellungen';
     $notificationSettings = $nutzerVerwaltung->getNotificationSettings($currentUserId);
+    // VAPID Public Key für das Frontend bereitstellen
+    $vapidPublicKey = $_SERVER['VAPID_PUBLIC_KEY'] ?? '';
 ?>
 
 
@@ -292,7 +294,7 @@
         );
         
         // Benachrichtigungs-Manager initialisieren
-        const vapidPublicKey = 'BJxX1uVuBeafFnQWLh49WksunbYOI-xM5iONmecrNta9V9MzOBsuBJgj6eJroTUZebP7zzlnwko-34Ck4upjafc';
+        const vapidPublicKey = '<?php echo $vapidPublicKey; ?>';
         initializeNotificationManager('enable-notifications-button', 'notification-status', vapidPublicKey, '#notification-toggles');
     });
 </script>
