@@ -129,12 +129,15 @@
 
     $pageTitle = 'Zwitscha – Einstellungen';
     $notificationSettings = $nutzerVerwaltung->getNotificationSettings($currentUserId);
-    // VAPID Public Key für das Frontend bereitstellen
-    $vapidPublicKey = $_SERVER['VAPID_PUBLIC_KEY'] ?? '';
+    
+    // VAPID Public Key für das Frontend bereitstellen - verschiedene Methoden versuchen
+    $vapidPublicKey = $_SERVER['VAPID_PUBLIC_KEY'] ?? getenv('VAPID_PUBLIC_KEY') ?: '';
     
     // Debug: VAPID Key überprüfen
     if (empty($vapidPublicKey)) {
         error_log("WARNUNG: VAPID_PUBLIC_KEY ist leer oder nicht gesetzt!");
+        error_log("DEBUG: \$_SERVER['VAPID_PUBLIC_KEY'] = " . ($_SERVER['VAPID_PUBLIC_KEY'] ?? 'NICHT GESETZT'));
+        error_log("DEBUG: getenv('VAPID_PUBLIC_KEY') = " . (getenv('VAPID_PUBLIC_KEY') ?: 'NICHT GESETZT'));
     } else {
         error_log("INFO: VAPID_PUBLIC_KEY geladen, Länge: " . strlen($vapidPublicKey));
     }

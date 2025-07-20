@@ -6,9 +6,9 @@ use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 
 // VAPID-Schlüssel aus Umgebungsvariablen laden
-$vapidPublicKey = $_SERVER['VAPID_PUBLIC_KEY'] ?? '';
-$vapidPrivateKey = $_SERVER['VAPID_PRIVATE_KEY'] ?? '';
-$vapidSubject = $_SERVER['VAPID_SUBJECT'] ?? 'mailto:default@example.com';
+$vapidPublicKey = $_SERVER['VAPID_PUBLIC_KEY'] ?? getenv('VAPID_PUBLIC_KEY') ?: '';
+$vapidPrivateKey = $_SERVER['VAPID_PRIVATE_KEY'] ?? getenv('VAPID_PRIVATE_KEY') ?: '';
+$vapidSubject = $_SERVER['VAPID_SUBJECT'] ?? getenv('VAPID_SUBJECT') ?: 'mailto:default@example.com';
 
 if (empty($vapidPublicKey) || empty($vapidPrivateKey)) {
     die("Fehler: VAPID-Schlüssel sind nicht in den Umgebungsvariablen gesetzt.");
