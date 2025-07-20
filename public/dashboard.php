@@ -336,7 +336,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_push_notificatio
         <img src="assets/favicon.png" alt="Zwitscha Logo">
     </a>
     <div class="container">
-        <h1>Raspberry Pi Systeminfo</h1>
         <!-- === Push Notification Panel === -->
         <div class="push-panel card">
             <h2>Push-Notification testen</h2>
@@ -355,11 +354,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_push_notificatio
                 <label for="notif_body">Text:</label>
                 <textarea name="notif_body" id="notif_body" rows="3" maxlength="200" required></textarea>
                 <button type="submit" name="send_push_notification">Notification senden</button>
-                <?php if ($notifMsg): ?>
+                
+                <?php /*
+                Debug-Nachrichten
+                
+                if ($notifMsg): ?>
                     <div class="msg"><?= htmlspecialchars($notifMsg) ?></div>
-                <?php endif; ?>
+                <?php endif;
+                */ ?>
             </form>
         </div>
+
+        <h1>Raspberry Pi Systeminfo</h1>
         <div class="cards">
             <!-- System Card -->
             <div class="card">
