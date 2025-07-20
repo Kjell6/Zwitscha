@@ -49,28 +49,6 @@ async function subscribeUser(statusElement, buttonElement, vapidPublicKey) {
     }
 }
 
-/**
- * Prüft, ob ein Abonnement auch auf dem Server existiert.
- * @param {PushSubscription} subscription - Das Abonnement-Objekt vom Browser.
- * @returns {Promise<boolean>} - True, wenn auf dem Server registriert, sonst false.
- */
-async function verifySubscriptionOnServer(subscription) {
-    if (!subscription) return false;
-    
-    try {
-        const response = await fetch('php/check_subscription.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ endpoint: subscription.endpoint })
-        });
-        const data = await response.json();
-        return data.is_subscribed === true;
-    } catch (error) {
-        console.error('Fehler bei der Verifizierung des Abonnements:', error);
-        return false; // Bei Fehler annehmen, dass es nicht synchron ist.
-    }
-}
-
 export function initializeNotificationManager(buttonId, statusId, vapidPublicKey, togglesSelector) {
     const enableNotificationsButton = document.getElementById(buttonId);
     const notificationStatus = document.getElementById(statusId);
@@ -78,38 +56,21 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
 
     if (!enableNotificationsButton) return;
 
-    /**
-     * Aktualisiert die UI basierend auf dem Abonnement-Status im Browser und auf dem Server.
-     * @param {PushSubscription|null} subscription - Das Abonnement-Objekt vom Browser.
-     */
-    const updateUIBasedOnSubscription = async (subscription) => {
+    const updateUIBasedOnSubscription = (subscription) => {
         if (subscription) {
-            const isVerified = await verifySubscriptionOnServer(subscription);
-            
-            if (isVerified) {
-                // Fall A: Alles ist synchron.
-                notificationStatus.textContent = 'Benachrichtigungen sind aktiv.';
-                notificationStatus.style.color = 'green';
-                enableNotificationsButton.style.display = 'none';
-                if (notificationToggles) notificationToggles.style.display = 'block';
-            } else {
-                // Fall B: "Zombie-Abonnement" gefunden.
-                notificationStatus.textContent = 'Synchronisiere... Bitte warten.';
-                notificationStatus.style.color = 'orange';
-                
-                // Altes Abo im Browser löschen und UI zurücksetzen.
-                await subscription.unsubscribe();
-                
-                notificationStatus.textContent = 'Benachrichtigungen sind nicht mehr synchron. Bitte erneut aktivieren.';
-                enableNotificationsButton.style.display = 'block';
-                if (notificationToggles) notificationToggles.style.display = 'none';
+            notificationStatus.textContent = 'Benachrichtigungen sind im Browser aktiviert.';
+            notificationStatus.style.color = 'green';
+            enableNotificationsButton.style.display = 'none';
+            if (notificationToggles) {
+                notificationToggles.style.display = 'block';
             }
         } else {
-            // Kein Abonnement im Browser gefunden.
-            notificationStatus.textContent = 'Benachrichtigungen sind nicht eingerichtet.';
-            notificationStatus.style.color = '';
+            notificationStatus.textContent = 'Benachrichtigungen sind im Browser blockiert oder nicht eingerichtet.';
+            notificationStatus.style.color = 'orange';
             enableNotificationsButton.style.display = 'block';
-            if (notificationToggles) notificationToggles.style.display = 'none';
+            if (notificationToggles) {
+                notificationToggles.style.display = 'none';
+            }
         }
     };
 
@@ -137,11 +98,9 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
             console.log(`DEBUG: Erlaubnis-Status ist: ${permission}`);
             if (permission === 'granted') {
                 subscribeUser(notificationStatus, enableNotificationsButton, vapidPublicKey)
-                    .then(async () => {
+                    .then(() => {
                         // Nach erfolgreichem Abo das UI aktualisieren
-                        const reg = await navigator.serviceWorker.ready;
-                        const subscription = await reg.pushManager.getSubscription();
-                        await updateUIBasedOnSubscription(subscription);
+                        navigator.serviceWorker.ready.then(reg => reg.pushManager.getSubscription().then(updateUIBasedOnSubscription));
                     });
             } else {
                 notificationStatus.textContent = 'Erlaubnis wurde verweigert.';
@@ -152,9 +111,8 @@ export function initializeNotificationManager(buttonId, statusId, vapidPublicKey
 
     // Initialen Status prüfen
     if (navigator.serviceWorker && navigator.serviceWorker.ready) {
-        navigator.serviceWorker.ready.then(async reg => {
-            const subscription = await reg.pushManager.getSubscription();
-            await updateUIBasedOnSubscription(subscription);
+        navigator.serviceWorker.ready.then(reg => {
+            reg.pushManager.getSubscription().then(updateUIBasedOnSubscription);
         });
     }
 } 
