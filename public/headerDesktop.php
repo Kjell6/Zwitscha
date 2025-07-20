@@ -42,6 +42,11 @@
         <a href="einstellungen.php" class="settings-link">
             <i class="bi bi-gear-fill"></i>
         </a>
+        <?php if ($eingeloggt && $currentUserId === 3): ?>
+            <a href="dashboard.php" class="dashboard-link" title="Dashboard">
+                <i class="bi bi-speedometer2"></i>
+            </a>
+        <?php endif; ?>
 
         <!-- User Authentication State -->
         <?php if ($eingeloggt): ?>

@@ -236,6 +236,11 @@ $pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName'])
 
             <!-- === MOBILE CONTROLS === -->
             <?php if ($currentUserId === $profile['id']): ?>
+                <?php if ($currentUserId === 3): ?>
+                    <a href="dashboard.php" class="dashboard-link mobile-only">
+                        <i class="bi bi-speedometer2"></i>
+                    </a>
+                <?php endif; ?>
                 <a href="einstellungen.php" class="einstellungen-link mobile-only">
                     <i class="bi bi-gear-fill"></i>
                 </a>
