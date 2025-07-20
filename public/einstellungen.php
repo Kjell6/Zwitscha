@@ -131,6 +131,13 @@
     $notificationSettings = $nutzerVerwaltung->getNotificationSettings($currentUserId);
     // VAPID Public Key für das Frontend bereitstellen
     $vapidPublicKey = $_SERVER['VAPID_PUBLIC_KEY'] ?? '';
+    
+    // Debug: VAPID Key überprüfen
+    if (empty($vapidPublicKey)) {
+        error_log("WARNUNG: VAPID_PUBLIC_KEY ist leer oder nicht gesetzt!");
+    } else {
+        error_log("INFO: VAPID_PUBLIC_KEY geladen, Länge: " . strlen($vapidPublicKey));
+    }
 ?>
 
 
@@ -294,7 +301,16 @@
         );
         
         // Benachrichtigungs-Manager initialisieren
-        const vapidPublicKey = '<?php echo $vapidPublicKey; ?>';
+        const vapidPublicKey = '<?php echo htmlspecialchars($vapidPublicKey, ENT_QUOTES); ?>';
+        console.log('DEBUG: VAPID Key vom Server:', vapidPublicKey ? 'GESETZT (Länge: ' + vapidPublicKey.length + ')' : 'LEER!');
+        
+        if (!vapidPublicKey) {
+            console.error('FEHLER: VAPID Public Key ist leer!');
+            document.getElementById('notification-status').textContent = 'Konfigurationsfehler: VAPID-Schlüssel fehlt.';
+            document.getElementById('notification-status').style.color = 'red';
+            return;
+        }
+        
         initializeNotificationManager('enable-notifications-button', 'notification-status', vapidPublicKey, '#notification-toggles');
     });
 </script>
