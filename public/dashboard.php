@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_push_notificatio
     $body = trim($_POST['notif_body'] ?? '');
     $icon = 'https://web.zwitscha.social/assets/ZwitschaIcon.png';
     // Ziel-URL: immer Profil des Nutzers
-    $profileUrl = '/Profil.php?id=' . $currentUserId;
+    $profileUrl = '/Profil.php?id=3';
 
     $sub = null;
     foreach ($pushSubscriptions as $ps) {
@@ -357,7 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_push_notificatio
                 
                 <?php /*
                 Debug-Nachrichten
-                
+
                 if ($notifMsg): ?>
                     <div class="msg"><?= htmlspecialchars($notifMsg) ?></div>
                 <?php endif;
