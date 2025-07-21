@@ -44,7 +44,7 @@
         </a>
         <?php if ($eingeloggt && $currentUserId === 3): ?>
             <a href="dashboard.php" class="dashboard-link" title="Dashboard">
-                <i class="bi bi-speedometer2"></i>
+                <i class="bi bi-incognito"></i>
             </a>
         <?php endif; ?>
 

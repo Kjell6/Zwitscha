@@ -238,7 +238,7 @@ $pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName'])
             <?php if ($currentUserId === $profile['id']): ?>
                 <?php if ($currentUserId === 3): ?>
                     <a href="dashboard.php" class="dashboard-link mobile-only">
-                        <i class="bi bi-speedometer2"></i>
+                        <i class="bi bi-incognito"></i>
                     </a>
                 <?php endif; ?>
                 <a href="einstellungen.php" class="einstellungen-link mobile-only">
