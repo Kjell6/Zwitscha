@@ -17,6 +17,20 @@ if ($currentUserId !== 3) {
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+// === Live-Log AJAX ===
+if (isset($_GET['action']) && $_GET['action'] === 'logs') {
+    // Passe ggf. den Service-Namen an!
+    $service = 'voice-assistant.service';
+    $lines = 100;
+    $cmd = "journalctl -u " . escapeshellarg($service) . " -n $lines --no-pager 2>&1";
+    $output = shell_exec($cmd);
+    // Gegen XSS schützen
+    header('Content-Type: text/plain; charset=utf-8');
+    echo htmlspecialchars($output ?? 'Keine Logs gefunden.');
+    exit();
+}
+
+
 // Systeminfos
 $os = php_uname();
 $hostname = gethostname();
@@ -398,7 +412,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_push_notificatio
                     <b>Aktuell:</b> <?= htmlspecialchars($cpuTemp) ?> °C
                 </div>
             </div>
+
+        <!-- === Live-Logs Card === -->
+        <div class="log-card">
+            <div class="log-title">Live-Logs: <code>voice-assistant.service</code></div>
+            <div class="log-refresh" id="log-refresh-info">Letztes Update: <span id="log-last-update">-</span></div>
+            <div class="log-error" id="log-error" style="display:none"></div>
+            <div class="logbox" id="logbox">Lade Logs...</div>
+        </div>
+
         </div>
     </div>
+
+    <script>
+        // === Live-Logbox Updater ===
+        function updateLogs() {
+            fetch(window.location.pathname + '?action=logs')
+                .then(response => {
+                    if (!response.ok) throw new Error('Fehler beim Laden der Logs');
+                    return response.text();
+                })
+                .then(text => {
+                    document.getElementById('logbox').textContent = text;
+                    document.getElementById('log-error').style.display = 'none';
+                    document.getElementById('log-last-update').textContent = (new Date()).toLocaleTimeString();
+                })
+                .catch(err => {
+                    document.getElementById('log-error').textContent = err.message;
+                    document.getElementById('log-error').style.display = '';
+                });
+        }
+        updateLogs();
+        setInterval(updateLogs, 2000);
+    </script>
+
 </body>
 </html>
