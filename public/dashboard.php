@@ -19,17 +19,16 @@ error_reporting(E_ALL);
 
 // === Live-Log AJAX ===
 if (isset($_GET['action']) && $_GET['action'] === 'logs') {
-    // Passe ggf. den Service-Namen an!
-    $service = 'voice-assistant.service';
-    $lines = 100;
-    $cmd = "journalctl -u " . escapeshellarg($service) . " -n $lines --no-pager 2>&1";
-    $output = shell_exec($cmd);
-    // Gegen XSS schützen
-    header('Content-Type: text/plain; charset=utf-8');
-    echo htmlspecialchars($output ?? 'Keine Logs gefunden.');
+    $logfile = '/logs/voice-assistant.log';
+    header('Content-Type: text/plain; charset=utf-8'); // Header immer vor der Ausgabe!
+    if (file_exists($logfile)) {
+        $output = shell_exec('tail -n 100 ' . escapeshellarg($logfile));
+        echo htmlspecialchars($output);
+    } else {
+        echo 'Keine Logdatei gefunden.';
+    }
     exit();
 }
-
 
 // Systeminfos
 $os = php_uname();
