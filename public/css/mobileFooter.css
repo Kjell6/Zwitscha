@@ -24,6 +24,15 @@
     font-size: 1.6rem;
     padding: var(--spacing-xs);
     transition: color var(--transition-fast);
+    border-radius: 20%; /* für runde Klickfläche */
+}
+
+.footer-link:active,
+.footer-link:focus,
+.footer-link:hover {
+    padding: var(--spacing-xs);
+    background: rgba(0,0,0,0.04); /* sehr dezenter Effekt, kann auf transparent gesetzt werden */
+    outline: none;
 }
 
 /* === RESPONSIVE DESIGN === */
