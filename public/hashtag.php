@@ -65,6 +65,7 @@
 </head>
 <body>
 <?php include 'headerDesktop.php'; ?>
+<?php include 'headerMobile.php'; ?>
 
 <div class="main-content hashtag-page">
     <div class="page-header with-chip no-divider">

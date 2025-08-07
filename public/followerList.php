@@ -42,6 +42,7 @@
 
 <!-- === HEADER === -->
 <?php include 'headerDesktop.php'; ?>
+<?php include 'headerMobile.php'; ?>
 
 <!-- === MAIN CONTAINER === -->
 <main class="container">

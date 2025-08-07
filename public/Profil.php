@@ -130,6 +130,7 @@ $pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName'])
 
 <!-- === HEADER === -->
 <?php include 'headerDesktop.php'; ?>
+<?php include 'headerMobile.php'; ?>
 <?php include 'footerMobile.php'; ?>
 
 <!-- === MAIN CONTAINER === -->
