@@ -35,6 +35,23 @@
     outline: none;
 }
 
+.footer-link.active {
+    color: var(--text-primary);
+    position: relative;
+}
+
+.footer-link.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -8px;
+    width: 24px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--primary-color);
+}
+
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
     .mobile-footer {

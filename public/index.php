@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/banner.css">
     <script src="js/image-compression.js"></script>
-    <?php include 'pwa-header.php'; ?>
+    <!-- PWA Header ist in global-header.php integriert -->
 </head>
 <body>
 <!-- === HEADER === -->
@@ -62,7 +62,7 @@
     </div>
 
     <!-- === CREATE POST FORM === -->
-    <form enctype="multipart/form-data" class="create-post-form">
+    <form enctype="multipart/form-data" class="create-post-form" id="compose">
         <input type="hidden" name="action" value="create_post">
 
         <!-- Form Header -->
@@ -144,6 +144,9 @@
         <button id="mehr-laden-button" class="btn">Mehr laden</button>
     </div>
     <?php endif; ?>
+    <button type="button" class="fab" id="fab-compose" aria-label="Neuen Post verfassen" title="Neuer Post">
+        <i class="bi bi-plus-lg"></i>
+    </button>
 </div>
 
 
@@ -258,6 +261,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- Benachrichtigungs-Banner -->
 <script src="js/notification-banner.js"></script>
+
+<!-- FAB Verhalten: Smooth-Scroll + Fokus auf Composer -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const fab = document.getElementById('fab-compose');
+  if (!fab) return;
+  fab.addEventListener('click', function(e) {
+    e.preventDefault();
+    const compose = document.getElementById('compose');
+    const textarea = document.getElementById('post-input');
+    if (compose) {
+      compose.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if (textarea) {
+      // Fokus setzen nach kleinem Delay, damit Scroll zuerst läuft
+      setTimeout(() => textarea.focus({ preventScroll: true }), 150);
+    }
+  });
+});
+</script>
 
 </body>
 </html>

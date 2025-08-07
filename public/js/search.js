@@ -14,6 +14,8 @@ function initializeSearch(config) {
     const searchInput = document.getElementById(config.searchInputId);
     const resultsContainer = document.getElementById(config.resultsContainerId);
     const resultsList = document.querySelector(config.resultsListSelector);
+    const clearButton = document.getElementById('mobile-clear-search');
+    const emptyState = document.getElementById('search-empty');
     
     // Prüfen ob alle Elemente existieren
     if (!searchInput || !resultsContainer) {
@@ -35,47 +37,63 @@ function initializeSearch(config) {
 
         if (results.length === 0) {
             resultsContainer.style.display = 'none';
+            if (emptyState) {
+                emptyState.style.display = '';
+                emptyState.innerHTML = '<p>Keine Nutzer gefunden.</p>';
+            }
             return;
         }
 
-        // Überschrift hinzufügen (nur wenn konfiguriert)
+        // Überschrift für Desktop optional, auf Mobile verzichten wir zugunsten kompakter Darstellung
         if (config.createHeading) {
             const heading = document.createElement('h3');
             heading.textContent = 'Nutzer gefunden';
             resultsContainer.appendChild(heading);
         }
 
-        // Ergebnisliste erstellen oder vorhandene verwenden
+        // Ergebnisliste erstellen oder vorhandene verwenden (nutzer-list Markup wie Follower-Liste)
         let actualResultsList = resultsList;
         if (!actualResultsList) {
-            actualResultsList = document.createElement('ul');
-            actualResultsList.classList.add('search-results-list');
+            actualResultsList = document.createElement('div');
+            actualResultsList.classList.add('user-list');
             resultsContainer.appendChild(actualResultsList);
+        } else {
+            actualResultsList.classList.add('user-list');
+        }
+
+        // Helper: Suchbegriff hervorheben
+        const query = searchInput.value.trim();
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        const highlightRegex = query.length >= 2 ? new RegExp(`(${escapeRegExp(query)})`, 'ig') : null;
+        function getHighlightedName(name) {
+            if (!highlightRegex) return name;
+            return name.replace(highlightRegex, '<mark>$1</mark>');
         }
 
         // Ergebnisse durchlaufen und HTML-Elemente erstellen
         results.forEach(user => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('search-result-item');
-
             const link = document.createElement('a');
             link.href = user.profileUrl;
+            link.classList.add('user-list-item');
 
             const img = document.createElement('img');
             img.src = user.avatar;
             img.alt = 'Profilbild';
+            img.classList.add('user-avatar');
 
             const nameSpan = document.createElement('span');
-            nameSpan.textContent = user.name;
+            nameSpan.innerHTML = getHighlightedName(user.name);
             nameSpan.classList.add('user-name');
 
             link.appendChild(img);
             link.appendChild(nameSpan);
-            listItem.appendChild(link);
-            actualResultsList.appendChild(listItem);
+            actualResultsList.appendChild(link);
         });
 
         resultsContainer.style.display = 'block';
+        if (emptyState) emptyState.style.display = 'none';
     }
 
     /**
@@ -85,6 +103,7 @@ function initializeSearch(config) {
     function performSearch(query) {
         if (query.length < 2) {
             resultsContainer.style.display = 'none';
+            if (emptyState) emptyState.style.display = '';
             return;
         }
 
@@ -109,8 +128,21 @@ function initializeSearch(config) {
     // Live-Suche bei Eingabe
     searchInput.addEventListener('input', () => {
         const query = searchInput.value.trim();
+        if (clearButton) clearButton.hidden = query.length === 0;
         performSearch(query);
     });
+
+    // Clear input
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            searchInput.value = '';
+            clearButton.hidden = true;
+            if (resultsList) resultsList.innerHTML = '';
+            resultsContainer.style.display = 'none';
+            if (emptyState) emptyState.style.display = '';
+            searchInput.focus();
+        });
+    }
 
     // Ergebnisse ausblenden bei Klick außerhalb (optional)
     if (config.enableBlurHide) {

@@ -66,8 +66,15 @@
 <body>
 <?php include 'headerDesktop.php'; ?>
 
-<div class="main-content">
-    <h1 class="page-title"><?php echo $pageTitle; ?></h1>
+<div class="main-content hashtag-page">
+    <div class="page-header with-chip no-divider">
+        <a href="index.php" class="back-link" aria-label="Zurück zur Startseite">
+            <i class="bi bi-arrow-left-short" aria-hidden="true"></i>
+        </a>
+        <h1 class="page-title">
+            <span class="hashtag-chip"></i>#<?php echo htmlspecialchars($tag); ?></span>
+        </h1>
+    </div>
 
     <!-- Dynamischer Feed -->
     <section class="feed" id="hashtag-feed">
@@ -99,8 +106,8 @@
 
     <!-- "Mehr laden"-Button -->
     <?php if (count($feedItems) === $limit): ?>
-    <div id="mehr-laden-container" style="display: flex; justify-content: center; margin: 20px 0;">
-        <button id="mehr-laden-button" class="btn">Mehr laden</button>
+    <div id="mehr-laden-container" class="load-more-container">
+        <button id="mehr-laden-button" class="btn load-more-btn">Mehr laden</button>
     </div>
     <?php endif; ?>
 </div>

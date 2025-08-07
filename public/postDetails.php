@@ -53,9 +53,11 @@
 <!-- === MAIN CONTAINER === -->
 <main class="container">
     <!-- === PAGE HEADER === -->
-    <div class="page-header-container">
-        <button class="back-button" type="button" onclick="history.back()">Zurück</button>
-        <h1>Post</h1>
+    <div class="page-header no-divider">
+        <a href="#" class="back-link" onclick="history.back(); return false;" aria-label="Zurück zur vorherigen Seite">
+            <i class="bi bi-arrow-left-short" aria-hidden="true"></i>
+        </a>
+        <h1 class="page-title">Post</h1>
     </div>
 
     <?php

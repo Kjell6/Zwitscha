@@ -10,7 +10,7 @@ header("Pragma: no-cache");
 header("Expires: 0");
 ?>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="icon" href="assets/favicon.png" type="image/png">
 <title><?php echo htmlspecialchars($pageTitle); ?></title>
 
@@ -21,7 +21,10 @@ header("Expires: 0");
 
 <!-- PWA Manifest und Service Worker -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#f5f5f5"/>
+<!-- Dynamische Statusbar-/UI-Farbe passend zum Header (Light/Dark) -->
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#222222" />
+<meta name="color-scheme" content="light dark" />
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

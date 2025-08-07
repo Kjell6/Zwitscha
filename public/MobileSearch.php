@@ -19,10 +19,12 @@
 <html lang="de">
 <head>
     <?php include 'global-header.php'; ?>
+    <link rel="stylesheet" href="css/followerList.css">
     <link rel="stylesheet" href="css/search.css">
 </head>
 <body>
 
+    <?php include 'headerMobile.php'; ?>
     <!-- === MAIN CONTENT === -->
     <div class="main-content">
         <!-- === SEARCH HEADER === -->
@@ -34,13 +36,20 @@
         <div class="mobile-search-section">
             <!-- Search Input -->
             <div class="search-input-container">
-                <input type="text" placeholder="Nach Nutzern suchen..." class="mobile-search-input" id="mobile-search-input" autocomplete="off">
+                <input type="text" placeholder="Nach Nutzern suchen…" class="mobile-search-input" id="mobile-search-input" autocomplete="off">
+                <button id="mobile-clear-search" class="clear-search-btn" type="button" hidden aria-label="Suche löschen">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="search-empty" class="search-empty">
+                <p>Gib mindestens 2 Zeichen ein, um Nutzer zu finden.</p>
             </div>
             
             <!-- === SEARCH RESULTS === -->
             <div class="search-results-container" id="search-results" style="display: none;">
-                <h3>Nutzer gefunden</h3>
-                <ul class="mobile-search-results-list"></ul>
+                <div class="mobile-search-results-list user-list"></div>
             </div>
         </div>
     </div>

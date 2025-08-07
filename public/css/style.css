@@ -13,6 +13,7 @@
     --border-color: #ddd;           /* Rahmenfarbe */
     --input-border: #ccc;           /* Rahmenfarbe für Eingabefelder */
     --bg-color: #f5f5f5;            /* Hintergrundfarbe */
+    --shadow-color: rgba(0, 0, 0, 0.1); /* Standard Schattenfarbe */
   
     /* Gefahrfarben */
     --danger-color: #e53935;
@@ -117,6 +118,69 @@
     color: var(--primary-hover);
   }
   
+  /* Zurück-Button (global) */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    background: var(--light-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 2px var(--shadow-color);
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .back-link .bi { font-size: var(--font-size-lg); line-height: 1; }
+  .back-link:hover { background: var(--hover-color); border-color: var(--border-color); }
+  .back-link:active { transform: translateY(1px); }
+  .back-link:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(34,218,38,0.25); }
+
+  /* Einheitlicher Page-Header: Back-Button und Titel nebeneinander + Trennlinie */
+  .page-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-xxs);
+    padding: calc(var(--spacing-xxs) * 1) 0; /* kompakteres Padding */
+    background: transparent;
+    margin-bottom: calc(var(--spacing-xxs) / 2); /* noch kleinere Margin */
+    flex-wrap: nowrap;
+  }
+
+  .page-header .page-title {
+    margin: 0;
+    font-size: var(--font-size-xl); /* etwas größer für bessere Lesbarkeit */
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Ausnahme: wenn .no-divider gesetzt ist, entferne die Trennlinie */
+  .page-header.no-divider { border-bottom: none; }
+
+  /* Variante mit Trennlinie und leicht größerem Abstand (z.B. Follower-Liste) */
+  .page-header.with-divider {
+    border-bottom: var(--border-width) solid var(--border-color);
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm) 0;
+  }
+
+  /* Wenn ein Chip neben dem Titel steht (z.B. Hashtag), kleiner Abstand */
+  .page-header.with-chip .hashtag-chip { margin-left: 4px; }
+
+  /* Mobile: etwas kompakter */
+  @media (max-width: 480px) {
+    .page-header { padding: calc(var(--spacing-xxs)) 0; gap: var(--spacing-xxs); }
+    .page-header .page-title { font-size: 1.1rem; }
+    .back-link { width: 36px; height: 36px; border-radius: 10px; }
+  }
+
   /* Buttons */
   button, .button {
     display: inline-block;
@@ -214,6 +278,30 @@
   
   .w-full { width: 100%; }
   .w-half { width: 50%; }
+
+  /* Floating Action Button (FAB) */
+  .fab {
+    position: fixed;
+    right: 16px;
+    bottom: calc(76px + env(safe-area-inset-bottom));
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    z-index: 1100;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+  }
+  .fab:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+  .fab:active { transform: translateY(1px); }
+
+  /* Anker-Ziel mit Abstand unter fixem Header */
+  #compose { scroll-margin-top: 100px; }
   
   /* Abstände */
   .mt-2 { margin-top: 0.5rem; }
@@ -230,6 +318,8 @@
   
   /* Responsive-Design-Breakpoints */
   @media (max-width: 768px) {
+    body { padding-top: 0; }
+    
     :root {
       --spacing-md: 1rem;
       --spacing-lg: 1.5rem;
@@ -271,6 +361,13 @@
     button, .button {
       color: #ffffff;
     }
+
+    /* Back-Link Dark Mode */
+    .back-link { background: var(--light-color); border-color: var(--border-color); box-shadow: 0 1px 2px var(--shadow-color); }
+    .back-link:hover { background: var(--hover-color); border-color: var(--border-color); }
+    .back-link:focus-visible { box-shadow: 0 0 0 3px rgba(31,211,35,0.35); }
+
+    .fab { box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
   
     /* Form-Elemente im Dark Mode */
     input[type="text"],
@@ -298,6 +395,10 @@
       border-color: var(--primary-color);
       box-shadow: 0 0 0 2px rgba(34, 218, 38, 0.4);
     }
+  }
+
+  @media (min-width: 769px) {
+    .fab { display: none; }
   }
   
   

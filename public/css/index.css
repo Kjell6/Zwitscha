@@ -52,7 +52,7 @@ body {
     min-height: 56px;
     font-size: 1.1rem;
     color: var(--text-primary);
-    padding: var(--spacing-xs) 0;
+    padding: var(--spacing-xs);
     line-height: 1.5;
 }
 
@@ -232,12 +232,28 @@ body {
 
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
+    body { padding-top: 0; }
     .main-content {
         width: 100%;
         margin: 0;
-        padding: 0;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .create-post-form {
+        margin-top: var(--spacing-md);
     }
 }
+
+/* === PAGE HEADER / CHIPS (Hashtag) === */
+.page-header { display: flex; align-items: center; gap: var(--spacing-xs); margin: var(--spacing-sm) 0; }
+.page-header.with-chip { justify-content: flex-start; }
+.page-title { font-size: 1.25rem; font-weight: 800; margin: 0; }
+.hashtag-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: var(--light-color); border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.06); font-weight: 700; }
+
+/* === LOAD MORE BUTTON (Unified) === */
+.load-more-container { display: flex; justify-content: center; margin: 20px 0; }
+.load-more-btn { background: var(--primary-color); color: #fff; border-radius: 999px; padding: 10px 18px; font-weight: 700; border: none; }
+.load-more-btn:hover { background: var(--primary-hover); }
 
 @media (max-width: 550px) {
     .create-post-form .user-avatar {
