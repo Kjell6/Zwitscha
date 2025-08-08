@@ -7,7 +7,6 @@ body {
 }
 
 .main-content {
-  padding: var(--spacing-sm);
   margin-bottom: var(--spacing-sm);
   margin-top: var(--spacing-md);
 }
@@ -110,11 +109,7 @@ input[type="text"] {
 
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 480px) {
-  body {
-    padding-left: var(--spacing-xs);
-    padding-right: var(--spacing-xs);
-  }
-
+    
   .mobile-search-results-list .user-avatar {
     width: 40px;
     height: 40px;

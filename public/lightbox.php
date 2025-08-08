@@ -15,7 +15,7 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.8);
-        z-index: 1000;
+        z-index: 2000; /* Über mobilem Header (z-index 1200) */
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
@@ -35,7 +35,7 @@
         color: white;
         font-size: 30px;
         cursor: pointer;
-        z-index: 1001;
+        z-index: 2001; /* Knopf über Lightbox-Inhalt */
         width: 40px;
         height: 40px;
         display: flex;
