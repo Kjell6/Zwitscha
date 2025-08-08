@@ -236,7 +236,7 @@ body {
     .main-content {
         width: 100%;
         margin: 0;
-        padding: 0 var(--spacing-sm);
+        padding: 0;
     }
 
     .create-post-form {
