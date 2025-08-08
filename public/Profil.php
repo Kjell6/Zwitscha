@@ -242,9 +242,6 @@ $pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName'])
                         <i class="bi bi-incognito"></i>
                     </a>
                 <?php endif; ?>
-                <a href="einstellungen.php" class="einstellungen-link mobile-only">
-                    <i class="bi bi-gear-fill"></i>
-                </a>
                 <a href="logout.php" class="logout-link mobile-only"
                    onclick="return confirm('Möchtest du dich wirklich abmelden?')">
                     <img src="assets/custom_icons/LogOut.svg" alt="Logout Icon" class="custom-logout-icon">

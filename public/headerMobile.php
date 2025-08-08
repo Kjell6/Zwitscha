@@ -2,6 +2,7 @@
     require_once __DIR__ . '/php/session_helper.php';
     $eingeloggt = isLoggedIn();
     $currentUsername = getCurrentUsername();
+    $currentUserId = getCurrentUserId();
 ?>
 <link rel="stylesheet" href="css/mobileHeader.css" />
 
@@ -15,6 +16,11 @@
             <a href="einstellungen.php" class="icon-button" aria-label="Einstellungen">
                 <i class="bi bi-gear-fill"></i>
             </a>
+            <?php if ($eingeloggt && $currentUserId === 3): ?>
+                <a href="dashboard.php" class="icon-button" aria-label="Dashboard">
+                    <i class="bi bi-incognito"></i>
+                </a>
+            <?php endif; ?>
             <?php if (!$eingeloggt): ?>
                 <a href="Login.php" class="cta-login">Anmelden</a>
             <?php endif; ?>
