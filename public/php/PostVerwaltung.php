@@ -73,9 +73,7 @@ class PostVerwaltung {
         return $this->_fetchAndProcessPosts($sql, [$currentUserId, $currentUserId, $limit, $offset], 'iiii');
     }
 
-    public function getPostsWithOffset(int $currentUserId, int $offset, int $limit): array {
-        return $this->getAllPosts($currentUserId, $limit, $offset);
-    }
+    
     
     /**
      * Holt alle Posts, die einen bestimmten Hashtag enthalten.
@@ -315,29 +313,7 @@ class PostVerwaltung {
      * @param int $postId Die ID des Posts.
      * @return array Ein Array von Kommentaren.
      */
-    public function getCommentsByPostId(int $postId): array {
-        $sql = "
-        SELECT 
-            k.id, k.text, k.datumZeit, k.parent_comment_id,
-            n.nutzerName AS autor,
-            n.profilbild,
-            n.id as userId
-        FROM kommentar k
-        JOIN nutzer n ON k.nutzer_id = n.id
-        WHERE k.post_id = ?
-        ORDER BY k.datumZeit ASC
-    ";
-
-        $stmt = $this->db->prepare($sql);
-        if (!$stmt) return [];
-
-        $stmt->bind_param("i", $postId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $comments = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-        return $comments;
-    }
+    
 
     public function getMainCommentsByPostId(int $postId): array {
         $sql = "
@@ -386,6 +362,38 @@ class PostVerwaltung {
         $stmt->close();
 
         return $replies;
+    }
+
+    /**
+     * Neueste Kommentare (global), inklusive Post- und Autor-Infos.
+     *
+     * @return array<int,array{
+     *   id:int, text:string, datumZeit:string, post_id:int, autor:string, userId:int, postAutor:string, postAutorId:int
+     * }>
+     */
+    public function getRecentComments(int $limit = 10): array {
+        $sql = "
+            SELECT 
+                k.id, k.text, k.datumZeit, k.post_id,
+                n.nutzerName AS autor, n.id AS userId,
+                pn.nutzerName AS postAutor, pn.id AS postAutorId
+            FROM kommentar k
+            JOIN nutzer n ON k.nutzer_id = n.id
+            JOIN post p ON k.post_id = p.id
+            JOIN nutzer pn ON p.nutzer_id = pn.id
+            WHERE k.datumZeit >= (NOW() - INTERVAL 7 DAY)
+            ORDER BY k.datumZeit DESC
+            LIMIT ?
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $rows;
     }
 
 

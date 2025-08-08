@@ -687,4 +687,127 @@ class NutzerVerwaltung {
         $stmt->execute();
         $stmt->close();
     }
+
+    
+
+    /**
+     * Liefert Basis-Statistiken für das Dashboard.
+     *
+     * @return array{
+     *   users:int, posts:int, comments:int, reactions:int, subscriptions:int, notifications_unread:int
+     * }
+     */
+    public function getBasicStats(): array {
+        $stats = [
+            'users' => 0,
+            'posts' => 0,
+            'comments' => 0,
+            'reactions' => 0,
+            'subscriptions' => 0,
+            'notifications_unread' => 0,
+        ];
+
+        $queries = [
+            ['SELECT COUNT(*) AS c FROM nutzer', 'users'],
+            ['SELECT COUNT(*) AS c FROM post', 'posts'],
+            ['SELECT COUNT(*) AS c FROM kommentar', 'comments'],
+            ['SELECT COUNT(*) AS c FROM Reaktion', 'reactions'],
+            ['SELECT COUNT(*) AS c FROM push_subscriptions', 'subscriptions'],
+            ['SELECT COUNT(*) AS c FROM notifications WHERE is_read = 0', 'notifications_unread'],
+        ];
+
+        foreach ($queries as [$sql, $key]) {
+            $res = $this->db->query($sql);
+            if ($res) {
+                $row = $res->fetch_assoc();
+                $stats[$key] = (int)($row['c'] ?? 0);
+            }
+        }
+
+        return $stats;
+    }
+
+    /**
+     * Neu registrierte Nutzer (absteigend nach Registrierungsdatum).
+     *
+     * @return array<int,array{id:int,nutzerName:string,registrierungsDatum:string}>
+     */
+    public function getRecentUsers(int $limit = 10): array {
+        $sql = "SELECT id, nutzerName, erstellungsDatum AS registrierungsDatum FROM nutzer WHERE erstellungsDatum >= (NOW() - INTERVAL 14 DAY) ORDER BY erstellungsDatum DESC LIMIT ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $rows = $res->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $rows;
+    }
+
+    
+
+    /**
+     * Erweiterte zeitbasierte Statistiken für das Dashboard.
+     * Enthält Tages-/24h-/7T-Metriken und aktive Nutzer (letzte 7 Tage).
+     *
+     * @return array<string,int>
+     */
+    public function getExtendedStats(?array $keys = null): array {
+        // Standard: nur Metriken berechnen, die im Dashboard angezeigt werden
+        $defaultKeys = ['posts_24h', 'comments_24h', 'notifications_today'];
+        $keys = $keys === null || empty($keys) ? $defaultKeys : $keys;
+
+        $stats = [];
+        $map = [
+            'users_today' => "SELECT COUNT(*) AS c FROM nutzer WHERE erstellungsDatum >= CURDATE()",
+            'users_7d' => "SELECT COUNT(*) AS c FROM nutzer WHERE erstellungsDatum >= (NOW() - INTERVAL 7 DAY)",
+            'posts_today' => "SELECT COUNT(*) AS c FROM post WHERE datumZeit >= CURDATE()",
+            'posts_24h' => "SELECT COUNT(*) AS c FROM post WHERE datumZeit >= (NOW() - INTERVAL 1 DAY)",
+            'comments_today' => "SELECT COUNT(*) AS c FROM kommentar WHERE datumZeit >= CURDATE()",
+            'comments_24h' => "SELECT COUNT(*) AS c FROM kommentar WHERE datumZeit >= (NOW() - INTERVAL 1 DAY)",
+            'subscriptions_today' => "SELECT COUNT(*) AS c FROM push_subscriptions WHERE created_at >= CURDATE()",
+            'subscriptions_24h' => "SELECT COUNT(*) AS c FROM push_subscriptions WHERE created_at >= (NOW() - INTERVAL 1 DAY)",
+            'notifications_today' => "SELECT COUNT(*) AS c FROM notifications WHERE created_at >= CURDATE()",
+            'unread_today' => "SELECT COUNT(*) AS c FROM notifications WHERE is_read = 0 AND created_at >= CURDATE()",
+            'active_users_7d' => null, // Spezialfall unten
+        ];
+
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $map)) {
+                continue;
+            }
+            if ($key === 'active_users_7d') {
+                $sqlActive = "
+                    SELECT COUNT(DISTINCT uid) AS c FROM (
+                        SELECT nutzer_id AS uid FROM post WHERE datumZeit >= (NOW() - INTERVAL 7 DAY)
+                        UNION ALL
+                        SELECT nutzer_id AS uid FROM kommentar WHERE datumZeit >= (NOW() - INTERVAL 7 DAY)
+                    ) AS t
+                ";
+                $res = $this->db->query($sqlActive);
+                if ($res) {
+                    $row = $res->fetch_assoc();
+                    $stats[$key] = (int)($row['c'] ?? 0);
+                } else {
+                    $stats[$key] = 0;
+                }
+                continue;
+            }
+
+            $sql = $map[$key];
+            if ($sql === null) {
+                $stats[$key] = 0;
+                continue;
+            }
+            $res = $this->db->query($sql);
+            if ($res) {
+                $row = $res->fetch_assoc();
+                $stats[$key] = (int)($row['c'] ?? 0);
+            } else {
+                $stats[$key] = 0;
+            }
+        }
+
+        return $stats;
+    }
 } 

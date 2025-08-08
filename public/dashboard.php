@@ -68,9 +68,12 @@ $pageTitle = 'Dashboard';
 // === Push-Subscriptions + Nutzernamen + Plattform laden ===
 require_once __DIR__ . '/php/db.php';
 require_once __DIR__ . '/php/NutzerVerwaltung.php';
+require_once __DIR__ . '/php/PostVerwaltung.php';
+require_once __DIR__ . '/php/helpers.php';
 
 $pushSubscriptions = [];
 $nutzerVerwaltung = new NutzerVerwaltung();
+$postVerwaltung = new PostVerwaltung();
 $db = db::getInstance();
 
 // Alle Subscriptions holen
@@ -93,6 +96,12 @@ while ($row = $res->fetch_assoc()) {
     }
     $pushSubscriptions[] = $row;
 }
+
+// === Analytics: KPIs & Aktivitätsfeeds ===
+$stats = $nutzerVerwaltung->getBasicStats();
+$xstats = $nutzerVerwaltung->getExtendedStats();
+$recentUsers = $nutzerVerwaltung->getRecentUsers(8);
+$recentComments = $postVerwaltung->getRecentComments(8);
 
 // === Notification-Versand ===
 $notifMsg = null;
@@ -324,9 +333,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_push_notificatio
 
 
         @media (max-width: 900px) {
-            .cards { flex-direction: column; align-items: stretch; }
             .card { min-width: 0; }
         }
+
+        /* Analytics */
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            flex: 1 1 160px;
+            min-width: 140px;
+        }
+        .stat-label { color: #bbb; font-size: .85rem; }
+        .stat-value { color: #fff; font-size: 1.4rem; font-weight: 700; margin-top: 6px; }
+        .sections {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+            margin: 16px 0 28px 0;
+        }
+        /* Mobile Anpassungen */
+        @media (max-width: 640px) {
+            .stat-card { padding: 12px; flex: 1 1 140px; }
+            .sections { grid-template-columns: 1fr; }
+            .push-panel { width: 100%; }
+        }
+        .section-card { background: #181818; border: 1px solid #333; border-radius: 12px; padding: 16px; }
+        .section-card h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: #fff; }
+        .list { list-style: none; margin: 0; padding: 0; }
+        .list li { border-bottom: 1px solid #2a2a2a; padding: 8px 0; }
+        .list li:last-child { border-bottom: none; }
+        .meta { color: #aaa; font-size: .85rem; }
+        .truncate { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -336,6 +384,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_push_notificatio
         <img src="assets/favicon.png" alt="Zwitscha Logo">
     </a>
     <div class="container">
+        <!-- === Analytics: KPIs === -->
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-label">Nutzer</div><div class="stat-value"><?= (int)$stats['users'] ?></div></div>
+            <div class="stat-card"><div class="stat-label">Posts</div><div class="stat-value"><?= (int)$stats['posts'] ?></div></div>
+            <div class="stat-card"><div class="stat-label">Kommentare</div><div class="stat-value"><?= (int)$stats['comments'] ?></div></div>
+            <div class="stat-card"><div class="stat-label">Reaktionen</div><div class="stat-value"><?= (int)$stats['reactions'] ?></div></div>
+            <div class="stat-card"><div class="stat-label">Push-Abos</div><div class="stat-value"><?= (int)$stats['subscriptions'] ?></div></div>
+            <div class="stat-card"><div class="stat-label">Ungelesene Benachr.</div><div class="stat-value"><?= (int)$stats['notifications_unread'] ?></div></div>
+            <div class="stat-card"><div class="stat-label">Posts 24h</div><div class="stat-value"><?= (int)$xstats['posts_24h'] ?></div></div>
+            <div class="stat-card"><div class="stat-label">Kommentare 24h</div><div class="stat-value"><?= (int)$xstats['comments_24h'] ?></div></div>
+            <div class="stat-card"><div class="stat-label">Benachr. heute</div><div class="stat-value"><?= (int)$xstats['notifications_today'] ?></div></div>
+        </div>
+
+        <!-- === Aktivität: Neue Kommentare, Neue Nutzer, Letzte Logins === -->
+        <div class="sections">
+            <div class="section-card">
+                <h3>Neueste Kommentare</h3>
+                <ul class="list">
+                    <?php foreach ($recentComments as $c): ?>
+                        <li>
+                            <div><a class="link" href="postDetails.php?id=<?= (int)$c['post_id'] ?>#comment-<?= (int)$c['id'] ?>">@<?= htmlspecialchars($c['autor']) ?></a>: <span class="truncate"><?= htmlspecialchars($c['text']) ?></span></div>
+                            <div class="meta"><?= time_ago($c['datumZeit']) ?> · Post von <a class="link" href="Profil.php?userid=<?= (int)$c['postAutorId'] ?>">@<?= htmlspecialchars($c['postAutor']) ?></a></div>
+                        </li>
+                    <?php endforeach; ?>
+                    <?php if (empty($recentComments)): ?>
+                        <li class="meta">Keine Kommentare gefunden.</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            <div class="section-card">
+                <h3>Neue Nutzer</h3>
+                <ul class="list">
+                    <?php foreach ($recentUsers as $u): ?>
+                        <li>
+                            <div><a class="link" href="Profil.php?userid=<?= (int)$u['id'] ?>">@<?= htmlspecialchars($u['nutzerName']) ?></a></div>
+                            <div class="meta">Registriert <?= time_ago($u['registrierungsDatum']) ?></div>
+                        </li>
+                    <?php endforeach; ?>
+                    <?php if (empty($recentUsers)): ?>
+                        <li class="meta">Keine neuen Nutzer.</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            
+        </div>
+
         <!-- === Push Notification Panel === -->
         <div class="push-panel card">
             <h2>Push-Notification testen</h2>
