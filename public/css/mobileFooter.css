@@ -9,7 +9,9 @@
   border-top: var(--border-width) solid var(--border-color);
   box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  padding: 0;
+  /* Reserveplatz an der Unterkante für Safe Area (z. B. iPhone Home Indicator).
+     Zusätzlich etwas Innenabstand oben innerhalb des Footers für Buttons */
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
 .footer-nav {
@@ -20,9 +22,7 @@
 
 .footer-link {
   color: var(--text-primary);
-  text-decoration: none;
-  font-size: 1.6rem;
-  padding: var(--spacing-xs);
+  padding-top: 0;
   transition: color var(--transition-fast);
   border-radius: 20%; /* für runde Klickfläche */
 }
@@ -30,13 +30,7 @@
 .footer-link:active,
 .footer-link:focus,
 .footer-link:hover {
-  padding: var(--spacing-xs);
-  background: rgba(
-    0,
-    0,
-    0,
-    0.04
-  ); /* sehr dezenter Effekt, kann auf transparent gesetzt werden */
+  background: rgba(0, 0, 0, 0.04); /* sehr dezenter Effekt, kann auf transparent gesetzt werden */
   outline: none;
 }
 
@@ -66,13 +60,16 @@
   body::after {
     content: "";
     display: block;
-    height: calc(60px);
+    /* Reserviert Platz im Dokumentfluss, damit Seiteninhalte nicht vom Footer überlappt werden.
+       Inkludiere die Safe-Area-Inset-Bottom, falls vorhanden. */
+    height: calc(60px + env(safe-area-inset-bottom, 0px));
   }
 }
 
 /* === PWA DESIGN === */
 @media all and (display-mode: standalone) {
   .mobile-footer {
-    padding-bottom: var(--spacing-lg);
+    /* Bei PWA/Standalone-Modus etwas größeren Innenabstand, plus Safe Area */
+    padding-bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
   }
 }

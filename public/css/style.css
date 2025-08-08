@@ -437,34 +437,7 @@ footer {
   z-index: 0;
 }
 
-/* Floating Action Button (FAB) */
-.fab {
-  position: fixed;
-  right: 16px;
-  bottom: calc(76px + env(safe-area-inset-bottom));
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background-color: var(--primary-color);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1100;
-  transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background-color var(--transition-fast);
-}
-.fab:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
-}
-.fab:active {
-  transform: translateY(1px);
-}
+/* Floating Action Button (FAB) entfernt */
 
 /* Anker-Ziel mit Abstand unter fixem Header */
 #compose {
@@ -563,9 +536,7 @@ footer {
     box-shadow: 0 0 0 3px rgba(31, 211, 35, 0.35);
   }
 
-  .fab {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  }
+  /* .fab rules removed for dark mode */
 
   /* Form-Elemente im Dark Mode */
   input[type="text"],
@@ -595,8 +566,3 @@ footer {
   }
 }
 
-@media (min-width: 769px) {
-  .fab {
-    display: none;
-  }
-}
