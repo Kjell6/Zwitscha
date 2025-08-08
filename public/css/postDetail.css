@@ -1,274 +1,282 @@
 /* === BODY LAYOUT === */
 body {
-    max-width: var(--container-max-width);
-    margin-left: auto;
-    margin-right: auto;
-    padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
 }
 
 /* === PAGE HEADER === */
 .page-header-container {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
 }
 
 .back-button {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 .back-button button {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
 }
 
 .page-header-container h1 {
-    font-size: var(--font-size-lg);
-    margin-bottom: 0;
-    flex-grow: 1;
+  font-size: var(--font-size-lg);
+  margin-bottom: 0;
+  flex-grow: 1;
 }
 
 /* === DETAIL POST === */
 .detail-post {
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
-    background-color: var(--light-color);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  background-color: var(--light-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .post-user-infos-detail {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-sm);
-    padding: 0 var(--spacing-xs);
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  padding: 0 var(--spacing-xs);
+  flex-wrap: wrap;
 }
 
 .post-user-info-left {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .post-user-infos-detail img {
-    display: block;
-    border-radius: 50%;
-    margin-right: var(--spacing-xs);
-    width: 55px;
-    height: 55px;
-    object-fit: cover;
-    flex-shrink: 0;
+  display: block;
+  border-radius: 50%;
+  margin-right: var(--spacing-xs);
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .post-user-details-detail {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .post-content-detail {
-    padding: 0 var(--spacing-xs);
+  padding: 0 var(--spacing-xs);
 }
 
 .post-content-detail p {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* === POST ACTIONS === */
 .post-actions.detail-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-sm);
-    padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: 0;
 }
 
 .post-actions .post-reactions {
-    display: flex;
-    gap: var(--spacing-xs);
-    align-items: center;
-    padding: 0 var(--spacing-xs);
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  padding: 0 var(--spacing-xs);
 }
 
 /* === CREATE POST FORM === */
-.create-post-form { margin: 0 var(--spacing-sm); }
+.create-post-form {
+  margin: 0 var(--spacing-sm);
+}
 
 .create-post-form:focus-within {
-    box-shadow: 0 4px 12px rgba(34, 218, 38, 0.15);
-    border-color: rgba(34, 218, 38, 0.3);
+  box-shadow: 0 4px 12px rgba(34, 218, 38, 0.15);
+  border-color: rgba(34, 218, 38, 0.3);
 }
 
 .create-post-form .form-header {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
 }
 
 .create-post-form .user-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .create-post-form textarea {
-    flex-grow: 1;
-    border: none;
-    background-color: transparent;
-    resize: none; /* Erlaubt die automatische Größenanpassung durch JS */
-    min-height: 24px;
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    padding: var(--spacing-xs) 0;
-    line-height: 1.5;
-    margin-bottom: 0;
+  flex-grow: 1;
+  border: none;
+  background-color: transparent;
+  resize: none; /* Erlaubt die automatische Größenanpassung durch JS */
+  min-height: 24px;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  padding: var(--spacing-xs) 0;
+  line-height: 1.5;
+  margin-bottom: 0;
 }
 
 .create-post-form textarea:focus {
-    outline: none;
+  outline: none;
 }
 
 .create-post-form .form-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: var(--spacing-xs);
-    margin-left: calc(48px + var(--spacing-sm));
-    padding-top: var(--spacing-xs);
-    border-top: 1px solid var(--bg-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-xs);
+  margin-left: calc(48px + var(--spacing-sm));
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid var(--bg-color);
 }
 
 .create-post-form .form-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
 .create-post-form .form-submit-area {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .create-post-form .character-count {
-    margin: 0;
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    font-variant-numeric: tabular-nums;
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 
 .create-post-form .post-button {
-    background-color: var(--primary-color);
-    color: var(--light-color);
-    font-weight: bold;
-    border-radius: 50px;
-    padding: 8px 20px;
-    transition: background-color var(--transition-fast), transform var(--transition-fast);
+  background-color: var(--primary-color);
+  color: var(--light-color);
+  font-weight: bold;
+  border-radius: 50px;
+  padding: 8px 20px;
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .create-post-form .post-button:hover {
-    background-color: var(--primary-hover);
-    transform: scale(1.03);
+  background-color: var(--primary-hover);
+  transform: scale(1.03);
 }
 
 .create-post-form .post-button:disabled {
-    cursor: not-allowed;
-    transform: none;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* === REPLY SECTION === */
 .hidden {
-    display: none;
+  display: none;
 }
 
 .reply-section {
-    padding-right: var(--spacing-sm);
+  padding-right: var(--spacing-sm);
 }
 
 .reply-button {
-    margin-left: var(--spacing-xs);
-    background: none;
-    color: var(--text-secondary);
-    padding: var(--spacing-xs);
-    border: none;
-    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  margin-left: var(--spacing-xs);
+  background: none;
+  color: var(--text-secondary);
+  padding: var(--spacing-xs);
+  border: none;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .reply-button:hover {
-    color: var(--primary-color);
-    background-color: var(--hover-color);
+  color: var(--primary-color);
+  background-color: var(--hover-color);
 }
 
 .reply-section .create-post-form {
-    margin: var(--spacing-sm) 0;
-    background-color: #fbfbfb;
+  margin: var(--spacing-sm) 0;
+  background-color: #fbfbfb;
 }
 
 .replies-list .post.comment-layout {
-    background-color: #fbfbfb;
+  background-color: #fbfbfb;
 }
 
 @media (prefers-color-scheme: dark) {
-    .replies-list .post.comment-layout, .reply-section .create-post-form {
-        background-color: var(--bg-color); 
-    }
+  .replies-list .post.comment-layout,
+  .reply-section .create-post-form {
+    background-color: var(--bg-color);
+  }
 }
 
 /* === COMMENTS SECTION === */
 .comments-section {
-    padding: var(--spacing-md) 0;
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
+  padding: var(--spacing-md) 0;
+  padding-left: var(--spacing-sm);
+  padding-right: var(--spacing-sm);
 }
 
 .comments-section h2 {
-    margin-bottom: var(--spacing-md);
-    font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-xl);
 }
 
 .comment-submit-area .character-count {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 480px) {
-    body {
-        padding-left: var(--spacing-xs);
-        padding-right: var(--spacing-xs);
-    }
+  body {
+    padding-left: var(--spacing-xs);
+    padding-right: var(--spacing-xs);
+  }
 
-    .page-header-container h1 {
-        font-size: var(--font-size-lg);
-    }
+  .page-header-container h1 {
+    font-size: var(--font-size-lg);
+  }
 
-    .post-actions.detail-actions {
-        gap: var(--spacing-sm);
-    }
+  .post-actions.detail-actions {
+    gap: var(--spacing-sm);
+  }
 
-    .post-actions .post-reactions {
-        flex-direction: row;
-    }
+  .post-actions .post-reactions {
+    flex-direction: row;
+  }
 }
 
 @media (max-width: 390px) {
-    .post-actions .post-reactions {
-        max-width: 260px;
-    }
+  .post-actions .post-reactions {
+    max-width: 260px;
+  }
 
-    .create-post-form .form-footer {
-        margin-left: 0;
-    }
+  .create-post-form .form-footer {
+    margin-left: 0;
+  }
 
-    .create-post-form .user-avatar {
-        display: none;
-    }
+  .create-post-form .user-avatar {
+    display: none;
+  }
 }

@@ -1,73 +1,78 @@
 /* === MOBILE FOOTER === */
 .mobile-footer {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--light-color);
-    border-top: var(--border-width) solid var(--border-color);
-    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 0;
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--light-color);
+  border-top: var(--border-width) solid var(--border-color);
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 0;
 }
 
 .footer-nav {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .footer-link {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-size: 1.6rem;
-    padding: var(--spacing-xs);
-    transition: color var(--transition-fast);
-    border-radius: 20%; /* für runde Klickfläche */
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 1.6rem;
+  padding: var(--spacing-xs);
+  transition: color var(--transition-fast);
+  border-radius: 20%; /* für runde Klickfläche */
 }
 
 .footer-link:active,
 .footer-link:focus,
 .footer-link:hover {
-    padding: var(--spacing-xs);
-    background: rgba(0,0,0,0.04); /* sehr dezenter Effekt, kann auf transparent gesetzt werden */
-    outline: none;
+  padding: var(--spacing-xs);
+  background: rgba(
+    0,
+    0,
+    0,
+    0.04
+  ); /* sehr dezenter Effekt, kann auf transparent gesetzt werden */
+  outline: none;
 }
 
 .footer-link.active {
-    color: var(--text-primary);
-    position: relative;
+  color: var(--text-primary);
+  position: relative;
 }
 
 .footer-link.active::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -8px;
-    width: 24px;
-    height: 3px;
-    border-radius: 3px;
-    background: var(--primary-color);
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -8px;
+  width: 24px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--primary-color);
 }
 
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
-    .mobile-footer {
-        display: block;
-    }
+  .mobile-footer {
+    display: block;
+  }
 
-    body::after {
-        content: "";
-        display: block;
-        height: calc(60px);
-    }
+  body::after {
+    content: "";
+    display: block;
+    height: calc(60px);
+  }
 }
 
 /* === PWA DESIGN === */
 @media all and (display-mode: standalone) {
-    .mobile-footer {
-        padding-bottom: var(--spacing-lg);
-    }
+  .mobile-footer {
+    padding-bottom: var(--spacing-lg);
   }
+}

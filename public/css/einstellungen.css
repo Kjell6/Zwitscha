@@ -1,105 +1,105 @@
 /* === BODY LAYOUT === */
 body {
-    padding: var(--spacing-sm);
+  padding: var(--spacing-sm);
 }
 
 /* === SETTINGS CONTAINER === */
 .settings {
-    margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
 }
 
 .settings h2 {
-    text-align: center;
+  text-align: center;
 }
 
 /* === FORM STYLING === */
 form.card {
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
 }
 
 form.card fieldset {
-    border: none;
-    padding: 0;
-    margin: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 form.card legend {
-    font-size: var(--font-size-lg);
-    font-weight: 700;
-    margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
 }
 
 form.card label {
-    color: var(--text-secondary);
-    margin-bottom: var(--spacing-xs);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
 }
 
 form.card button.button {
-    background-color: var(--primary-color);
-    margin-top: var(--spacing-md);
+  background-color: var(--primary-color);
+  margin-top: var(--spacing-md);
 }
 
 form.card button.button:hover {
-    background-color: var(--primary-hover);
+  background-color: var(--primary-hover);
 }
 
 /* === AVATAR FORM === */
 .avatar-form-layout {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: var(--spacing-lg);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--spacing-lg);
 }
 
 .avatar-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .avatar-preview img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--border-color);
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
 }
 
 .button-secondary {
-    background-color: var(--bg-color);
-    color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-xs);
+  background-color: var(--bg-color);
+  color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
 }
 
 .button-secondary:hover {
-    background-color: var(--hover-color);
-    border-color: var(--primary-color);
+  background-color: var(--hover-color);
+  border-color: var(--primary-color);
 }
 
 /* === DANGER BUTTON === */
 form.card button.danger {
-    background-color: var(--danger-color);
-    color: var(--light-color);
+  background-color: var(--danger-color);
+  color: var(--light-color);
 }
 
 form.card button.danger:hover {
-    background-color: var(--danger-hover);
+  background-color: var(--danger-hover);
 }
 
 /* === NOTIFICATION SETTINGS === */
 .notification-setting {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
 }
 
 .notification-setting label {
-    margin-bottom: 0;
-    flex-grow: 1;
+  margin-bottom: 0;
+  flex-grow: 1;
 }

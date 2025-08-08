@@ -1,356 +1,369 @@
 /* === BODY LAYOUT === */
 body {
-    padding-top: var(--spacing-sm);
-    max-width: var(--container-max-width);
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-sm);
+  padding-right: var(--spacing-sm);
 }
 
 .posts {
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
+  padding-left: var(--spacing-sm);
+  padding-right: var(--spacing-sm);
 }
 
 /* === PROFILE HEADER === */
 .profil-header {
-    border-bottom: var(--border-width) solid var(--border-color);
-    padding: var(--spacing-sm);
-    padding-bottom: 0;
-    background-color: var(--light-color);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    display: flex;
-    gap: var(--spacing-md);
-    align-items: flex-start;
-    position: relative;
-    margin-bottom: var(--spacing-md);
+  border-bottom: var(--border-width) solid var(--border-color);
+  padding: var(--spacing-sm);
+  padding-bottom: 0;
+  background-color: var(--light-color);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+  position: relative;
+  margin-bottom: var(--spacing-md);
 }
 
 .mobile-only {
-    display: none;
+  display: none;
 }
 
 .profilbild {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 /* === PROFILE BUTTONS === */
-.folgen-button, .admin-button {
-    cursor: pointer;
-    background-color: var(--primary-color);
-    color: var(--light-color);
-    border: none;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    transition: background-color var(--transition-fast);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xxs);
+.folgen-button,
+.admin-button {
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: var(--light-color);
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: background-color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xxs);
 }
 
 .folgen-button:hover {
-    background-color: var(--primary-hover);
+  background-color: var(--primary-hover);
 }
 
 .admin-button {
-    background-color: var(--danger-color);
+  background-color: var(--danger-color);
 }
 
 .admin-button:hover {
-    background-color: var(--danger-hover);
+  background-color: var(--danger-hover);
 }
 
 .ban-button {
-    cursor: pointer;
-    background-color: transparent;
-    color: var(--danger-color);
-    border: 1px solid var(--danger-color);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    transition: all var(--transition-fast);
+  cursor: pointer;
+  background-color: transparent;
+  color: var(--danger-color);
+  border: 1px solid var(--danger-color);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: all var(--transition-fast);
 }
 
 .ban-button:hover {
-    background-color: var(--danger-color);
-    color: var(--light-color);
+  background-color: var(--danger-color);
+  color: var(--light-color);
 }
 
 /* === PROFILE INFO === */
 div.profil-header.pb-name-untereinander {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    gap: 0;
-    box-shadow: none;
-    border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0;
+  box-shadow: none;
+  border-bottom: none;
 }
 
 .profil-main-infos {
-    display: flex;
-    align-items: center;
-    margin-bottom: var(--spacing-xs);
-    flex-wrap: wrap;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .profil-name {
-    margin: 0;
-    font-size: var(--font-size-xl);
-    line-height: 1;
-    flex-grow: 1;
-    word-break: break-word;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+  margin: 0;
+  font-size: var(--font-size-xl);
+  line-height: 1;
+  flex-grow: 1;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .admin-badge {
-    background-color: var(--primary-color);
-    color: var(--light-color);
-    padding: var(--spacing-xxs) var(--spacing-xs);
-    border-radius: var(--border-radius-sm);
-    font-size: var(--font-size-sm);
-    display: inline-flex;
-    align-items: center;
-    position: relative;
-    cursor: help;
+  background-color: var(--primary-color);
+  color: var(--light-color);
+  padding: var(--spacing-xxs) var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  cursor: help;
 }
 
 .admin-badge::after {
-    content: "Administrator";
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: var(--spacing-xxs) var(--spacing-xs);
-    border-radius: var(--border-radius-sm);
-    font-size: var(--font-size-xs);
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--transition-fast), visibility var(--transition-fast);
-    pointer-events: none;
-    z-index: 1000;
-    margin-bottom: 5px;
+  content: "Administrator";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: var(--spacing-xxs) var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast);
+  pointer-events: none;
+  z-index: 1000;
+  margin-bottom: 5px;
 }
 
 .admin-badge:hover::after {
-    opacity: 1;
-    visibility: visible;
+  opacity: 1;
+  visibility: visible;
 }
 
 .admin-button.admin-active {
-    background-color: var(--primary-color);
+  background-color: var(--primary-color);
 }
 
 .admin-button.admin-active:hover {
-    background-color: var(--primary-hover);
+  background-color: var(--primary-hover);
 }
 
 .folgen-button {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 .beitritts-datum {
-    color: var(--text-secondary);
-    font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
 }
 
 .folgen-container {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
 }
 
 .folge-info {
-    display: flex;
-    gap: var(--spacing-xs);
-    align-items: baseline;
-    margin: 0;
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: baseline;
+  margin: 0;
 }
 
 .folge-info span {
-    color: var(--text-secondary);
-    font-size: var(--font-size-sm);
-    font-weight: normal;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: normal;
 }
 
 /* === PROFILE NAVIGATION === */
 .einstellungen-link {
-    position: absolute;
-    top: var(--spacing-sm);
-    left: var(--spacing-sm);
-    z-index: 10;
-    padding: var(--spacing-xs);
-    border-radius: var(--border-radius-sm);
-    transition: background-color var(--transition-fast);
+  position: absolute;
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+  z-index: 10;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-fast);
 }
 
 .einstellungen-link:hover {
-    background-color: var(--hover-color);
+  background-color: var(--hover-color);
 }
 
 .einstellungen-link i {
-    font-size: var(--font-size-xl);
-    color: var(--text-secondary);
-    transition: color var(--transition-fast);
+  font-size: var(--font-size-xl);
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
 }
 
 .einstellungen-link:hover i {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .logout-link {
-    position: absolute;
-    top: var(--spacing-sm);
-    right: var(--spacing-sm);
-    z-index: 10;
-    padding: var(--spacing-xs);
-    border-radius: var(--border-radius-sm);
-    transition: background-color var(--transition-fast);
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  z-index: 10;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-fast);
 }
 
 .logout-link:hover {
-    background-color: rgba(229, 57, 53, 0.1);
+  background-color: rgba(229, 57, 53, 0.1);
 }
 
 .custom-logout-icon {
-    height: 24px;
-    width: 24px;
+  height: 24px;
+  width: 24px;
 }
 
 /* === PROFILE TOGGLE === */
 .switch-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: var(--spacing-md);
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
 }
 
 .profile-toggle {
-    width: 320px;
-    height: 40px;
+  width: 320px;
+  height: 40px;
 }
 
 .profile-toggle label {
-    flex: 1;
-    text-align: center;
-    line-height: 38px;
-    height: 100%;
-    cursor: pointer;
-    z-index: 1;
-    color: var(--text-secondary);
-    transition: color var(--transition-fast);
-    user-select: none;
+  flex: 1;
+  text-align: center;
+  line-height: 38px;
+  height: 100%;
+  cursor: pointer;
+  z-index: 1;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+  user-select: none;
 }
 
-#comments-toggle:checked ~ .switch-indicator { transform: translateX(100%); }
-#posts-toggle:checked ~ .switch-indicator { transform: translateX(0%); }
+#comments-toggle:checked ~ .switch-indicator {
+  transform: translateX(100%);
+}
+#posts-toggle:checked ~ .switch-indicator {
+  transform: translateX(0%);
+}
 
 #posts-toggle:checked ~ label[for="posts-toggle"],
 #comments-toggle:checked ~ label[for="comments-toggle"] {
-    color: var(--light-color);
+  color: var(--light-color);
 }
 
 /* === CONTENT ANIMATION === */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
-    .posts {
-        padding-left: 0;
-        padding-right: 0;
-    }
+  .posts {
+    padding-left: 0;
+    padding-right: 0;
+  }
 
-    .profil-header {
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        padding-top: var(--spacing-lg);
-    }
+  .profil-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding-top: var(--spacing-lg);
+  }
 
-    .profilbild {
-        width: 150px;
-        height: 150px;
-    }
+  .profilbild {
+    width: 150px;
+    height: 150px;
+  }
 
-    div.profil-header.pb-name-untereinander {
-        flex-direction: column;
-        flex-grow: 0;
-        align-items: center;
-    }
+  div.profil-header.pb-name-untereinander {
+    flex-direction: column;
+    flex-grow: 0;
+    align-items: center;
+  }
 
-    .profil-main-infos {
-        flex-direction: column;
-        gap: var(--spacing-xs);
-        align-items: center;
-    }
+  .profil-main-infos {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    align-items: center;
+  }
 
-    .admin-button,
-    .folgen-button {
-        font-size: var(--font-size-xs);
-        padding: var(--spacing-xxs) var(--spacing-xs);
-    }
+  .admin-button,
+  .folgen-button {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xxs) var(--spacing-xs);
+  }
 
-    .profil-name,
-    .beitritts-datum {
-        text-align: center;
-    }
+  .profil-name,
+  .beitritts-datum {
+    text-align: center;
+  }
 
-    .folgen-container {
-        justify-content: center;
-    }
+  .folgen-container {
+    justify-content: center;
+  }
 
-    .mobile-only {
-        display: block;
-    }
+  .mobile-only {
+    display: block;
+  }
 
-    .einstellungen-link {
-        top: var(--spacing-sm);
-        left: var(--spacing-sm);
-        padding: var(--spacing-xs);
-    }
+  .einstellungen-link {
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    padding: var(--spacing-xs);
+  }
 
-    .logout-link {
-        top: var(--spacing-sm);
-        right: var(--spacing-sm);
-        padding: var(--spacing-xs);
-    }
+  .logout-link {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    padding: var(--spacing-xs);
+  }
 
-    .dashboard-link {
-        position: absolute;
-        top: 60px;
-        left: 15px;
-        z-index: 10;
-        padding: var(--spacing-xs);
-        border-radius: var(--border-radius-sm);
-        transition: background-color var(--transition-fast);
-        color: var(--text-secondary);
-        font-size: var(--font-size-xl);
-    }
+  .dashboard-link {
+    position: absolute;
+    top: 60px;
+    left: 15px;
+    z-index: 10;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    transition: background-color var(--transition-fast);
+    color: var(--text-secondary);
+    font-size: var(--font-size-xl);
+  }
 
-    .profile-toggle {
-        width: 100%;
-        max-width: 280px;
-        height: 36px;
-    }
+  .profile-toggle {
+    width: 100%;
+    max-width: 280px;
+    height: 36px;
+  }
 
-    .profile-toggle label {
-        font-size: var(--font-size-xs);
-        line-height: 36px;
-    }
+  .profile-toggle label {
+    font-size: var(--font-size-xs);
+    line-height: 36px;
+  }
 }

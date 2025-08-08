@@ -237,11 +237,6 @@ $pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName'])
 
             <!-- === MOBILE CONTROLS === -->
             <?php if ($currentUserId === $profile['id']): ?>
-                <?php if ($currentUserId === 3): ?>
-                    <a href="dashboard.php" class="dashboard-link mobile-only">
-                        <i class="bi bi-incognito"></i>
-                    </a>
-                <?php endif; ?>
                 <a href="logout.php" class="logout-link mobile-only"
                    onclick="return confirm('Möchtest du dich wirklich abmelden?')">
                     <img src="assets/custom_icons/LogOut.svg" alt="Logout Icon" class="custom-logout-icon">
