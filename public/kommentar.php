@@ -75,7 +75,7 @@
 
                 <div class="form-header">
                     <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" loading="lazy" alt="Dein Profilbild">
-                    <textarea name="comment_text" id="answer-input" placeholder="Antwort schreiben..." maxlength="300" required></textarea>
+                    <textarea class="mentionable" name="comment_text" id="answer-input" placeholder="Antwort schreiben..." maxlength="300" required></textarea>
                 </div>
 
                 <div class="form-footer">

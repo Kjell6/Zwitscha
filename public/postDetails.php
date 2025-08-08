@@ -148,7 +148,7 @@
 
             <div class="form-header">
                 <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" loading="lazy" alt="Dein Profilbild">
-                <textarea name="comment_text" id="post-input" placeholder="Schreibe einen Kommentar..." maxlength="300" required></textarea>
+                <textarea class="mentionable" name="comment_text" id="post-input" placeholder="Schreibe einen Kommentar..." maxlength="300" required></textarea>
             </div>
 
             <div class="form-footer">
@@ -211,6 +211,7 @@
 <!-- Refactored JavaScript-Funktionalität -->
 <script src="js/textarea-utils.js"></script>
 <script src="js/comment-utils.js"></script>
+<script src="js/mention-autocomplete.js"></script>
 
 <!-- AJAX-Funktionalität -->
 <script src="js/ajax/utils.js"></script>

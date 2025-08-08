@@ -69,7 +69,7 @@
         <!-- Form Header -->
         <div class="form-header">
             <img class="user-avatar" src="getImage.php?type=user&id=<?php echo $currentUserId; ?>" loading="lazy" alt="Dein Profilbild">
-            <textarea name="post_text" id="post-input" placeholder="Was gibt's Neues?" maxlength="300" required></textarea>
+            <textarea class="mentionable" name="post_text" id="post-input" placeholder="Was gibt's Neues?" maxlength="300" required></textarea>
         </div>
 
         <!-- === IMAGE PREVIEW === -->
@@ -159,6 +159,7 @@
 <script src="js/textarea-utils.js"></script>
 <script src="js/image-preview.js"></script>
 <script src="js/pagination.js"></script>
+<script src="js/mention-autocomplete.js"></script>
 
 <!-- AJAX-Funktionalität -->
 <script src="js/ajax/utils.js"></script>

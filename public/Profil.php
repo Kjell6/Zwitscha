@@ -167,6 +167,17 @@ $pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName'])
                                 <i class="bi bi-shield-fill"></i>
                             </span>
                         <?php endif; ?>
+                        <?php
+                            // Mutual-Follow-Badge: nur anzeigen, wenn es NICHT das eigene Profil ist
+                            if ($currentUserId !== $profile['id']) {
+                                $isFollowingEachOther = $nutzerVerwaltung->isFollowing($currentUserId, $profile['id']) && $nutzerVerwaltung->isFollowing($profile['id'], $currentUserId);
+                                if ($isFollowingEachOther): ?>
+                                    <span class="mutual-badge" title="Gegenseitiges Folgen">
+                                        <i class="bi bi-arrow-left-right"></i>
+                                    </span>
+                                <?php endif;
+                            }
+                        ?>
                     </h1>
 
                     <!-- === PROFILE BUTTONS === -->
@@ -324,6 +335,7 @@ $pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName'])
 
 <!-- Refactored JavaScript-Funktionalität -->
 <script src="js/comment-utils.js"></script>
+<script src="js/mention-autocomplete.js"></script>
 <script src="js/pagination.js"></script>
 
 <!-- AJAX-Funktionalität -->
@@ -374,6 +386,8 @@ $pageTitle = $profile ? 'Profil von ' . htmlspecialchars($profile['nutzerName'])
 
         // Initial setup für bereits geladene Kommentare
         initializeCommentSystem();
+        // Für alle vorhandenen Textareas die Mention-Klasse sicherstellen (falls dynamisch geladen)
+        document.querySelectorAll('textarea#post-input, textarea#answer-input').forEach(t => t.classList.add('mentionable'));
     });
 </script>
 

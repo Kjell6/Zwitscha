@@ -33,3 +33,11 @@ body {
   color: var(--text-secondary);
   font-size: var(--font-size-md);
 }
+
+.mutual-badge {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  font-weight: 700;
+}

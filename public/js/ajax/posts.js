@@ -136,6 +136,18 @@ class PostAjax {
                 const postElement = form.closest('.post');
                 if (postElement) {
                     postElement.remove();
+                } else {
+                    // Auf Detailseite gibt es keinen .post-Wrapper → zurück navigieren
+                    const isPostDetails = window.location.pathname.includes('postDetails.php');
+                    if (isPostDetails) {
+                        // Erst versuchen zurückzugehen, sonst zur Startseite
+                        if (window.history.length > 1) {
+                            window.history.back();
+                        } else {
+                            window.location.href = 'index.php';
+                        }
+                        return;
+                    }
                 }
                 
             } else {
