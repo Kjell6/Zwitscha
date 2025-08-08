@@ -278,6 +278,90 @@
   
   .w-full { width: 100%; }
   .w-half { width: 50%; }
+  
+  /* User-Liste (global) */
+  .user-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  .user-list-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: background-color var(--transition-fast);
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  .user-list-item .user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: var(--border-width) solid var(--border-color);
+  }
+  .user-list-item .user-name {
+    font-weight: 700;
+    font-size: var(--font-size-md);
+  }
+
+  /* Toggle/Switch (global baseline) */
+  .toggle,
+  .post-toggle,
+  .profile-toggle {
+    position: relative;
+    display: inline-flex;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    background-color: var(--light-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  /* Create Post Form (global baseline) */
+  .create-post-form {
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-sm);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid var(--border-color);
+    transition: box-shadow var(--transition-normal);
+  }
+
+  .toggle input,
+  .post-toggle input,
+  .profile-toggle input { display: none; }
+
+  .toggle label,
+  .post-toggle label,
+  .profile-toggle label {
+    flex: 1;
+    text-align: center;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+    user-select: none;
+  }
+
+  .toggle .switch-indicator,
+  .post-toggle .switch-indicator,
+  .profile-toggle .switch-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius-md);
+    transition: transform var(--transition-fast);
+    z-index: 0;
+  }
 
   /* Floating Action Button (FAB) */
   .fab {

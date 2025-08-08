@@ -15,9 +15,7 @@
     box-sizing: border-box;
 }
 
-.desktop-header {
-    display: none;
-}
+/* Entfernt doppelte Deklaration: display wird unten im Media-Query gesetzt */
 
 .desktop-header .header-section {
     display: flex;

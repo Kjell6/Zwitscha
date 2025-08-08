@@ -97,15 +97,7 @@ body {
 }
 
 /* === CREATE POST FORM === */
-.create-post-form {
-    background-color: var(--light-color);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm);
-    margin: 0 var(--spacing-sm) ;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border: 1px solid var(--border-color);
-    transition: box-shadow var(--transition-normal);
-}
+.create-post-form { margin: 0 var(--spacing-sm); }
 
 .create-post-form:focus-within {
     box-shadow: 0 4px 12px rgba(34, 218, 38, 0.15);

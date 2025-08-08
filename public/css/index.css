@@ -15,15 +15,7 @@ body {
 }
 
 /* === CREATE POST FORM === */
-.create-post-form {
-    background-color: var(--light-color);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border: 1px solid var(--border-color);
-    transition: box-shadow var(--transition-normal);
-}
+.create-post-form { margin-bottom: var(--spacing-md); }
 
 .create-post-form:focus-within {
     box-shadow: 0 4px 12px rgba(34, 218, 38, 0.15);
@@ -172,50 +164,19 @@ body {
 }
 
 .post-toggle {
-    position: relative;
-    display: inline-flex;
     align-items: center;
     justify-content: space-between;
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius-md);
     margin-bottom: var(--spacing-xs);
-    border-bottom: var(--border-width) solid var(--border-color);
-    background-color: var(--light-color);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
     font-size: var(--font-size-sm);
     width: 280px;
     height: 40px;
 }
 
-.post-toggle input {
-    display: none;
-}
+/* input Hiding global */
 
-.post-toggle label {
-    flex: 1;
-    text-align: center;
-    line-height: 45px;
-    height: 100%;
-    cursor: pointer;
-    z-index: 1;
-    color: var(--text-secondary);
-    transition: color var(--transition-fast);
-    user-select: none;
-}
+.post-toggle label { line-height: 45px; }
 
-.post-toggle .switch-indicator {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background-color: var(--primary-color);
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-md);
-    transition: transform var(--transition-fast);
-    z-index: 0;
-}
+.post-toggle .switch-indicator { padding: var(--spacing-sm); }
 
 #followed-posts:checked ~ .switch-indicator {
     transform: translateX(100%);
