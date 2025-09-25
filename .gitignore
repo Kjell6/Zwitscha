@@ -5,12 +5,6 @@
 # Versteckte Dateien, die auf dem Mac automatisch angelegt werden
 .DS_Store
 
-# User-uploaded content
-# ----------------------
-# Ignore user-uploaded images and other files.
-/public/assets/uploads/
-
-
 ##################################################
 # Created by https://www.gitignore.io/api/phpstorm
 # Edit at https://www.gitignore.io/?templates=phpstorm
@@ -104,6 +98,8 @@ fabric.properties
 .idea/**/markdown-navigator/
 
 # End of https://www.gitignore.io/api/phpstorm
-public/assets/placeholder-profilbild-2.png
 /node_modules
 /public/vendor
+# Ignore logs and composer.phar
+logs/
+public/composer.phar
